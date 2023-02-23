@@ -1,4 +1,5 @@
 # 3110 Project
 
 - Added Mohammad Khan (msk295)
-- Pablo Raigoza (pr428)
+- Added Pablo Raigoza (pr428)
+- Added Evan Vera (erv29)
