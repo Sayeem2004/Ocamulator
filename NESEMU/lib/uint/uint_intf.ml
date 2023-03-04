@@ -27,5 +27,12 @@ module type Uint =
     val shift_left : t -> int -> t
     val shift_right : t -> int -> t
     val from_int : int -> t
-    val to_int : t -> int
   end
+
+module type UintSet = sig
+  type t 
+  
+  val max_value : t
+  val zero : t
+  val one : t
+end

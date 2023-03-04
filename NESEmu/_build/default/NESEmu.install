@@ -1,8 +1,0 @@
-lib: [
-  "_build/install/default/lib/NESEmu/META"
-  "_build/install/default/lib/NESEmu/dune-package"
-  "_build/install/default/lib/NESEmu/opam"
-]
-bin: [
-  "_build/install/default/bin/NESEmu"
-]

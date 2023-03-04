@@ -1,4 +1,4 @@
-# dune init project NESEmu
+# dune init project NESEMU
 # OCAMLPARAM: unset
 # Shared cache: disabled
 # Workspace root: "/home/devovevo/CS 3110/Final/3110Project"
