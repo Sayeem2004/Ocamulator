@@ -1,2 +1,7 @@
+# General Stuff
 .DS_Store
 assignment/
+
+# Dune / Opam
+_build/
+*.opam

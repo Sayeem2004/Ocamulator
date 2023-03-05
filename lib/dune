@@ -1,0 +1,2 @@
+(library (name "lib"))
+(include_subdirs unqualified)

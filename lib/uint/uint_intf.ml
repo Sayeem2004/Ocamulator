@@ -1,5 +1,4 @@
-module type Uint =
-  sig
+module type Uint = sig
     type t
 
     val to_string : t -> string
@@ -20,19 +19,19 @@ module type Uint =
 
     val succ : t -> t
     val pred : t -> t
-    
+
     val logand : t -> t -> t
     val logor : t -> t -> t
     val logxor : t -> t -> t
     val shift_left : t -> int -> t
     val shift_right : t -> int -> t
     val from_int : int -> t
-  end
+end
 
 module type UintSet = sig
-  type t 
-  
-  val max_value : t
-  val zero : t
-  val one : t
+    type t
+
+    val max_value : t
+    val zero : t
+    val one : t
 end

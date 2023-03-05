@@ -1,4 +1,0 @@
-(library
- (name NESEMU))
- 
-(include_subdirs unqualified)
