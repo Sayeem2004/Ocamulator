@@ -1,4 +1,4 @@
-module F (S: UIntSet.S with type t := int) : UInt.S = struct
+module F (S: Lib__UIntSet.S with type t := int) : Lib__UInt.S = struct
     type t = int
 
     let to_string ui = Printf.sprintf "$%04X" ui

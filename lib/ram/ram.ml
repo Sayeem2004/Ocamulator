@@ -1,8 +1,8 @@
-open UInt8
-open UInt16
+open Lib__UInt8
+open Lib__UInt16
 
 module RAM = struct
-    let max_mem = 64000
+    let max_mem = 0xFFFF + 1
     let ram_memory = Array.init max_mem UInt8.from_int
 
     let read_ui8 (addr : uint16) : uint8 =
