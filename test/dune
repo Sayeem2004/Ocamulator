@@ -1,1 +1,4 @@
-(test (name "test"))
+(test
+    (name "uIntTest")
+    (libraries ounit2 lib)
+)
