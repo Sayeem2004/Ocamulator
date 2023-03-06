@@ -1,39 +1,31 @@
 open Lib__UInt8
 open Lib__UInt16
 
+open Lib__Ram
+
 module CPU = struct
-    let (accumulator: uint8 ref) = ref UInt8.zero;;
-    let (register_X: uint8 ref) = ref UInt8.zero;;
-    let (register_Y: uint8 ref) = ref UInt8.zero;;
-    let (program_counter: uint16 ref) = ref UInt16.zero;;
+    type cpu_flags = {
+        carr_bit : bool;
+        zero : bool;
+        interrupt: bool;
+        decimal : bool;
+        negative : bool;
+        overflow : bool;
+        break : bool;
+        reserved : bool;
+    }
 
-    let (carry_bit: bool ref) = ref false;;
-    let (zero: bool ref) = ref false;;
-    let (interrupt: bool ref) = ref false;;
-    let (decimal: bool ref) = ref false;;
-    let (negative: bool ref) = ref false;;
-    let (overflow: bool ref) = ref false;;
-    let (break: bool ref) = ref false;;
-    let (reserved: bool ref) = ref false;;
+    type t = {
+        accumulator : uint8;
+        register_X : uint8;
+        register_Y : uint8;
+        program_counter : uint16;
 
-    type memory_mode =
-        | Accumulator
-        | Absolute
-        | AbsoluteX
-        | AbsoluteY
-        | Immediate
-        | Implied
-        | Indirect
-        | XIndirect
-        | YIndirect
-        | Relative
-        | Zeropage
-        | ZeropageX
-        | ZeropageY
-    ;;
+        ram : RAM.t;
 
-    let clc () : unit = carry_bit := false;;
-    let cld () : unit = decimal := false;;
-    let cli () : unit = interrupt := false;;
-    let clv () : unit = overflow := false;;
+        flags : cpu_flags;
+    }
+
+    let fetch_ui8 (cpu : t) (addr : uint16) : uint8 = RAM.read_ui8 cpu.ram addr
+    let fetch_ui16 (cpu : t) (addr : uint16) : uint16 = RAM.read_ui16 cpu.ram addr
 end
