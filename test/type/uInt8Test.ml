@@ -189,7 +189,7 @@ let (shift_left_tests: test list) = [
     shift_left_test "Shift_left 0x0001 1 -> 0x0002" (UInt8.one) (1) (UInt8.from_int 2);
     shift_left_test "Shift_left 0x0001 7 -> 0x0080" (UInt8.one) (7) (UInt8.from_int 128);
     shift_left_test "Shift_left 0x0001 8 -> 0x0000" (UInt8.one) (8) (UInt8.zero);
-    shift_left_test "Shift_left 0x00FF 1 -> 0x00FE" (UInt8.one) (9) (UInt8.zero);
+    shift_left_test "Shift_left 0x00FF 1 -> 0x00FE" (UInt8.from_int 255) (1) (UInt8.from_int 254);
 ];;
 
 let shift_right_test (name: string) (a: uint8) (b: int) (expected: uint8) : test =
@@ -214,8 +214,8 @@ let from_int_test (name: string) (a: int) (expected: uint8) : test =
 ;;
 
 let (from_int_tests: test list) = [
-    from_int_test "From_int 0 -> 0x0000" (0) (UInt8.zero);
-    from_int_test "From_int 1 -> 0x0001" (1) (UInt8.one);
+    from_int_test "From_int 000 -> 0x0000" (0) (UInt8.zero);
+    from_int_test "From_int 001 -> 0x0001" (1) (UInt8.one);
     from_int_test "From_int 255 -> 0x00FF" (255) (UInt8.max_value);
     from_int_test "From_int 256 -> 0x0000" (256) (UInt8.zero);
 ];;
