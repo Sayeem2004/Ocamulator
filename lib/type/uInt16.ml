@@ -4,6 +4,7 @@ module UInt16Set : UIntSet.S with type t := int = struct
     let (max_value: int) = 0xFFFF;;
     let (zero: int) = 0;;
     let (one: int) = 1;;
+    let (size: int) = 16;;
 end
 
 module UInt16 = struct
