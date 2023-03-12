@@ -1,13 +1,19 @@
-.PHONY: build test clean
+.PHONY: build clean cloc install run test
 
 build:
 	dune build
 
-utop:
-	OCAMLRUNPARAM=b dune utop bin
-
-test:
-	OCAMLRUNPARAM=b dune exec test/main.exe
-
 clean:
 	dune clean
+
+cloc:
+	cloc --by-file --include-lang=OCaml .
+
+install:
+	opam install . --deps-only
+
+run:
+	dune exec bin/main.exe
+
+test:
+	dune exec test/main.exe
