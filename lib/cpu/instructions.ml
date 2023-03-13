@@ -28,7 +28,7 @@ module Instructions = struct
     | AbsoluteY -> CPU.fetch_ui16 cpu cpu.program_counter 
     |> UInt16.add (UInt16.ui16_from_ui8 cpu.register_Y)
     | Immediate -> CPU.fetch_ui8 cpu cpu.program_counter |> UInt16.ui16_from_ui8
-    | Implied -> 0
+    | Implied -> UInt16.zero
     | Indirect -> CPU.fetch_ui16 cpu cpu.program_counter 
     |> CPU.fetch_ui16 cpu
     | XIndirect -> CPU.fetch_ui8 cpu cpu.program_counter
@@ -43,4 +43,15 @@ module Instructions = struct
     | ZeropageY -> CPU.fetch_ui8 cpu cpu.program_counter 
     |> UInt8.add cpu.register_Y |> UInt16.ui16_from_ui8
 
+    let adc_op (cpu : CPU.t) (mode : memory_mode) =
+      let add_op = decode_operand cpu mode in
+      {cpu with accumulator = UInt8.add cpu.accumulator (add_op |> UInt16.to_int |> UInt8.from_int) }
+
+    let and_op (cpu : CPU.t) (mode : memory_mode) = 
+      let add_op = decode_operand cpu mode in
+      {cpu with accumulator = UInt8.logand cpu.accumulator (add_op |> UInt16.to_int |> UInt8.from_int) }
+    
+    let asl_op (cpu : CPU.t) (mode : memory_mode) =
+      if (mode = Accumulator) then {cpu with accumulator = UInt8.shift_left cpu.accumulator 1 }
+      else Ram.RAM.write_ui8
 end
