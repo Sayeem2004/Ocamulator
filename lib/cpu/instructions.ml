@@ -76,6 +76,4 @@ module Instructions = struct
     let and_op (cpu : CPU.t) (mode : memory_mode) =
       let operand = decode_operand cpu mode in
       {cpu with accumulator = UInt8.logand operand.u8 cpu.accumulator}
-    
-    
 end
