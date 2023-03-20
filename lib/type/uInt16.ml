@@ -16,3 +16,15 @@ module UInt16 = struct
 end
 
 type uint16 = UInt16.t;;
+
+let ( +++ ) = UInt16.add
+let ( !++ ) = UInt16.succ
+let ( --- ) = UInt16.sub
+let ( !-- ) = UInt16.pred
+let ( *** ) = UInt16.mul
+let ( /// ) = UInt16.div
+let ( %%% ) = UInt16.rem
+let ( &&& ) = UInt16.logand
+let ( ||| ) = UInt16.logxor
+let ( <<< ) = UInt16.shift_left
+let ( >>> ) = UInt16.shift_right

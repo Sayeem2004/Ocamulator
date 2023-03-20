@@ -12,8 +12,11 @@ module F (M: UIntSet.S with type t := int) : UInt.S = struct
     let equal (ui1: t) (ui2: t) : bool = compare ui1 ui2 = 0;;
 
     let add (ui1: t) (ui2: t) : t = (ui1 + ui2) land max_value;;
+
     let sub (ui1: t) (ui2: t) : t = (ui1 - ui2) land max_value;;
+
     let mul (ui1: t) (ui2: t) : t = (ui1 * ui2) land max_value;;
+
     let div (ui1: t) (ui2: t) : t = (ui1 / ui2) land max_value;;
     let rem (ui1: t) (ui2: t) : t = (ui1 mod ui2) land max_value;;
 
