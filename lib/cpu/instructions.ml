@@ -44,13 +44,10 @@ module Instructions = struct
 
     let adc_op (cpu : CPU.t) (mode : memory_mode) =
       let add_op = decode_operand cpu mode in
-      {cpu with accumulator = (add_op |> UInt16.to_int |> UInt8.from_int) ++ cpu.accumulator }
+      {cpu with accumulator = (add_op |> UInt16.to_int |> UInt8.from_int) |> UInt8.add cpu.accumulator }
 
     let and_op (cpu : CPU.t) (mode : memory_mode) = 
       let add_op = decode_operand cpu mode in
-      {cpu with accumulator = (add_op |> UInt16.to_int |> UInt8.from_int) && cpu.accumulator }
+      {cpu with accumulator = (add_op |> UInt16.to_int |> UInt8.from_int) |> UInt8.logand cpu.accumulator }
 
-    let h (a : uint8) (b : uint8) =
-        let j : uint8 = (!+ a) in
-        j ++ b
 end
