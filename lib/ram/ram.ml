@@ -1,5 +1,6 @@
-open Lib__UInt8
-open Lib__UInt16
+open UInt8
+open UInt16
+open UIntVar.UIntVar
 
 module RAM = struct
     type t = {
@@ -12,14 +13,14 @@ module RAM = struct
         ram_memory = Array.init (0xFFF + 1) UInt8.from_int;
     };;
 
-    let read_ui8 (ram: t) (addr: uint16) : uint8 =
-        Array.get ram.ram_memory (UInt16.to_int addr)
-    ;;
-
-    let read_ui16 (ram: t) (addr: uint16) : uint16 =
-        let ui8_1 = Array.get ram.ram_memory (UInt16.to_int addr) in
-        let ui8_2 = Array.get ram.ram_memory (UInt16.to_int addr + 1) in
-        UInt16.ui16_combine_ui8 ui8_2 ui8_1
+    let read (ram: t) (addr: uint_var) : uint_var =
+        match addr with
+        | U8 _ -> U8 (Array.get ram.ram_memory (to_int addr))
+        | U16 _ ->
+            let ui8_1 = Array.get ram.ram_memory (to_int addr) in
+            let ui8_2 = Array.get ram.ram_memory (to_int addr + 1) in
+            U16 (UInt16.ui16_combine_ui8 ui8_2 ui8_1)
+        | _ -> raise (UnknownOperation "ram.ml memory address neither u8 or u16")
     ;;
 
     let write_ui8 (ram: t) (addr: uint16) (value: uint8) : unit =

@@ -11,14 +11,13 @@ module CPU : sig
     };;
 
     type t = {
-        accumulator : UInt8.uint8;
-        register_X : UInt8.uint8;
-        register_Y : UInt8.uint8;
-        program_counter : UInt16.uint16;
+        accumulator : UIntVar.UIntVar.uint_var;
+        register_X : UIntVar.UIntVar.uint_var;
+        register_Y : UIntVar.UIntVar.uint_var;
+        program_counter : UIntVar.UIntVar.uint_var;
         ram : Ram.RAM.t;
         flags : cpu_flags;
     };;
 
-    val fetch_ui8 : t -> UInt16.uint16 -> UInt8.uint8;;
-    val fetch_ui16 : t -> UInt16.uint16 -> UInt16.uint16;;
+    val fetch : t -> UIntVar.UIntVar.uint_var -> UIntVar.UIntVar.uint_var;;
 end
