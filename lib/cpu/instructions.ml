@@ -1,6 +1,6 @@
-open Lib__UInt8
-open Lib__UInt16
-open Lib__Cpu
+open UInt8
+open UInt16
+open Cpu
 
 module Instructions = struct
   type memory_mode =

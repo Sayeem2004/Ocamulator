@@ -1,6 +1,6 @@
-open Lib__UInt8
-open Lib__UInt16
-open Lib__Ram
+open UInt8
+open UInt16
+open Ram
 
 module CPU = struct
     type cpu_flags = {

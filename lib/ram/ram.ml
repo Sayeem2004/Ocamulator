@@ -1,5 +1,5 @@
-open Lib__UInt8
-open Lib__UInt16
+open UInt8
+open UInt16
 
 module RAM = struct
     type t = {

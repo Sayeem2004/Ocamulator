@@ -17,3 +17,21 @@ end
 
 type uint16 = UInt16.t;;
 
+(* TODO Add prefix operators to
+    1. Downcast from uint16 -> uint8
+    2. Upcast from uint8 -> uint16
+    Maybe?    !->    or !.
+              !^
+*)
+
+let ( +++ ) = UInt16.add
+let ( !++ ) = UInt16.succ
+let ( --- ) = UInt16.sub
+let ( !-- ) = UInt16.pred
+let ( *** ) = UInt16.mul
+let ( /// ) = UInt16.div
+let ( %%% ) = UInt16.rem
+let ( &&& ) = UInt16.logand
+let ( ||| ) = UInt16.logxor
+let ( <<< ) = UInt16.shift_left
+let ( >>> ) = UInt16.shift_right
