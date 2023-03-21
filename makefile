@@ -1,4 +1,4 @@
-.PHONY: build clean cloc install run test
+.PHONY: build clean cloc install run_main run_read test
 
 build:
 	dune build
@@ -10,10 +10,13 @@ cloc:
 	cloc --by-file --include-lang=OCaml .
 
 install:
-	opam install . --deps-only
+	./script/install.sh
 
-run:
-	dune exec bin/main.exe
+run_main:
+	OCAMLRUNPARAM=b dune exec bin/main.exe
+
+run_read:
+	OCAMLRUNPARAM=b dune exec bin/read.exe
 
 test:
-	dune exec test/main.exe
+	OCAMLRUNPARAM=b dune exec test/main.exe
