@@ -24,6 +24,12 @@ type uint16 = UInt16.t;;
               !^
 *)
 
+let ( ?^ ) i = Bool.to_int i |> UInt16.from_int
+let ( ?. ) i = Bool.to_int i |> UInt8.from_int
+
+let ( !^ ) = UInt16.ui16_from_ui8
+let ( !. ) i = UInt16.to_int i |> UInt8.from_int
+
 let ( +++ ) = UInt16.add
 let ( !++ ) = UInt16.succ
 let ( --- ) = UInt16.sub
