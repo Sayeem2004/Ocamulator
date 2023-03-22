@@ -9,7 +9,6 @@ module Decode = struct
         | AbsoluteX : uint16 -> uint16 memory_mode
         | AbsoluteY : uint16 -> uint16 memory_mode
         | Immediate : uint8 -> uint8 memory_mode
-        | Implied : uint8 option -> uint8 option memory_mode
         | Indirect : uint16 -> uint16 memory_mode
         | XIndirect : uint8 -> uint16 memory_mode
         | IndirectY : uint8 -> uint16 memory_mode
@@ -43,7 +42,6 @@ module Decode = struct
             !^(zero_addr_x ++ cpu.register_X) |> CPU.fetch_ui8 cpu
         | ZeropageY zero_addr_y ->
             !^(zero_addr_y ++ cpu.register_Y) |> CPU.fetch_ui8 cpu
-        | _ -> raise (Failure "AHHHH")
 
     let address (cpu : CPU.t) (type a) (mode : a memory_mode) : uint16 =
         match mode with
@@ -60,5 +58,8 @@ module Decode = struct
         | Zeropage zero_addr -> !^zero_addr
         | ZeropageX zero_addr_x -> !^(zero_addr_x ++ cpu.register_X)
         | ZeropageY zero_addr_y -> !^(zero_addr_y ++ cpu.register_Y)
-        | _ -> raise (Failure "AHHH")
+        | _ -> raise (Failure "Memory mode incompatible with decode address")
+
+    let overflow (op_1 : uint8) (op_2 : uint8) (res : uint8) : bool =
+        (?-op_1 && ?-op_2 && not ?-res) || ((not ?-op_1) && (not ?-op_2) && ?-res)
 end
