@@ -1,5 +1,6 @@
 (library
-    (name "lib")
-    (instrumentation
-        (backend bisect_ppx)))
+ (name "lib")
+ (instrumentation
+  (backend bisect_ppx)))
+
 (include_subdirs unqualified)

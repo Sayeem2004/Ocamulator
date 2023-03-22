@@ -1,6 +1,5 @@
-open OUnit2;;
+open OUnit2
+
 (* open Lib__Ram;; *)
 
-let (tests: test list) = List.flatten [
-
-];;
+let (tests : test list) = List.flatten []

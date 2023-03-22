@@ -8,7 +8,7 @@ module CPU : sig
         overflow : bool;
         break : bool;
         reserved : bool;
-    };;
+    }
 
     type t = {
         accumulator : UInt8.uint8;
@@ -17,8 +17,8 @@ module CPU : sig
         program_counter : UInt16.uint16;
         ram : Ram.RAM.t;
         flags : cpu_flags;
-    };;
+    }
 
-    val fetch_ui8 : t -> UInt16.uint16 -> UInt8.uint8;;
-    val fetch_ui16 : t -> UInt16.uint16 -> UInt16.uint16;;
+    val fetch_ui8 : t -> UInt16.uint16 -> UInt8.uint8
+    val fetch_ui16 : t -> UInt16.uint16 -> UInt16.uint16
 end

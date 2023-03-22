@@ -1,8 +1,8 @@
 module type S = sig
-    type t;;
+    type t
 
-    val max_value: t;;
-    val zero: t;;
-    val one: t;;
-    val size: int;;
+    val max_value : t
+    val zero : t
+    val one : t
+    val size : int
 end
