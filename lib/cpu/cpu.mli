@@ -24,7 +24,7 @@ module CPU : sig
         register_X : uint8;
         register_Y : uint8;
         program_counter : uint16;
-        stack_pointer : UInt8.uint8;
+        stack_pointer : uint8;
         ram : RAM.t;
         flags : cpu_flags;
     }

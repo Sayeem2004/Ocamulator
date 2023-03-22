@@ -25,4 +25,4 @@ let ( >> ) = UInt8.shift_right
 let ( ~. ) = UInt8.from_int
 let ( ?. ) i = Bool.to_int i |> UInt8.from_int
 let ( ?> ) u8_1 u8_2 = u8_1 ++ u8_2 <?> u8_1 < 0
-let ( ?- ) u8 = (u8 && ~.0b10000000) <-> UInt8.one
+let ( ?- ) u8 = (u8 &&. ~.0b10000000) <-> UInt8.one
