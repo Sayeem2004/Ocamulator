@@ -1,7 +1,7 @@
 open OUnit2
 
 let (tests : test) =
-    "Test Suite For NES Emulator"
+    "Test Suite For Ocamulator"
     >::: List.flatten
         [ UInt8Test.tests; UInt16Test.tests; CpuTest.tests; RamTest.tests ]
 

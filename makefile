@@ -1,5 +1,5 @@
-.PHONY: build clean install remove run_main run_read test cloc bisect coverage
-.PHONY: doc opendoc zip
+.PHONY: build clean install remove run_main run_read test format cloc bisect
+.PHONY: coverage doc opendoc zip
 
 ML_FILES = $(wildcard *.ml) $(wildcard */*.ml) $(wildcard */*/*.ml)
 MLI_FILES = $(wildcard *.mli) $(wildcard */*.mli) $(wildcard */*/*.mli)
@@ -53,5 +53,5 @@ opendoc: doc
 	@./util/opendoc.sh
 
 zip:
-	rm -f nes.zip
-	zip -r nes.zip . -x@util/exclude.lst
+	@rm -f nes.zip
+	@zip -r nes.zip . -x@util/exclude.lst

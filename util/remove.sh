@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Removing switch
-opam switch remove nes
+opam switch remove ocamulator

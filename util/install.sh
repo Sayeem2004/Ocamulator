@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Creating new switch
-opam switch create nes ocaml-base-compiler.4.14.0
-opam switch nes
+opam switch create ocamulator ocaml-base-compiler.4.14.0
+opam switch ocamulator
 
 # Installing dependencies
 opam install -y utop
