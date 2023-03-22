@@ -7,5 +7,5 @@ let main () : unit =
     print_endline "Parsing: Not Implemented";
     print_endline "Hex:     Not Implemented"
 
-(* Running main *)
+(** Running main. *)
 let _ = main ()

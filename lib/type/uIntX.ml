@@ -2,10 +2,10 @@ module F (M : UIntSet.S with type t := int) : UInt.S = struct
     type t = int
 
     let to_string (ui : t) : string = Printf.sprintf "$%04X" ui
-    let (max_value : t) = M.max_value
-    let (zero : t) = M.zero
-    let (one : t) = M.one
-    let (size : int) = M.size
+    let max_value : t = M.max_value
+    let zero : t = M.zero
+    let one : t = M.one
+    let size : int = M.size
     let compare (ui1 : t) (ui2 : t) : int = Stdlib.compare ui1 ui2
     let equal (ui1 : t) (ui2 : t) : bool = compare ui1 ui2 = 0
     let add (ui1 : t) (ui2 : t) : t = (ui1 + ui2) land max_value

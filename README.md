@@ -6,23 +6,9 @@ usage instructions are below along with a more detailed description of the proje
 
 ## Installation/Usage
 
-`git clone git@github.com:Sayeem2004/3110Project.git` Cloning the repository.
+Installation and usage instructions can be found in [INSTALL.md](info/INSTALL.md).
 
-`cd 3110Project` Entering the repository directory.
-
-`make install` Creating a new opam switch and installing the dependencies.
-
-`make build` Compiling the project.
-
-`make test` Running the test cases.
-
-`make run_read` To run the hex reading portion of the project.
-
-`make run_main` To run the main emulator of the project (currently a work in progress).
-
-## Further Description
-
-### Goals
+## Goals
 
 - [X] Use Git and GitHub to facilitate our development process.
 - [X] Develop the appropriate structure and utilities for a project of this size.
@@ -52,7 +38,7 @@ usage instructions are below along with a more detailed description of the proje
 - [ ] Develop an AI to attempt to play Super Mario Bros. ROM file. (Reach goal)
 - [ ] Test AI against friends and see who can get the highest score. (Reach goal)
 
-### Makefile Commands
+## Makefile Commands
 
 `make build` Compiles and builds the project.
 
@@ -82,7 +68,7 @@ usage instructions are below along with a more detailed description of the proje
 
 `make zip` Zips all necessary components of the project.
 
-### Project Structure
+## Project Structure
 
 ```txt
 bin:                      Contains project executables
@@ -141,7 +127,7 @@ INSTALL.md:               (Installation instructions and information)
 makefile:                 (Makefile for using the project)
 ```
 
-### Credits
+## Credits
 
 Ocamulator was created by Mohammad Khan, Pablo Raigoza, and Evan Vera.
 However, we did have a lot of help from the following sources:

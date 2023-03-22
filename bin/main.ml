@@ -12,5 +12,5 @@ let main () : unit =
     print_endline "RAM:      Not Implemented...";
     print_endline "Graphics: Not Implemented..."
 
-(* Running main *)
+(** Running main. *)
 let _ = main ()

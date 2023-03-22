@@ -1,13 +1,18 @@
 open OUnit2
 open Lib__UInt
 
+(** Functor that tests a generic UInt type. *)
 module F (M : S) = struct
+    (** [over] is an integer that is gauranteed to overflow an unsigned int. *)
     let (over : int) = M.to_int M.max_value + 1
 
+    (** [compare_test name a b expected] tests equivalence between [compare a b]
+        and [expected]. *)
     let compare_test (name : string) (a : M.t) (b : M.t) (expected : int) : test =
         name >:: fun _ ->
             assert_equal expected (M.compare a b) ~printer:string_of_int
 
+    (** Compare tests to be run. *)
     let (compare_tests : test list) =
         [
             compare_test "Compare Zero Zero -> 0" M.zero M.zero 0;
@@ -19,10 +24,13 @@ module F (M : S) = struct
             compare_test "Compare Over Ones -> -1" (M.from_int over) M.one (-1);
         ]
 
+    (** [equal_test name a b expected] tests equivalence between [equal a b]
+        and [expected]. *)
     let equal_test (name : string) (a : M.t) (b : M.t) (expected : bool) : test =
         name >:: fun _ ->
             assert_equal expected (M.equal a b) ~printer:string_of_bool
 
+    (** Equal tests to be run. *)
     let (equal_tests : test list) =
         [
             equal_test "Equal Zero Zero -> true" M.zero M.zero true;
@@ -34,9 +42,12 @@ module F (M : S) = struct
             equal_test "Equal Over Ones -> false" (M.from_int over) M.one false;
         ]
 
+    (** [add_test name a b expected] tests equivalence between [add a b] and
+        [expected]. *)
     let add_test (name : string) (a : M.t) (b : M.t) (expected : M.t) : test =
         name >:: fun _ -> assert_equal expected (M.add a b) ~printer:M.to_string
 
+    (** Add tests to be run. *)
     let (add_tests : test list) =
         [
             add_test "Add Zero Zero -> Zero" M.zero M.zero M.zero;
@@ -48,9 +59,12 @@ module F (M : S) = struct
             add_test "Add Over Zero -> Zero" (M.from_int over) M.zero M.zero;
         ]
 
+    (** [sub_test name a b expected] tests equivalence between [sub a b] and
+        [expected]. *)
     let sub_test (name : string) (a : M.t) (b : M.t) (expected : M.t) : test =
         name >:: fun _ -> assert_equal expected (M.sub a b) ~printer:M.to_string
 
+    (** Sub tests to be run. *)
     let (sub_tests : test list) =
         [
             sub_test "Sub Zero Zero -> Zero" M.zero M.zero M.zero;
@@ -62,9 +76,12 @@ module F (M : S) = struct
             sub_test "Sub Over Zero -> Zero" (M.from_int over) M.zero M.zero;
         ]
 
+    (** [mul_test name a b expected] tests equivalence between [mul a b] and
+        [expected]. *)
     let mul_test (name : string) (a : M.t) (b : M.t) (expected : M.t) : test =
         name >:: fun _ -> assert_equal expected (M.mul a b) ~printer:M.to_string
 
+    (** Mul tests to be run. *)
     let (mul_tests : test list) =
         [
             mul_test "Mul Zero Zero -> Zero" M.zero M.zero M.zero;
@@ -76,9 +93,12 @@ module F (M : S) = struct
             mul_test "Mul Over Ones -> Zero" (M.from_int over) M.one M.zero;
         ]
 
+    (** [div_test name a b expected] tests equivalence between [div a b] and
+        [expected]. *)
     let div_test (name : string) (a : M.t) (b : M.t) (expected : M.t) : test =
         name >:: fun _ -> assert_equal expected (M.div a b) ~printer:M.to_string
 
+    (** Div tests to be run. *)
     let (div_tests : test list) =
         [
             div_test "Div Zero Ones -> Zero" M.zero M.one M.zero;
@@ -87,9 +107,12 @@ module F (M : S) = struct
             div_test "Div Over Ones -> Zero" (M.from_int over) M.one M.zero;
         ]
 
+    (** [rem_test name a b expected] tests equivalence between [rem a b] and
+        [expected]. *)
     let rem_test (name : string) (a : M.t) (b : M.t) (expected : M.t) : test =
         name >:: fun _ -> assert_equal expected (M.rem a b) ~printer:M.to_string
 
+    (** Rem tests to be run. *)
     let (rem_tests : test list) =
         [
             rem_test "Rem Zero Ones -> Zero" M.zero M.one M.zero;
@@ -98,27 +121,36 @@ module F (M : S) = struct
             rem_test "Rem Over Ones -> Zero" (M.from_int over) M.one M.zero;
         ]
 
+    (** [succ_test name a expected] tests equivalence between [succ a] and
+        [expected] *)
     let succ_test (name : string) (a : M.t) (expected : M.t) : test =
         name >:: fun _ -> assert_equal expected (M.succ a) ~printer:M.to_string
 
+    (** Succ tests to be run. *)
     let (succ_tests : test list) =
         [
             succ_test "Succ Zero -> Ones" M.zero M.one;
             succ_test "Succ Maxx -> Zero" M.max_value M.zero;
         ]
 
+    (** [pred_test name a expected] tests equivalence between [pred a] and
+        [expected] *)
     let pred_test (name : string) (a : M.t) (expected : M.t) : test =
         name >:: fun _ -> assert_equal expected (M.pred a) ~printer:M.to_string
 
+    (** Pred tests to be run. *)
     let (pred_tests : test list) =
         [
             pred_test "Pred Ones -> Zero" M.one M.zero;
             pred_test "Pred Zero -> Maxx" M.zero M.max_value;
         ]
 
+    (** [logand_test name a b expected] tests equivalence between [logand a b] and
+        [expected]. *)
     let logand_test (name : string) (a : M.t) (b : M.t) (expected : M.t) : test =
         name >:: fun _ -> assert_equal expected (M.logand a b) ~printer:M.to_string
 
+    (** Logand tests to be run. *)
     let (logand_tests : test list) =
         [
             logand_test "Logand Zero Zero -> Zero" M.zero M.zero M.zero;
@@ -130,9 +162,12 @@ module F (M : S) = struct
             logand_test "Logand Over Ones -> Zero" (M.from_int over) M.one M.zero;
         ]
 
+    (** [logor_test name a b expected] tests equivalence between [logor a b] and
+        [expected]. *)
     let logor_test (name : string) (a : M.t) (b : M.t) (expected : M.t) : test =
         name >:: fun _ -> assert_equal expected (M.logor a b) ~printer:M.to_string
 
+    (** Logor tests to be run. *)
     let (logor_tests : test list) =
         [
             logor_test "Logor Zero Zero -> Zero" M.zero M.zero M.zero;
@@ -144,9 +179,12 @@ module F (M : S) = struct
             logor_test "Logor Over Ones -> Ones" (M.from_int over) M.one M.one;
         ]
 
+    (** [logxor_test name a b expected] tests equivalence between [logxor a b] and
+        [expected]. *)
     let logxor_test (name : string) (a : M.t) (b : M.t) (expected : M.t) : test =
         name >:: fun _ -> assert_equal expected (M.logxor a b) ~printer:M.to_string
 
+    (** Logxor tests to be run. *)
     let (logxor_tests : test list) =
         [
             logxor_test "Logxor Zero Zero -> Zero" M.zero M.zero M.zero;
@@ -159,11 +197,14 @@ module F (M : S) = struct
             logxor_test "Logxor Over Ones -> Ones" (M.from_int over) M.one M.one;
         ]
 
+    (** [shift_left_test name a b expected] tests equivalence between
+        [shift_left a b] and [expected]. *)
     let shift_left_test (name : string) (a : M.t) (b : int) (expected : M.t) :
         test =
         name >:: fun _ ->
             assert_equal expected (M.shift_left a b) ~printer:M.to_string
 
+    (** Shift_left tests to be run. *)
     let (shift_left_tests : test list) =
         [
             shift_left_test "Shift_left Zero 0 -> Zero" M.zero 0 M.zero;
@@ -178,11 +219,14 @@ module F (M : S) = struct
                 (M.pred M.max_value);
         ]
 
+    (** [shift_right_test name a b expected] tests equivalence between
+        [shift_right a b] and [expected]. *)
     let shift_right_test (name : string) (a : M.t) (b : int) (expected : M.t) :
         test =
         name >:: fun _ ->
             assert_equal expected (M.shift_right a b) ~printer:M.to_string
 
+    (** Shift_right tests to be run. *)
     let (shift_right_tests : test list) =
         [
             shift_right_test "Shift_right Zero 0 -> Zero" M.zero 0 M.zero;
@@ -198,9 +242,12 @@ module F (M : S) = struct
                 (M.size - 1) M.one;
         ]
 
+    (** [from_int_test name a expected] tests equivalence between [from_int a] and
+        [expected]. *)
     let from_int_test (name : string) (a : int) (expected : M.t) : test =
         name >:: fun _ -> assert_equal expected (M.from_int a) ~printer:M.to_string
 
+    (** From_int tests to be run. *)
     let (from_int_tests : test list) =
         [
             from_int_test "From_int Zero -> Zero" 0 M.zero;
@@ -209,9 +256,12 @@ module F (M : S) = struct
             from_int_test "From_int Over -> Zero" over M.zero;
         ]
 
+    (** [to_int_test name a expected] tests equivalence between [to_int a] and
+        [expected]. *)
     let to_int_test (name : string) (a : M.t) (expected : int) : test =
         name >:: fun _ -> assert_equal expected (M.to_int a) ~printer:string_of_int
 
+    (** To_int tests to be run. *)
     let (to_int_tests : test list) =
         [
             to_int_test "To_int Zero -> 0" M.zero 0;
@@ -219,10 +269,13 @@ module F (M : S) = struct
             to_int_test "To_int Maxx -> Maxx" M.max_value (over - 1);
         ]
 
+    (** [to_string_test name a expected] tests equivalence between [to_string a]
+        and [expected]. *)
     let to_string_test (name : string) (input : M.t) (expected : string) : test =
         name >:: fun _ ->
             assert_equal expected (M.to_string input) ~printer:(fun x -> x)
 
+    (** UIntX tests to be run. *)
     let (tests : test list) =
         List.flatten
             [
