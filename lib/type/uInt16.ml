@@ -24,6 +24,19 @@ type uint16 = UInt16.t;;
               !^
 *)
 
+let ( <?> ) u8_1 u8_2 = UInt8.compare u8_1 u8_2
+let ( <??> ) u16_1 u16_2 = UInt16.compare u16_1 u16_2
+
+let ( <-> ) u8_1 u8_2 = u8_1 <?> u8_2 = 0
+let ( <--> ) u16_1 u16_2 = u16_1 <??> u16_2 = 0
+
+let ( ~^ ) = UInt16.from_int
+let ( ~. ) = UInt8.from_int
+
+let ( ?> ) u8_1 u8_2 = u8_1 ++ u8_2 <?> u8_1 < 0
+let ( ?- ) u8 = (u8 && ~. (0b10000000)) <-> UInt8.zero
+let ( ?* ) u8 = UInt8.compare u8 UInt8.zero = 0
+
 let ( ?^ ) i = Bool.to_int i |> UInt16.from_int
 let ( ?. ) i = Bool.to_int i |> UInt8.from_int
 
