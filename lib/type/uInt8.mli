@@ -39,6 +39,9 @@ val ( %% ) : uint8 -> uint8 -> uint8
 val ( &&. ) : uint8 -> uint8 -> uint8
 (** Infix alias for UInt8.logand. *)
 
+val ( |/. ) : uint8 -> uint8 -> uint8
+(** Infix alias for UInt8.logxor. *)
+
 val ( ||. ) : uint8 -> uint8 -> uint8
 (** Infix alias for UInt8.logor. *)
 
@@ -59,6 +62,9 @@ val ( ?> ) : uint8 -> uint8 -> bool
 
 val ( ?- ) : uint8 -> bool
 (** Returns true if the most significant bit of a uint8 is [1]. *)
+
+val ( ?+ ) : uint8 -> bool
+(** Returns true if the least significant bit of a uint8 is [1]. *)
 
 val ( ?* ) : uint8 -> bool
 (** Returns true if the [uint8] is [0]. *)
