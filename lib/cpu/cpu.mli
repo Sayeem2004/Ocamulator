@@ -31,15 +31,16 @@ module CPU : sig
     (** [CPU.t] is a record type containing all necessary data types that a CPU
         could possibly interact with.  *)
 
-    val flags_ui8 : t -> UInt8.uint8;; 
+    val flags_ui8 : t -> uint8;; 
 
+    val fetch_ui8 : t -> uint16 -> uint8
     val fetch_ui16 : t -> uint16 -> uint16
     (** [fetch_ui16 cpu addr] is the [uint16] found in the index [addr] in the
         RAM array. *)
-    val write_ui8 : t -> UInt16.uint16 -> UInt8.uint8 -> unit;;
+    val write_ui8 : t -> uint16 -> uint8 -> unit;;
 
-    val push_stack_u8 : t -> UInt8.uint8 -> t
-    val push_stack_u16 : t -> UInt16.uint16 -> t
-    val peek_stack : t -> UInt8.uint8
+    val push_stack_u8 : t -> uint8 -> t
+    val push_stack_u16 : t -> uint16 -> t
+    val peek_stack : t -> uint8
     val pop_stack : t -> t
 end
