@@ -2,7 +2,7 @@ open UInt8
 open UInt16
 open Cpu
 
-module Instructions = struct
+module Decode = struct
     type _ memory_mode =
         | Accumulator : uint8 memory_mode
         | Absolute : uint16 -> uint16 memory_mode
@@ -18,7 +18,7 @@ module Instructions = struct
         | ZeropageX : uint8 -> uint16 memory_mode
         | ZeropageY : uint8 -> uint16 memory_mode
 
-    let decode_contents (cpu : CPU.t) (type a) (mode : a memory_mode) : uint8 =
+    let contents (cpu : CPU.t) (type a) (mode : a memory_mode) : uint8 =
         match mode with
         | Accumulator -> cpu.accumulator
         | Absolute abs_addr -> CPU.fetch_ui8 cpu abs_addr
@@ -45,7 +45,7 @@ module Instructions = struct
             !^(zero_addr_y ++ cpu.register_Y) |> CPU.fetch_ui8 cpu
         | _ -> raise (Failure "AHHHH")
 
-    let decode_address (cpu : CPU.t) (type a) (mode : a memory_mode) : uint16 =
+    let address (cpu : CPU.t) (type a) (mode : a memory_mode) : uint16 =
         match mode with
         | Absolute abs_addr -> abs_addr
         | AbsoluteX abs_addr_x ->
@@ -61,15 +61,4 @@ module Instructions = struct
         | ZeropageX zero_addr_x -> !^(zero_addr_x ++ cpu.register_X)
         | ZeropageY zero_addr_y -> !^(zero_addr_y ++ cpu.register_Y)
         | _ -> raise (Failure "AHHH")
-
-    let adc_op (cpu : CPU.t) (type a) (mode : a memory_mode) : CPU.t =
-        let operand = decode_contents cpu mode in
-        let summed_acc = cpu.accumulator ++ operand in
-        let carry = ?>operand summed_acc in
-        let neg_bit = ?-summed_acc in
-        {
-            cpu with
-            accumulator = summed_acc;
-            flags = { cpu.flags with carr_bit = carry; negative = neg_bit };
-        }
 end
