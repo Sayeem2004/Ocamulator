@@ -1,4 +1,5 @@
 (test
-    (name "main")
-    (libraries "ounit2" "lib"))
+ (name "main")
+ (libraries "ounit2" "lib"))
+
 (include_subdirs unqualified)

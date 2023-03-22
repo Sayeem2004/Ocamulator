@@ -1,6 +1,5 @@
-open OUnit2;;
-(* open Lib__Ram;; *)
+open OUnit2
+open Lib__Ram
 
-let (tests: test list) = List.flatten [
-
-];;
+(** RAM tests to be run. *)
+let (tests : test list) = List.flatten []

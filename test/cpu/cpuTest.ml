@@ -1,6 +1,5 @@
-open OUnit2;;
-(* open Lib__Cpu;; *)
+open OUnit2
+open Lib__Cpu
 
-let (tests: test list) = List.flatten [
-
-];;
+(** CPU tests to be run. *)
+let (tests : test list) = List.flatten []

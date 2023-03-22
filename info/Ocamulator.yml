@@ -1,0 +1,27 @@
+---
+group:
+    -
+        name: Mohammad Khan
+        netid: msk295
+    -
+        name: Pablo Raigoza
+        netid: pr428
+    -
+        name: Evan Vera
+        netid: erv29
+pm:
+    name: Leo Zhao
+    netid: lz527
+publish: true
+title: "Ocamulator"
+git-repo: "https://github.com/Sayeem2004/Ocamulator"
+demo-video-url: ""
+desc: >
+    Ocamulator is a NES emulator written in OCaml. A NES emulator is an engine
+    that simulates the hardware of the Nintendo Entertainment System, allowing
+    older games like Super Mario Bros. to be played on modern computers.
+    Ocamulator supports a command line interface that allows users to enter the
+    path to a ROM file. After the ROM file is parsed a GUI is displayed that is
+    connected to the keyboard. All visual and audio effects from the original
+    game should be present, and there should be bonus emulator features such as
+    speeding up the game or creating new keybindings.

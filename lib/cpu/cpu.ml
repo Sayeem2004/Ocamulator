@@ -4,15 +4,15 @@ open Ram
 
 module CPU = struct
     type cpu_flags = {
-        carr_bit: bool;
-        zero: bool;
-        interrupt: bool;
-        decimal: bool;
-        negative: bool;
-        overflow: bool;
-        break: bool;
-        reserved: bool;
-    };;
+        carr_bit : bool;
+        zero : bool;
+        interrupt : bool;
+        decimal : bool;
+        negative : bool;
+        overflow : bool;
+        break : bool;
+        reserved : bool;
+    }
 
     type t = {
         accumulator: uint8;
