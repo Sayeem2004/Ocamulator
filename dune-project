@@ -1,11 +1,11 @@
 (lang dune 3.6)
-(name "NES Emulator")
+(name "Emulator")
 (source (github "Sayeem2004/3110Project"))
 (authors "Mohammad Khan" "Pablo Raigoza" "Evan Vera")
 (maintainers "Mohammad Khan" "Pablo Raigoza" "Evan Vera")
 (license MIT)
 (package
-    (name "NES Emulator")
+    (name "Emulator")
     (synopsis "This package parses NES ROMs and runs them.")
     (description "This package parses NES ROMs and runs them.")
     (depends ocaml dune)

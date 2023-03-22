@@ -1,0 +1,6 @@
+break-cases = fit-or-vertical
+exp-grouping = preserve
+parse-docstrings = true
+profile = conventional
+type-decl = sparse
+wrap-comments = true

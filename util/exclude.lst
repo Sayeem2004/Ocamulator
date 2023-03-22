@@ -1,0 +1,4 @@
+_build/*
+_coverage/*
+.DS_Store
+*.zip

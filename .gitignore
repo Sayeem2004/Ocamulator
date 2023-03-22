@@ -1,7 +1,19 @@
 # General Stuff
 .DS_Store
+*.swp
+*~
+\#*\#
 assignment/
+
+# Ocaml
+*.cmo
+*.cma
+*.cmi
+*.out
+*.cmx
+*.native
+*.byte
 
 # Dune / Opam
 _build/
-*.opam
+_coverage/
