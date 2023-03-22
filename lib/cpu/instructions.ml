@@ -297,7 +297,7 @@ module Instructions = struct
         let jmp_addr = decode_address cpu mode in
         {cpu with program_counter = jmp_addr}
     
-    let jsr (cpu : CPU.t) (type a) (mode : a memory_mode) : CPU.t =
+    let jsr_op (cpu : CPU.t) (type a) (mode : a memory_mode) : CPU.t =
         let return_point = cpu.program_counter --- ~^ 0x0001 in
         let pushed_cpu = CPU.push_stack_u16 cpu return_point in
         let jmp_addr = decode_address pushed_cpu mode in
