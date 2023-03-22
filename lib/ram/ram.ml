@@ -8,7 +8,10 @@ module RAM = struct
     }
 
     let nes_zero_ram =
-        { max_mem = 0xFFFF + 1; ram_memory = Array.init (0xFFF + 1) UInt8.from_int }
+        {
+            max_mem = 0xFFFF + 1;
+            ram_memory = Array.init (0xFFFF + 1) (fun x -> UInt8.zero);
+        }
 
     let read_ui8 (ram : t) (addr : uint16) : uint8 =
         Array.get ram.ram_memory (UInt16.to_int addr)
