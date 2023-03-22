@@ -33,6 +33,5 @@ let ( <<< ) = UInt16.shift_left
 let ( >>> ) = UInt16.shift_right
 let ( ~^ ) = UInt16.from_int
 let ( ?^ ) i = Bool.to_int i |> UInt16.from_int
-let ( ?. ) i = Bool.to_int i |> UInt8.from_int
 let ( !^ ) = UInt16.ui16_from_ui8
 let ( !. ) i = UInt16.to_int i |> UInt8.from_int
