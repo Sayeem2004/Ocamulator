@@ -61,4 +61,4 @@ val ( ?- ) : uint8 -> bool
 (** Returns true if the most significant bit of a uint8 is [1]. *)
 
 val ( ?* ) : uint8 -> bool
-(** Returns true if this uint9 is equal to UInt8.zero *)
+(** Returns true if the [uint8] is [0]. *)

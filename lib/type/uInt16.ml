@@ -18,9 +18,6 @@ end
 
 type uint16 = UInt16.t
 
-(* TODO Add prefix operators to 1. Downcast from uint16 -> uint8 2. Upcast from
-   uint8 -> uint16 Maybe? !-> or !. !^ *)
-
 let ( <??> ) = UInt16.compare
 let ( <--> ) = UInt16.equal
 let ( +++ ) = UInt16.add
@@ -36,6 +33,5 @@ let ( <<< ) = UInt16.shift_left
 let ( >>> ) = UInt16.shift_right
 let ( ~^ ) = UInt16.from_int
 let ( ?^ ) i = Bool.to_int i |> UInt16.from_int
-let ( ?. ) i = Bool.to_int i |> UInt8.from_int
 let ( !^ ) = UInt16.ui16_from_ui8
 let ( !. ) i = UInt16.to_int i |> UInt8.from_int

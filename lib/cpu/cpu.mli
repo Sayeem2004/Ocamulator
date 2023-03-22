@@ -31,16 +31,41 @@ module CPU : sig
     (** [CPU.t] is a record type containing all necessary data types that a CPU
         could possibly interact with.  *)
 
-    val flags_ui8 : t -> uint8;; 
+    val flags_ui8 : t -> uint8
+    (** [flags_ui8 cpu] is the [uint8] representation of the [cpu] flags. *)
 
     val fetch_ui8 : t -> uint16 -> uint8
+    (** [fetch_ui8 cpu addr] is the [uint8] found in the index [addr] in the RAM
+        array. *)
+
     val fetch_ui16 : t -> uint16 -> uint16
     (** [fetch_ui16 cpu addr] is the [uint16] found in the index [addr] in the
         RAM array. *)
-    val write_ui8 : t -> uint16 -> uint8 -> unit;;
+
+    val write_ui8 : t -> uint16 -> uint8 -> unit
+    (** [write_ui8 cpu addr value] writes [value] to the index [addr] in the
+        RAM array. *)
+
+    val write_ui16 : t -> uint16 -> uint16 -> unit
+    (** [write_ui16 cpu addr value] writes [value] to the index [addr] in the
+        RAM array. *)
+
+    val absolute_loc_stack : t -> uint16
+    (** [absolute_loc_stack cpu] is the absolute location of the stack pointer
+        in the RAM array. *)
 
     val push_stack_u8 : t -> uint8 -> t
+    (** [push_stack_u8 cpu value] pushes [value] to the stack and updates the
+        position of the stack_pointer. *)
+
     val push_stack_u16 : t -> uint16 -> t
+    (** [push_stack_u16 cpu value] pushes [value] to the stack and updates the
+        position of the stack_pointer. *)
+
     val peek_stack : t -> uint8
+    (** [peek_stack cpu] is the [uint8] value at the top of the stack. *)
+
     val pop_stack : t -> t
+    (** [pop_stack cpu] pops the top value of the stack and updates the position
+        of the stack_pointer. *)
 end
