@@ -1,5 +1,5 @@
 open OUnit2
-open Lib__Cpu
+open Lib__Decode
 
-(** Cpu tests to be run. *)
+(** Decode tests to be run. *)
 let (tests : test list) = List.flatten []

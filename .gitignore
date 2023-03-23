@@ -3,8 +3,12 @@
 *.swp
 *~
 \#*\#
+
+# Project Specific
 assignment/
+data/
 *.zip
+*.nes
 
 # Ocaml
 *.cmo
