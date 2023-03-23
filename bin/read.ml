@@ -9,7 +9,7 @@ let pp_cpu (cpu : CPU.t) : unit =
     print_endline ("    Accumulator: " ^ UInt8.to_string cpu.accumulator);
     print_endline ("    Register X: " ^ UInt8.to_string cpu.register_X);
     print_endline ("    Register Y: " ^ UInt8.to_string cpu.register_Y);
-    print_endline ("    Program Counter: " ^ UInt8.to_string cpu.register_Y);
+    print_endline ("    Program Counter: " ^ UInt16.to_string cpu.program_counter);
     print_endline ("    Stack Pointer: " ^ UInt16.to_string (~^ 0x01 +++ !^ (cpu.stack_pointer)));
     print_endline ("    Flags: " ^ UInt8.to_string (CPU.flags_ui8 cpu));
     print_endline "}"
@@ -27,6 +27,7 @@ let rec step (cpu : CPU.t) : unit =
     | exception End_of_file -> ()
     | command -> if (command = "Quit") then () else
         let opcode = fetch_current_opcode cpu in
+        let _ = print_endline (UInt8.to_string opcode) in
         let cpu_stepped_pc = step_cpu_pc cpu in
         let stepped_cpu = Opcode.step cpu_stepped_pc opcode in
         step (stepped_cpu)
@@ -47,8 +48,9 @@ let main () : unit =
         let nes_channel_in = open_in file_dir in
         let nes_rom_buffer = Bytes.make 0xFFFF ' ' in
         let _ = In_channel.input nes_channel_in nes_rom_buffer 0 0xFFFF in
+        (*let _ = print_endline (Bytes.to_string nes_rom_buffer) in*)
         let nes_ram_rom = RAM.nes_ram nes_rom_buffer in
-        let init_pc = RAM.read_ui16 nes_ram_rom (~^ 0xFFFC) in
+        let init_pc = ~^ 0x10 in
         let new_nes_cpu = CPU.nes_cpu init_pc nes_ram_rom in
         step new_nes_cpu
 
