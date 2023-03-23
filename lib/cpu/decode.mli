@@ -35,7 +35,9 @@ module Decode : sig
     (** [overflow a b c] is true if the addition of [a] and [b] overflows
         [c]. *)
 
-    val opcode : CPU.t -> uint8 -> CPU.t
-    (** [opcode cpu op] is the CPU after running the instruction represented by
-        [op]. *)
+    val incr_cpu_pc : CPU.t -> int -> CPU.t
+
+    val fetch_uint8_op : CPU.t -> uint8
+
+    val fetch_uint16_op : CPU.t -> uint16
 end

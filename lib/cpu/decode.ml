@@ -1,7 +1,6 @@
 open UInt8
 open UInt16
 open Cpu
-open Instruction
 
 module Decode = struct
     type _ memory_mode =
@@ -64,14 +63,10 @@ module Decode = struct
     let overflow (op_1 : uint8) (op_2 : uint8) (res : uint8) : bool =
         (?-op_1 && ?-op_2 && not ?-res) || ((not ?-op_1) && (not ?-op_2) && ?-res)
 
-    (* let incr_cpu_pc (cpu : CPU.t) (size : int) : CPU.t =
-        { cpu with program_counter = cpu.program_counter +++ ~^(size) } *)
+    let incr_cpu_pc (cpu : CPU.t) (size : int) : CPU.t =
+        { cpu with program_counter = cpu.program_counter +++ ~^(size) }
 
-    (* let fetch_uint8_op (cpu : CPU.t) : uint8 = CPU.fetch_ui8 cpu cpu.program_counter
-    let fetch_uint16_op (cpu : CPU.t) : uint16 = CPU.fetch_ui16 cpu cpu.program_counter *)
+    let fetch_uint8_op (cpu : CPU.t) : uint8 = CPU.fetch_ui8 cpu cpu.program_counter
 
-    (* let opcode (cpu : CPU.t) (mode : uint8) : CPU.t =
-        match UInt8.to_int mode with
-        | 0x00 -> incr_cpu_pc cpu 0 |> Instruction.brk_op
-        | _ -> raise (Failure "Invalid opcode") *)
+    let fetch_uint16_op (cpu : CPU.t) : uint16 = CPU.fetch_ui16 cpu cpu.program_counter
 end
