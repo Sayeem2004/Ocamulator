@@ -14,16 +14,21 @@ let pp_cpu (cpu : CPU.t) : unit =
     print_endline ("    Flags: " ^ UInt8.to_string (CPU.flags_ui8 cpu));
     print_endline "}"
 
-let fetch_next_opcode (cpu : CPU.t) : uint8 =
+let fetch_current_opcode (cpu : CPU.t) : uint8 =
     CPU.fetch_current_instruction cpu
+
+let step_cpu_pc (cpu : CPU.t) : CPU.t =
+    {cpu with program_counter = cpu.program_counter +++ ~^ 1}
 
 let rec step (cpu : CPU.t) : unit =
     pp_cpu cpu;
     print_endline "Step:";
     match read_line() with
     | exception End_of_file -> ()
-    | command -> if (command = "Quit") then () else 
-        let stepped_cpu = Opcode.step cpu (fetch_next_opcode cpu) in
+    | command -> if (command = "Quit") then () else
+        let opcode = fetch_current_opcode cpu in
+        let cpu_stepped_pc = step_cpu_pc cpu in
+        let stepped_cpu = Opcode.step cpu_stepped_pc opcode in
         step (stepped_cpu)
 
 (**)
