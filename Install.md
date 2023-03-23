@@ -10,6 +10,9 @@
 
 `make test` Running the test cases.
 
-`make run_read` To run the hex reading portion of the project.
+`make run_read` To run the hex reading portion of the project. When prompted for
+a file, enter the name of the file you want to run in ./data, with the correct
+file extension. When prompted from "Step: ", press "Enter" to keep stepping CPU
+or type "quit" or "exit" to end.
 
-`make run_main` To run the main emulator of the project (currently a work in progress).
+`make run_main` To run the main emulator of the project (currently a work in progress, and does nothing).
