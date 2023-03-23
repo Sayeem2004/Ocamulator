@@ -27,8 +27,8 @@ module RAM = struct
 
     let write_ui16 (ram : t) (addr : uint16) (value : uint16) : unit =
         let mem_addr_int = UInt16.to_int addr in
-        let least_sig_bit = !. value in
-        let most_sig_bit = !. (value >>> 8) in
+        let least_sig_bit = !.value in
+        let most_sig_bit = !.(value >>> 8) in
         Array.set ram.ram_memory mem_addr_int least_sig_bit;
         Array.set ram.ram_memory (mem_addr_int + 1) most_sig_bit
 end

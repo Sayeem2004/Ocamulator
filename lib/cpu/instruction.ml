@@ -4,7 +4,7 @@ open Cpu
 open Decode
 
 module Instruction = struct
-    let adc_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let adc_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let operand = Decode.contents cpu mode in
         let summed_acc = cpu.accumulator ++ operand ++ ?.(cpu.flags.carr_bit) in
         let overflow = Decode.overflow operand cpu.accumulator summed_acc in
@@ -23,7 +23,7 @@ module Instruction = struct
                 };
         }
 
-    let and_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let and_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let operand = Decode.contents cpu mode in
         let modif_acc = cpu.accumulator &&. operand in
         let zero_bit = ?*modif_acc in
@@ -34,7 +34,7 @@ module Instruction = struct
             flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
 
-    let asl_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let asl_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         match mode with
         | Accumulator ->
             let shifted_acc = cpu.accumulator << 1 in
@@ -71,25 +71,25 @@ module Instruction = struct
                     };
             }
 
-    let bcc_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let bcc_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         if not cpu.flags.carr_bit then
             let branch_addr = Decode.address cpu mode in
             { cpu with program_counter = branch_addr }
         else cpu
 
-    let bcs_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let bcs_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         if cpu.flags.carr_bit then
             let branch_addr = Decode.address cpu mode in
             { cpu with program_counter = branch_addr }
         else cpu
 
-    let beq_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let beq_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         if cpu.flags.zero then
             let branch_addr = Decode.address cpu mode in
             { cpu with program_counter = branch_addr }
         else cpu
 
-    let bit_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let bit_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
         let zero_bit = ?*(mem_contents &&. cpu.accumulator) in
         let bit_6 = ?-(mem_contents << 1) in
@@ -100,19 +100,19 @@ module Instruction = struct
                 { cpu.flags with zero = zero_bit; overflow = bit_6; negative = bit_7 };
         }
 
-    let bmi_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let bmi_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         if cpu.flags.negative then
             let branch_addr = Decode.address cpu mode in
             { cpu with program_counter = branch_addr }
         else cpu
 
-    let bne_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let bne_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         if not cpu.flags.zero then
             let branch_addr = Decode.address cpu mode in
             { cpu with program_counter = branch_addr }
         else cpu
 
-    let bpl_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let bpl_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         if not cpu.flags.negative then
             let branch_addr = Decode.address cpu mode in
             { cpu with program_counter = branch_addr }
@@ -129,13 +129,13 @@ module Instruction = struct
             flags = { cpu_pushed_flags.flags with break = true };
         }
 
-    let bvc_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let bvc_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         if not cpu.flags.overflow then
             let branch_addr = Decode.address cpu mode in
             { cpu with program_counter = branch_addr }
         else cpu
 
-    let bvs_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let bvs_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         if cpu.flags.overflow then
             let branch_addr = Decode.address cpu mode in
             { cpu with program_counter = branch_addr }
@@ -153,7 +153,7 @@ module Instruction = struct
     let clv_op (cpu : CPU.t) : CPU.t =
         { cpu with flags = { cpu.flags with overflow = false } }
 
-    let cmp_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let cmp_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
         let cmp_mem_acc = cpu.accumulator -- mem_contents in
         let carry_flag = cmp_mem_acc <?> ~.0 > 0 in
@@ -170,7 +170,7 @@ module Instruction = struct
                 };
         }
 
-    let cpx_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let cpx_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
         let cmp_mem_x = cpu.register_X -- mem_contents in
         let carry_flag = cmp_mem_x <?> ~.0 > 0 in
@@ -187,7 +187,7 @@ module Instruction = struct
                 };
         }
 
-    let cpy_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let cpy_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
         let cmp_mem_x = cpu.register_Y -- mem_contents in
         let carry_flag = cmp_mem_x <?> ~.0 > 0 in
@@ -204,7 +204,7 @@ module Instruction = struct
                 };
         }
 
-    let dec_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let dec_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
         let mem_addr = Decode.address cpu mode in
         let dec_contents = mem_contents -- ~.0x01 in
@@ -236,7 +236,7 @@ module Instruction = struct
             flags = { cpu.flags with zero = zero_flag; negative = neg_flag };
         }
 
-    let eor_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let eor_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let operand = Decode.contents cpu mode in
         let xor_acc = cpu.accumulator ||. operand in
         let zero_bit = ?*xor_acc in
@@ -247,7 +247,7 @@ module Instruction = struct
             flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
 
-    let inc_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let inc_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
         let mem_addr = Decode.address cpu mode in
         let inc_contents = mem_contents ++ ~.0x01 in
@@ -279,94 +279,121 @@ module Instruction = struct
             flags = { cpu.flags with zero = zero_flag; negative = neg_flag };
         }
 
-    let jmp_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let jmp_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let jmp_addr = Decode.address cpu mode in
         { cpu with program_counter = jmp_addr }
 
-    let jsr_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+    let jsr_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let return_point = cpu.program_counter --- ~^0x0001 in
         let pushed_cpu = CPU.push_stack_u16 cpu return_point in
         let jmp_addr = Decode.address pushed_cpu mode in
         { pushed_cpu with program_counter = jmp_addr }
 
     (* TODO: Finish implemetning this function. *)
-    let lda_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let lda_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let ldx_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let ldx_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let ldy_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let ldy_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let lsr_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let lsr_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let nop_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let nop_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let ora_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let ora_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let pha_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let pha_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let php_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let php_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let pla_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let pla_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let plp_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let plp_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let rol_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let rol_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let ror_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let ror_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let rti_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let rti_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let rts_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let rts_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let sbc_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let sbc_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let sec_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let sec_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let sed_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let sed_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let sei_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let sei_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let sta_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let sta_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let stx_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let stx_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let sty_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let sty_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let tax_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let tax_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let tay_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let tay_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let tsx_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let tsx_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let txa_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let txa_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let txs_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let txs_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 
     (* TODO: Finish implemetning this function. *)
-    let tya_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t = cpu
+    let tya_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
+        cpu
 end
