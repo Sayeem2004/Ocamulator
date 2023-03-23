@@ -402,5 +402,6 @@ module Opcode = struct
         | 0xFE ->
             Decode.incr_cpu_pc cpu 2
             |> Instruction.inc_op (AbsoluteX (Decode.fetch_uint16_op cpu))
-        | _ -> failwith "Invalid Opcode"
+        | _ -> cpu
+        (* Todo: Change to this to failwith eventually. *)
 end
