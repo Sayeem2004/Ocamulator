@@ -24,6 +24,26 @@ module CPU = struct
         flags : cpu_flags;
     }
 
+    let nes_cpu (init_pc : uint16) (nes_ram : RAM.t): t =
+        {
+            accumulator = ~. 0;
+            register_X = ~. 0;
+            register_Y = ~. 0;
+            program_counter = init_pc;
+            stack_pointer = ~. 0xFF;
+            ram = nes_ram;
+            flags = {
+                carr_bit = false;
+                zero = false;
+                interrupt = true;
+                decimal = false;
+                negative = false;
+                overflow = false;
+                break = false;
+                reserved = true;
+            }
+        }
+
     let flags_ui8 (cpu : t) : uint8 =
         let neg_flag = ~.0 ++ ?.(cpu.flags.negative) << 1 in
         let overflow_flag = neg_flag ++ ?.(cpu.flags.overflow) << 1 in
@@ -35,6 +55,9 @@ module CPU = struct
 
     let fetch_ui8 (cpu : t) (addr : uint16) : uint8 = RAM.read_ui8 cpu.ram addr
     let fetch_ui16 (cpu : t) (addr : uint16) : uint16 = RAM.read_ui16 cpu.ram addr
+
+    let fetch_current_instruction (cpu : t) : uint8 =
+        fetch_ui8 cpu cpu.program_counter
 
     let write_ui8 (cpu : t) (addr : uint16) (value : uint8) =
         RAM.write_ui8 cpu.ram addr value
