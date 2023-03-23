@@ -21,8 +21,8 @@ module Decode : sig
         | Zeropage : uint8 -> uint8 memory_mode
         | ZeropageX : uint8 -> uint16 memory_mode
         | ZeropageY : uint8 -> uint16 memory_mode
-    (** [memory_mode] are the possible memory types that can be provided to an
-        instruction. *)
+        (** [memory_mode] are the possible memory types that can be provided to an
+            instruction. *)
 
     val contents : CPU.t -> 'a memory_mode -> uint8
     (** [contents cpu mode] is the contents stored at the address the memory
@@ -36,8 +36,14 @@ module Decode : sig
         [c]. *)
 
     val incr_cpu_pc : CPU.t -> int -> CPU.t
+    (** [incr_cpu_pc cpu n] is [cpu] with the program counter incremented by
+        [n]. *)
 
     val fetch_uint8_op : CPU.t -> uint8
+    (** [fetch_uint8_op cpu] is the next uint8 in RAM specified by the program
+        counter. *)
 
     val fetch_uint16_op : CPU.t -> uint16
+    (** [fetch_uint16_op cpu] is the next uint16 in RAM specified by the program
+        counter. *)
 end

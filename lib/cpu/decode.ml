@@ -64,9 +64,11 @@ module Decode = struct
         (?-op_1 && ?-op_2 && not ?-res) || ((not ?-op_1) && (not ?-op_2) && ?-res)
 
     let incr_cpu_pc (cpu : CPU.t) (size : int) : CPU.t =
-        { cpu with program_counter = cpu.program_counter +++ ~^(size) }
+        { cpu with program_counter = cpu.program_counter +++ ~^size }
 
-    let fetch_uint8_op (cpu : CPU.t) : uint8 = CPU.fetch_ui8 cpu cpu.program_counter
+    let fetch_uint8_op (cpu : CPU.t) : uint8 =
+        CPU.fetch_ui8 cpu cpu.program_counter
 
-    let fetch_uint16_op (cpu : CPU.t) : uint16 = CPU.fetch_ui16 cpu cpu.program_counter
+    let fetch_uint16_op (cpu : CPU.t) : uint16 =
+        CPU.fetch_ui16 cpu cpu.program_counter
 end

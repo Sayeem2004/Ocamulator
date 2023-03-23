@@ -26,6 +26,6 @@ let ( >> ) = UInt8.shift_right
 let ( ~. ) = UInt8.from_int
 let ( ?. ) i = Bool.to_int i |> UInt8.from_int
 let ( ?> ) u8_1 u8_2 = u8_1 ++ u8_2 <?> u8_1 < 0
-let ( ?- ) u8 = not (u8 &&. ~. 0b10000000 <-> ~.0x00)
+let ( ?- ) u8 = not (u8 &&. ~.0b10000000 <-> ~.0x00)
 let ( ?* ) u8 = u8 <?> UInt8.zero = 0
-let ( ?+ ) u8 = not (u8 &&. ~. 0b00000001 <-> ~.0x00)
+let ( ?+ ) u8 = not (u8 &&. ~.0b00000001 <-> ~.0x00)
