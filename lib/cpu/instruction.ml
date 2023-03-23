@@ -291,30 +291,33 @@ module Instruction = struct
 
     let lda_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
-        let zero_flag = ?* mem_contents in
-        let neg_flag = ?- mem_contents in
-        { cpu with accumulator = mem_contents; flags = {
-            cpu.flags with zero = zero_flag;
-            negative = neg_flag;
-        }}
+        let zero_flag = ?*mem_contents in
+        let neg_flag = ?-mem_contents in
+        {
+            cpu with
+            accumulator = mem_contents;
+            flags = { cpu.flags with zero = zero_flag; negative = neg_flag };
+        }
 
-    let ldx_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t)  : CPU.t =
+    let ldx_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
-        let zero_flag = ?* mem_contents in
-        let neg_flag = ?- mem_contents in
-        { cpu with register_X = mem_contents; flags = {
-            cpu.flags with zero = zero_flag;
-            negative = neg_flag;
-        }}
+        let zero_flag = ?*mem_contents in
+        let neg_flag = ?-mem_contents in
+        {
+            cpu with
+            register_X = mem_contents;
+            flags = { cpu.flags with zero = zero_flag; negative = neg_flag };
+        }
 
-    let ldy_op (type a') (mode : a' Decode.memory_mode)  (cpu : CPU.t) : CPU.t =
+    let ldy_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
-        let zero_flag = ?* mem_contents in
-        let neg_flag = ?- mem_contents in
-        { cpu with register_Y = mem_contents; flags = {
-            cpu.flags with zero = zero_flag;
-            negative = neg_flag;
-        }}
+        let zero_flag = ?*mem_contents in
+        let neg_flag = ?-mem_contents in
+        {
+            cpu with
+            register_Y = mem_contents;
+            flags = { cpu.flags with zero = zero_flag; negative = neg_flag };
+        }
 
     let lsr_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         match mode with
@@ -354,8 +357,7 @@ module Instruction = struct
             }
 
     (* TODO: Finish implemetning this function. *)
-    let nop_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+    let nop_op (cpu : CPU.t) : CPU.t = cpu
 
     let ora_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let operand = Decode.contents cpu mode in
@@ -369,20 +371,16 @@ module Instruction = struct
         }
 
     (* TODO: Finish implemetning this function. *)
-    let pha_op (cpu : CPU.t) : CPU.t =
-        cpu
+    let pha_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implementing this function. *)
-    let php_op (cpu : CPU.t) : CPU.t =
-        cpu
+    let php_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
-    let pla_op (cpu : CPU.t) : CPU.t =
-        cpu
+    let pla_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
-    let plp_op (cpu : CPU.t) : CPU.t =
-        cpu
+    let plp_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
     let rol_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
@@ -393,28 +391,23 @@ module Instruction = struct
         cpu
 
     (* TODO: Finish implemetning this function. *)
-    let rti_op (cpu : CPU.t) : CPU.t =
-        cpu
+    let rti_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
-    let rts_op (cpu : CPU.t) : CPU.t =
-        cpu
+    let rts_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
     let sbc_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         cpu
 
     (* TODO: Finish implemetning this function. *)
-    let sec_op (cpu : CPU.t) : CPU.t =
-        cpu
+    let sec_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
-    let sed_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+    let sed_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
-    let sei_op (cpu : CPU.t) : CPU.t =
-        cpu
+    let sei_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
     let sta_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
@@ -429,26 +422,20 @@ module Instruction = struct
         cpu
 
     (* TODO: Finish implemetning this function. *)
-    let tax_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+    let tax_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
-    let tay_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+    let tay_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
-    let tsx_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+    let tsx_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
-    let txa_op (cpu : CPU.t) : CPU.t =
-        cpu
+    let txa_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
-    let txs_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+    let txs_op (cpu : CPU.t) : CPU.t = cpu
 
     (* TODO: Finish implemetning this function. *)
-    let tya_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+    let tya_op (cpu : CPU.t) : CPU.t = cpu
 end

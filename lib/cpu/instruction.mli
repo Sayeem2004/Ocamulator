@@ -2,7 +2,7 @@ open Cpu
 open Decode
 
 (** The Nintendo Entertainment System had 56 different instructions that
-    updated the CPU state in over 200 different ways. [Instruction.Instruction]
+    updated the CPU state in over 150 different ways. [Instruction.Instruction]
     is a module that contains the implementation of these 56 different
     instructions. *)
 module Instruction : sig
@@ -138,7 +138,7 @@ module Instruction : sig
     (** [lsr_op] implements the LSR instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#LSR *)
 
-    val nop_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    val nop_op : CPU.t -> CPU.t
     (** [nop_op] implements the NOP instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#NOP *)
 
@@ -186,7 +186,7 @@ module Instruction : sig
     (** [sec_op] implements the SEC instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#SEC *)
 
-    val sed_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    val sed_op : CPU.t -> CPU.t
     (** [sed_op] implements the SED instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#SED *)
 
@@ -206,15 +206,15 @@ module Instruction : sig
     (** [sty_op] implements the STY instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#STY *)
 
-    val tax_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    val tax_op : CPU.t -> CPU.t
     (** [tax_op] implements the TAX instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#TAX *)
 
-    val tay_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    val tay_op : CPU.t -> CPU.t
     (** [tay_op] implements the TAY instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#TAY *)
 
-    val tsx_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    val tsx_op : CPU.t -> CPU.t
     (** [tsx_op] implements the TSX instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#TSX *)
 
@@ -222,11 +222,11 @@ module Instruction : sig
     (** [txa_op] implements the TXA instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#TXA *)
 
-    val txs_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    val txs_op : CPU.t -> CPU.t
     (** [txs_op] implements the TXS instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#TXS *)
 
-    val tya_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    val tya_op : CPU.t -> CPU.t
     (** [tya_op] implements the TYA instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#TYA *)
 end
