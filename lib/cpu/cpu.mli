@@ -31,6 +31,8 @@ module CPU : sig
     (** [CPU.t] is a record type containing all necessary data types that a CPU
         could possibly interact with.  *)
 
+    val nes_cpu : uint16 -> RAM.t -> t
+
     val flags_ui8 : t -> uint8
     (** [flags_ui8 cpu] is the [uint8] representation of the [cpu] flags. *)
 
@@ -41,6 +43,10 @@ module CPU : sig
     val fetch_ui16 : t -> uint16 -> uint16
     (** [fetch_ui16 cpu addr] is the [uint16] found in the index [addr] in the
         RAM array. *)
+
+    val fetch_current_instruction : t -> uint8
+    (** [fetch_current_instruction] is the [uint8] found at the index of the
+        [program_counter] of the given [t] *)
 
     val write_ui8 : t -> uint16 -> uint8 -> unit
     (** [write_ui8 cpu addr value] writes [value] to the index [addr] in the

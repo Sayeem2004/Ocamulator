@@ -56,6 +56,9 @@ module CPU = struct
     let fetch_ui8 (cpu : t) (addr : uint16) : uint8 = RAM.read_ui8 cpu.ram addr
     let fetch_ui16 (cpu : t) (addr : uint16) : uint16 = RAM.read_ui16 cpu.ram addr
 
+    let fetch_current_instruction (cpu : t) : uint8 =
+        fetch_ui8 cpu cpu.program_counter
+
     let write_ui8 (cpu : t) (addr : uint16) (value : uint8) =
         RAM.write_ui8 cpu.ram addr value
 
