@@ -4,6 +4,7 @@
 *~
 \#*\#
 assignment/
+*.zip
 
 # Ocaml
 *.cmo

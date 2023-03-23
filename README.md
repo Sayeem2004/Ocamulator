@@ -6,7 +6,23 @@ usage instructions are below along with a more detailed description of the proje
 
 ## Installation/Usage
 
-Installation and usage instructions can be found in [INSTALL.md](info/INSTALL.md).
+`git clone git@github.com:Sayeem2004/3110Project.git` Cloning the repository.
+
+`cd 3110Project` Entering the repository directory.
+
+`make install` Creating a new opam switch and installing the dependencies.
+
+`make build` Compiling the project.
+
+`make test` Running the test cases.
+
+`make run_read` To run the hex reading portion of the project. When prompted for
+a file, enter the name of the file you want to run in ./data, with the correct
+file extension. When prompted from "Step: ", press "Enter" to keep stepping CPU
+or type "quit" or "exit" to end.
+
+`make run_main` To run the main emulator of the project (currently a work in
+progress, and does nothing).
 
 ## Goals
 
@@ -105,9 +121,9 @@ lib:                      Contains project libraries
 |   |-- uInt8.mli:        (Interface for unsigned 8-bit integer module)
 |   |-- uInt16.ml:        (Module representing unsigned 16-bit integers)
 |   |-- uInt16.mli:       (Interface for unsigned 16-bit integer module)
-|   |-- uIntSet.ml:       (Generic signature for the bounds of unsigned integers)
+|   |-- uIntSet.ml:       (Generic signature for bounds of unsigned integers)
 |   |-- uIntSet.mli:      (Interface for unsigned integer set module)
-|   |-- uIntX.ml:         (Functor for transforming bounds into unsigned integers)
+|   |-- uIntX.ml:         (Functor for converting bounds into unsigned integers)
 |   |-- uIntX.mli:        (Interface for unsigned integer functor module)
 |-- dune                  (Dune configuration)
 
@@ -143,9 +159,12 @@ README.md:                (Project description and information)
 Ocamulator was created by Mohammad Khan, Pablo Raigoza, and Evan Vera.
 However, we did have a lot of help from the following sources:
 
-- ROM files were downloaded from [Emulator Games](https://www.emulatorgames.net/roms/nintendo/).
-- Previously made NES emulators like [Caml Boy](https://linoscope.github.io/writing-a-game-boy-emulator-in-ocaml/)
+- ROM files were downloaded from
+  [Emulator Games](https://www.emulatorgames.net/roms/nintendo/).
+- Previously made NES emulators like
+  [Caml Boy](https://linoscope.github.io/writing-a-game-boy-emulator-in-ocaml/)
   and [Nes Emu](https://yizhang82.dev/nes-emu-overview) were used as reference.
-- The [NES Dev Wiki](https://www.nesdev.org/wiki/Nesdev) led us to different resources that helped us
-  understand the NES architecture.
-- Inspiration for project structure and utilities came from previous CS 3110 assignments and labs.
+- The [NES Dev Wiki](https://www.nesdev.org/wiki/Nesdev) led us to different
+  resources that helped us understand the NES architecture.
+- Inspiration for project structure and utilities came from previous CS 3110
+  assignments and labs.
