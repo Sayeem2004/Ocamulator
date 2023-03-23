@@ -53,5 +53,5 @@ opendoc: doc
 	@./util/opendoc.sh
 
 zip:
-	@rm -f nes.zip
-	@zip -r nes.zip . -x@util/exclude.lst
+	@rm -f ocamulator.zip
+	@zip -r ocamulator.zip . -x@util/exclude.lst
