@@ -1,16 +1,15 @@
 .PHONY: build clean install remove run_main run_read test format cloc bisect
 .PHONY: coverage doc opendoc zip
 
-ML_FILES = $(wildcard *.ml) $(wildcard */*.ml) $(wildcard */*/*.ml)
-MLI_FILES = $(wildcard *.mli) $(wildcard */*.mli) $(wildcard */*/*.mli)
+ML_FILES = $(wildcard src/*/*.ml) $(wildcard src/*/*/*.ml)
+MLI_FILES = $(wildcard src/*/*.mli) $(wildcard src/*/*/*.mli)
 
 build:
-	@dune build
+	@dune build --root src --no-print-directory
 
 clean:
-	@rm -rf _coverage
-	@dune clean
-	@rm -f *.zip
+	@rm -rf src/_coverage *.zip
+	@dune clean --root src --no-print-directory
 
 install:
 	@./util/install.sh
@@ -19,13 +18,13 @@ remove:
 	@./util/remove.sh
 
 run_main: build
-	@OCAMLRUNPARAM=b dune exec bin/main.exe
+	@OCAMLRUNPARAM=b dune exec --root src --no-print-directory bin/main.exe
 
 run_read: build
-	@OCAMLRUNPARAM=b dune exec bin/read.exe
+	@OCAMLRUNPARAM=b dune exec --root src --no-print-directory bin/read.exe
 
 test: build
-	@OCAMLRUNPARAM=b dune exec test/main.exe
+	@cd src && OCAMLRUNPARAM=b dune exec test/main.exe
 
 format:
 	@for file in $(ML_FILES); do ocamlformat --inplace $$file; done
@@ -37,21 +36,21 @@ cloc:
 	@cloc --by-file --include-lang=OCaml .
 
 bisect:
-	@-dune exec --instrument-with bisect_ppx ./test/main.exe
-	@bisect-ppx-report html
-	@bisect-ppx-report summary
-	@mkdir -p _coverage/temp
-	@mv *.coverage _coverage/temp
+	@cd src && dune exec --instrument-with bisect_ppx test/main.exe
+	@cd src && bisect-ppx-report html
+	@cd src && bisect-ppx-report summary
+	@cd src && mkdir -p _coverage/temp
+	@cd src && mv *.coverage _coverage/temp
 
 coverage: bisect
 	@./util/opencov.sh
 
 doc:
-	@dune build @doc
+	@dune build --root src --no-print-directory @doc
 
 opendoc: doc
 	@./util/opendoc.sh
 
 zip:
-	@rm -f nes.zip
-	@zip -r nes.zip . -x@util/exclude.lst
+	@rm -f ocamulator.zip
+	@zip -r ocamulator.zip . -x@info/exclude.lst
