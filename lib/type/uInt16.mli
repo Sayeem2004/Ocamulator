@@ -46,6 +46,9 @@ val ( %%% ) : uint16 -> uint16 -> uint16
 val ( &&& ) : uint16 -> uint16 -> uint16
 (** Alias for UInt16.logand. *)
 
+val ( |/| ) : uint16 -> uint16 -> uint16
+(** Alias for UInt16.logxor. *)
+
 val ( ||| ) : uint16 -> uint16 -> uint16
 (** Alias for UInt16.logor. *)
 

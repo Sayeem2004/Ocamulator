@@ -39,8 +39,8 @@ module Instruction = struct
         | Accumulator ->
             let shifted_acc = cpu.accumulator << 1 in
             let carry_bit = ?-(cpu.accumulator) in
-            let neg_bit = ?-shifted_acc in
             let zero_bit = ?*shifted_acc in
+            let neg_bit = ?-shifted_acc in
             {
                 cpu with
                 accumulator = shifted_acc;
@@ -57,8 +57,8 @@ module Instruction = struct
             let operand_contents = Decode.contents cpu addr_mode in
             let shifted_contents = operand_contents << 1 in
             let carry_bit = ?-operand_contents in
-            let neg_bit = ?-shifted_contents in
             let zero_bit = ?*shifted_contents in
+            let neg_bit = ?-shifted_contents in
             CPU.write_ui8 cpu operand_addr shifted_contents;
             {
                 cpu with
@@ -238,7 +238,7 @@ module Instruction = struct
 
     let eor_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         let operand = Decode.contents cpu mode in
-        let xor_acc = cpu.accumulator ||. operand in
+        let xor_acc = cpu.accumulator |/. operand in
         let zero_bit = ?*xor_acc in
         let neg_bit = ?-xor_acc in
         {
@@ -289,29 +289,84 @@ module Instruction = struct
         let jmp_addr = Decode.address pushed_cpu mode in
         { pushed_cpu with program_counter = jmp_addr }
 
-    (* TODO: Finish implemetning this function. *)
-    let lda_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
-        cpu
+    let lda_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+        let mem_contents = Decode.contents cpu mode in
+        let zero_flag = ?* mem_contents in
+        let neg_flag = ?- mem_contents in
+        { cpu with accumulator = mem_contents; flags = {
+            cpu.flags with zero = zero_flag;
+            negative = neg_flag;
+        }}
 
-    (* TODO: Finish implemetning this function. *)
-    let ldx_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
-        cpu
+    let ldx_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+        let mem_contents = Decode.contents cpu mode in
+        let zero_flag = ?* mem_contents in
+        let neg_flag = ?- mem_contents in
+        { cpu with register_X = mem_contents; flags = {
+            cpu.flags with zero = zero_flag;
+            negative = neg_flag;
+        }}
 
-    (* TODO: Finish implemetning this function. *)
-    let ldy_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
-        cpu
+    let ldy_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+        let mem_contents = Decode.contents cpu mode in
+        let zero_flag = ?* mem_contents in
+        let neg_flag = ?- mem_contents in
+        { cpu with register_Y = mem_contents; flags = {
+            cpu.flags with zero = zero_flag;
+            negative = neg_flag;
+        }}
 
-    (* TODO: Finish implemetning this function. *)
-    let lsr_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
-        cpu
+    let lsr_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+        match mode with
+        | Accumulator ->
+            let shifted_acc = cpu.accumulator >> 1 in
+            let carry_bit = ?+(cpu.accumulator) in
+            let zero_bit = ?*shifted_acc in
+            let neg_bit = ?-shifted_acc in
+            {
+                cpu with
+                accumulator = shifted_acc;
+                flags =
+                    {
+                        cpu.flags with
+                        zero = zero_bit;
+                        carr_bit = carry_bit;
+                        negative = neg_bit;
+                    };
+            }
+        | addr_mode ->
+            let operand_addr = Decode.address cpu addr_mode in
+            let operand_contents = Decode.contents cpu addr_mode in
+            let shifted_contents = operand_contents >> 1 in
+            let carry_bit = ?+operand_contents in
+            let zero_bit = ?*shifted_contents in
+            let neg_bit = ?-shifted_contents in
+            CPU.write_ui8 cpu operand_addr shifted_contents;
+            {
+                cpu with
+                flags =
+                    {
+                        cpu.flags with
+                        zero = zero_bit;
+                        carr_bit = carry_bit;
+                        negative = neg_bit;
+                    };
+            }
 
     (* TODO: Finish implemetning this function. *)
     let nop_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
         cpu
 
-    (* TODO: Finish implemetning this function. *)
-    let ora_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
-        cpu
+    let ora_op (cpu : CPU.t) (type a) (mode : a Decode.memory_mode) : CPU.t =
+        let operand = Decode.contents cpu mode in
+        let or_acc = cpu.accumulator ||. operand in
+        let zero_bit = ?*or_acc in
+        let neg_bit = ?-or_acc in
+        {
+            cpu with
+            accumulator = or_acc;
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
+        }
 
     (* TODO: Finish implemetning this function. *)
     let pha_op (cpu : CPU.t) (type a') (mode : a' Decode.memory_mode) : CPU.t =
