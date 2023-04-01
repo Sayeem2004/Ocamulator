@@ -1,6 +1,6 @@
+open Cpu
 open UInt8
 open UInt16
-open Cpu
 
 module Decode = struct
     type _ memory_mode =

@@ -1,6 +1,6 @@
+open Ram
 open UInt8
 open UInt16
-open Ram
 
 (** [Cpu.CPU] represents the CPU of the emulator by storing RAM, all necessary
     flags, and special [uint]s used as special storage options. It also provides

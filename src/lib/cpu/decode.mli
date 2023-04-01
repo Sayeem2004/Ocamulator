@@ -1,6 +1,6 @@
+open Cpu
 open UInt8
 open UInt16
-open Cpu
 
 (** The Nintendo Entertainment System had 255 opcodes that the CPU could run.
     Each would modify the CPU in their own way, but their functionality could

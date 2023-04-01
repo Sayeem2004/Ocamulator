@@ -1,7 +1,7 @@
-open UInt8
-open UInt16
 open Cpu
+open UInt8
 open Decode
+open UInt16
 
 module Instruction = struct
     let adc_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =

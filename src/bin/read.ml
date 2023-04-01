@@ -1,8 +1,8 @@
 open Lib__Cpu
 open Lib__Ram
 open Lib__UInt8
-open Lib__UInt16
 open Lib__Opcode
+open Lib__UInt16
 
 (** [pp_cpu cpu] is a pretty-printed string representing the CPU state. *)
 let pp_cpu (cpu : CPU.t) : unit =
