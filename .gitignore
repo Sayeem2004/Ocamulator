@@ -6,7 +6,6 @@
 
 # Project Specific
 assignment/
-data/
 *.zip
 *.nes
 

@@ -201,5 +201,4 @@ module Opcode = struct
         | 0xFD -> step_absx cpu Instruction.sbc_op
         | 0xFE -> step_absx cpu Instruction.inc_op
         | _ -> cpu
-        (* Todo: Change to this to failwith eventually. *)
 end

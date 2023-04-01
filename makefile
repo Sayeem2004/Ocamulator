@@ -12,10 +12,10 @@ clean:
 	@dune clean --root src --no-print-directory
 
 install:
-	@./util/install.sh
+	@./util/script/install.sh
 
 remove:
-	@./util/remove.sh
+	@./util/script/remove.sh
 
 run_main: build
 	@OCAMLRUNPARAM=b dune exec --root src --no-print-directory bin/main.exe
@@ -43,14 +43,14 @@ bisect:
 	@cd src && mv *.coverage _coverage/temp
 
 coverage: bisect
-	@./util/opencov.sh
+	@./util/script/opencov.sh
 
 doc:
 	@dune build --root src --no-print-directory @doc
 
 opendoc: doc
-	@./util/opendoc.sh
+	@./util/script/opendoc.sh
 
 zip:
 	@rm -f ocamulator.zip
-	@zip -r ocamulator.zip . -x@info/exclude.lst
+	@zip -r ocamulator.zip . -x@util/info/exclude.lst

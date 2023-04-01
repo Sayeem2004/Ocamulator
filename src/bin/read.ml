@@ -46,11 +46,13 @@ let rec step (cpu : CPU.t) : unit =
 let main () : unit =
     print_newline ();
     print_endline
-        "Please enter the name of the ROM file in ./data you would like to run:";
+        "Please enter the name of the ROM file in ./data/rom you would like to run:";
     match read_line () with
     | exception End_of_file -> ()
     | file_name ->
-        let file_dir = "data" ^ Filename.dir_sep ^ file_name in
+        let file_dir =
+            "data" ^ Filename.dir_sep ^ "rom" ^ Filename.dir_sep ^ file_name
+        in
         let _ = print_endline file_dir in
         let nes_channel_in = open_in file_dir in
         let nes_rom_buffer = Bytes.make (0xFFFF + 1) ' ' in
