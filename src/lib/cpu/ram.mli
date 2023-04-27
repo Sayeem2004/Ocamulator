@@ -12,13 +12,19 @@ module RAM : sig
     (** [RAM.t] is a record type that stores the array representing RAM and an
         int representing its size. *)
 
-    val nes_zero_ram : t
+    val nes_zero_ram : unit -> t
     (** [nes_zero_ram ()] is an instantiation of type [t] with size equivalent
         to the [UInt16.max_value + 1]. *)
 
     val nes_ram : bytes -> t
     (** [nes_ram b] is an instantiation of type [t] containing the bytes
         sequence given by [b] *)
+
+    val byte_to_uint8 : char -> uint8
+    (** [byte_to_uint8 c] is the [uint8] representation of the [char] [c]. *)
+
+    val uint8_to_byte : uint8 -> char
+    (** [uint8_to_byte u] is the [char] representation of the [uint8] [u]. *)
 
     val read_ui8 : t -> uint16 -> uint8
     (** [read_ui8 ram addr] is the [uint8] stored in the index of [ram] at

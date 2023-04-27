@@ -1,7 +1,7 @@
 open OUnit2
 
 (** Ocamulator tests to be run. *)
-let (tests : test) =
+let tests : test =
     "Test Suite For Ocamulator"
     >::: List.flatten
         [
@@ -15,4 +15,4 @@ let (tests : test) =
         ]
 
 (** Running tests. *)
-let _ = run_test_tt_main tests
+let _ : unit = run_test_tt_main tests
