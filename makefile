@@ -56,5 +56,5 @@ zip:
 	@zip -r ocamulator.zip . -x@data/exclude.lst
 
 scrape:
-	@python util/python/scrape.py
+	@python util/scrape.py
 	@prettier --write data/opcode
