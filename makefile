@@ -1,15 +1,15 @@
 .PHONY: build clean install remove run_main run_read test format cloc bisect
-.PHONY: coverage doc opendoc zip
+.PHONY: coverage doc opendoc zip scrape
 
 ML_FILES = $(wildcard src/*/*.ml) $(wildcard src/*/*/*.ml)
 MLI_FILES = $(wildcard src/*/*.mli) $(wildcard src/*/*/*.mli)
 
 build:
-	@dune build --root src --no-print-directory
+	@cd src && dune build --no-print-directory
 
 clean:
 	@rm -rf src/_coverage *.zip
-	@dune clean --root src --no-print-directory
+	@cd src && dune clean --no-print-directory
 
 install:
 	@./util/script/install.sh
@@ -18,10 +18,10 @@ remove:
 	@./util/script/remove.sh
 
 run_main: build
-	@OCAMLRUNPARAM=b dune exec --root src --no-print-directory bin/main.exe
+	@cd src && OCAMLRUNPARAM=b dune exec --no-print-directory bin/main.exe
 
 run_read: build
-	@OCAMLRUNPARAM=b dune exec --root src --no-print-directory bin/read.exe
+	@cd src && OCAMLRUNPARAM=b dune exec --no-print-directory bin/read.exe
 
 test: build
 	@cd src && OCAMLRUNPARAM=b dune exec test/main.exe
@@ -46,11 +46,15 @@ coverage: bisect
 	@./util/script/opencov.sh
 
 doc:
-	@dune build --root src --no-print-directory @doc
+	cd src && dune build @doc --no-print-directory
 
 opendoc: doc
 	@./util/script/opendoc.sh
 
 zip:
 	@rm -f ocamulator.zip
-	@zip -r ocamulator.zip . -x@util/info/exclude.lst
+	@zip -r ocamulator.zip . -x@data/exclude.lst
+
+scrape:
+	@python util/python/scrape.py
+	@prettier --write data/opcode
