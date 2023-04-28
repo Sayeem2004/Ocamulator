@@ -81,10 +81,17 @@ module CPU = struct
         write_ui16 cpu stack_loc value;
         { cpu with stack_pointer = cpu.stack_pointer -- ~.0x0002 }
 
-    let peek_stack (cpu : t) : uint8 =
+    let peek_stack_ui8 (cpu : t) : uint8 =
         let stack_loc = absolute_loc_stack cpu in
-        fetch_ui8 cpu stack_loc
+        fetch_ui8 cpu (stack_loc +++ ~^0x0001)
+    
+    let peek_stack_ui16 (cpu : t) : uint16 =
+        let stack_loc = absolute_loc_stack cpu in
+        fetch_ui16 cpu (stack_loc +++ ~^0x0002)
 
-    let pop_stack (cpu : t) : t =
+    let pop_stack_ui8 (cpu : t) : t =
         { cpu with stack_pointer = cpu.stack_pointer ++ ~.0x0001 }
+
+    let pop_stack_ui16 (cpu : t) : t =
+        { cpu with stack_pointer = cpu.stack_pointer ++ ~.0x0002 }
 end
