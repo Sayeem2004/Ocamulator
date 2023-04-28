@@ -22,7 +22,7 @@ let ram_ui16 : RAM.t =
     and [exp]. *)
 let byte_to_uint8_test (name : string) (c : char) (exp : uint8) : test =
     name >:: fun _ ->
-        assert_equal exp (RAM.byte_to_uint8 c) ~printer:UInt8.to_string
+        assert_equal exp (Char.code c |> UInt8.from_int) ~printer:UInt8.to_string
 
 (** Byte_to_uint8 tests to be run. *)
 let byte_to_uint8_tests : test list =
@@ -37,7 +37,7 @@ let byte_to_uint8_tests : test list =
     and [exp]. *)
 let uint8_to_byte_test (name : string) (n : uint8) (exp : char) : test =
     name >:: fun _ ->
-        assert_equal exp (RAM.uint8_to_byte n) ~printer:(String.make 1)
+        assert_equal exp (UInt8.to_int n |> Char.chr) ~printer:(String.make 1)
 
 (** Uint8_to_byte tests to be run. *)
 let uint8_to_byte_tests : test list =
