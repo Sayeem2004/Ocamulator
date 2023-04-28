@@ -54,6 +54,22 @@ module CPU = struct
         let zero_flag = decimal_flag ++ ?.(cpu.flags.zero) << 1 in
         zero_flag ++ ?.(cpu.flags.carr_bit)
 
+    let flags_from_ui8 (cpu : t) (f : uint8) : t =
+        {
+            cpu with
+            flags =
+                {
+                    cpu.flags with
+                    negative = not (f &&. ~.0b1000000 <-> ~.0x00);
+                    overflow = not (f &&. ~.0b0100000 <-> ~.0x00);
+                    reserved = true;
+                    break = not (f &&. ~.0b0001000 <-> ~.0x00);
+                    decimal = not (f &&. ~.0b0000100 <-> ~.0x00);
+                    zero = not (f &&. ~.0b0000010 <-> ~.0x00);
+                    carr_bit = not (f &&. ~.0b0000001 <-> ~.0x00);
+                };
+        }
+
     let fetch_ui8 (cpu : t) (address : uint16) : uint8 =
         RAM.read_ui8 cpu.ram address
 
@@ -81,10 +97,17 @@ module CPU = struct
         write_ui16 cpu stack_loc value;
         { cpu with stack_pointer = cpu.stack_pointer -- ~.0x0002 }
 
-    let peek_stack (cpu : t) : uint8 =
+    let peek_stack_ui8 (cpu : t) : uint8 =
         let stack_loc = absolute_loc_stack cpu in
-        fetch_ui8 cpu stack_loc
+        fetch_ui8 cpu (stack_loc +++ ~^0x0001)
+    
+    let peek_stack_ui16 (cpu : t) : uint16 =
+        let stack_loc = absolute_loc_stack cpu in
+        fetch_ui16 cpu (stack_loc +++ ~^0x0002)
 
-    let pop_stack (cpu : t) : t =
+    let pop_stack_ui8 (cpu : t) : t =
         { cpu with stack_pointer = cpu.stack_pointer ++ ~.0x0001 }
+
+    let pop_stack_ui16 (cpu : t) : t =
+        { cpu with stack_pointer = cpu.stack_pointer ++ ~.0x0002 }
 end

@@ -37,6 +37,9 @@ module CPU : sig
     val flags_ui8 : t -> uint8
     (** [flags_ui8 cpu] is the [uint8] representation of the [cpu] flags. *)
 
+    val flags_from_ui8 : t -> uint8 -> t
+    (** [flags_from_ui8 cpu flags] is cpu with flags read in from the uint8 arg *)
+
     val fetch_ui8 : t -> uint16 -> uint8
     (** [fetch_ui8 cpu addr] is the [uint8] found in the index [addr] in the RAM
         array. *)
@@ -69,10 +72,17 @@ module CPU : sig
     (** [push_stack_u16 cpu value] pushes [value] to the stack and updates the
         position of the stack_pointer. *)
 
-    val peek_stack : t -> uint8
+    val peek_stack_ui8 : t -> uint8
     (** [peek_stack cpu] is the [uint8] value at the top of the stack. *)
 
-    val pop_stack : t -> t
-    (** [pop_stack cpu] pops the top value of the stack and updates the position
-        of the stack_pointer. *)
+    val peek_stack_ui16 : t -> uint16
+    (** [peek_stack cpu] is the [uint8] value at the top of the stack. *)
+
+    val pop_stack_ui8 : t -> t
+    (** [pop_stack cpu] pops the top [uint8] 
+        value of the stack and updates the position of the stack_pointer. *)
+
+    val pop_stack_ui16: t -> t
+    (** [pop_stack cpu] pops the top [uint16] 
+        value of the stack and updates the position of the stack_pointer. *)
 end

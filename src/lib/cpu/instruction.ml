@@ -356,7 +356,6 @@ module Instruction = struct
                     };
             }
 
-    (* TODO: Finish implemetning this function. *)
     let nop_op (cpu : CPU.t) : CPU.t = cpu
 
     let ora_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
@@ -370,21 +369,61 @@ module Instruction = struct
             flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
 
-    (* TODO: Finish implemetning this function. *)
-    let pha_op (cpu : CPU.t) : CPU.t = cpu
+    let pha_op (cpu : CPU.t) : CPU.t = CPU.push_stack_ui8 cpu cpu.accumulator
+    let php_op (cpu : CPU.t) : CPU.t = CPU.push_stack_ui8 cpu (CPU.flags_ui8 cpu)
 
-    (* TODO: Finish implementing this function. *)
-    let php_op (cpu : CPU.t) : CPU.t = cpu
+    let pla_op (cpu : CPU.t) : CPU.t =
+        let pulled_acc = CPU.peek_stack_ui8 cpu in
+        let popped_cpu = CPU.pop_stack_ui8 cpu in
+        let zero_bit = ?*pulled_acc in
+        let neg_bit = ?-pulled_acc in
+        {
+            popped_cpu with
+            accumulator = pulled_acc;
+            flags = { popped_cpu.flags with zero = zero_bit; negative = neg_bit };
+        }
 
-    (* TODO: Finish implemetning this function. *)
-    let pla_op (cpu : CPU.t) : CPU.t = cpu
+    let plp_op (cpu : CPU.t) : CPU.t =
+        let pulled_flags = CPU.peek_stack_ui8 cpu in
+        let popped_cpu = CPU.pop_stack_ui8 cpu in
+        CPU.flags_from_ui8 popped_cpu pulled_flags
 
-    (* TODO: Finish implemetning this function. *)
-    let plp_op (cpu : CPU.t) : CPU.t = cpu
-
-    (* TODO: Finish implemetning this function. *)
     let rol_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+        match mode with
+        | Accumulator ->
+            let shifted_acc = (cpu.accumulator << 1) ++ (?. (cpu.flags.carr_bit)) in
+            let carry_bit = ?-(cpu.accumulator) in
+            let zero_bit = ?*shifted_acc in
+            let neg_bit = ?-shifted_acc in
+            {
+                cpu with
+                accumulator = shifted_acc;
+                flags =
+                    {
+                        cpu.flags with
+                        zero = zero_bit;
+                        carr_bit = carry_bit;
+                        negative = neg_bit;
+                    };
+            }
+        | addr_mode ->
+            let operand_addr = Decode.address cpu addr_mode in
+            let operand_contents = Decode.contents cpu addr_mode in
+            let shifted_contents = (operand_contents << 1) ++ (?. (cpu.flags.carr_bit)) in
+            let carry_bit = ?-operand_contents in
+            let zero_bit = ?*shifted_contents in
+            let neg_bit = ?-shifted_contents in
+            CPU.write_ui8 cpu operand_addr shifted_contents;
+            {
+                cpu with
+                flags =
+                    {
+                        cpu.flags with
+                        zero = zero_bit;
+                        carr_bit = carry_bit;
+                        negative = neg_bit;
+                    };
+            }
 
     (* TODO: Finish implemetning this function. *)
     let ror_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
