@@ -1,8 +1,8 @@
 open OUnit2
-open Lib__UInt
+open Lib__UIntX
 
 (** Functor that tests a generic UInt type. *)
-module F (M : S) = struct
+module F (M : UInt) = struct
     (** [over] is an integer that is gauranteed to overflow an unsigned int. *)
     let over : int = M.to_int M.max_value + 1
 

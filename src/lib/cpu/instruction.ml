@@ -119,9 +119,9 @@ module Instruction = struct
         else cpu
 
     let brk_op (cpu : CPU.t) : CPU.t =
-        let cpu_pushed_pc = CPU.push_stack_u16 cpu cpu.program_counter in
+        let cpu_pushed_pc = CPU.push_stack_ui16 cpu cpu.program_counter in
         let uint8_flags = CPU.flags_ui8 cpu in
-        let cpu_pushed_flags = CPU.push_stack_u8 cpu_pushed_pc uint8_flags in
+        let cpu_pushed_flags = CPU.push_stack_ui8 cpu_pushed_pc uint8_flags in
         let interrupt_vector = CPU.fetch_ui16 cpu_pushed_flags ~^0xFFFE in
         {
             cpu_pushed_flags with
@@ -285,7 +285,7 @@ module Instruction = struct
 
     let jsr_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let return_point = cpu.program_counter --- ~^0x0001 in
-        let pushed_cpu = CPU.push_stack_u16 cpu return_point in
+        let pushed_cpu = CPU.push_stack_ui16 cpu return_point in
         let jmp_addr = Decode.address pushed_cpu mode in
         { pushed_cpu with program_counter = jmp_addr }
 

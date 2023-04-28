@@ -60,20 +60,20 @@ module CPU = struct
     let fetch_current_instruction (cpu : t) : uint8 =
         fetch_ui8 cpu cpu.program_counter
 
-    let write_ui8 (cpu : t) (addr : uint16) (value : uint8) =
+    let write_ui8 (cpu : t) (addr : uint16) (value : uint8) : unit =
         RAM.write_ui8 cpu.ram addr value
 
-    let write_ui16 (cpu : t) (addr : uint16) (value : uint16) =
+    let write_ui16 (cpu : t) (addr : uint16) (value : uint16) : unit =
         RAM.write_ui16 cpu.ram addr value
 
     let absolute_loc_stack (cpu : t) : uint16 = ~^0x0100 +++ !^(cpu.stack_pointer)
 
-    let push_stack_u8 (cpu : t) (value : uint8) : t =
+    let push_stack_ui8 (cpu : t) (value : uint8) : t =
         let stack_loc = absolute_loc_stack cpu in
         write_ui8 cpu stack_loc value;
         { cpu with stack_pointer = cpu.stack_pointer -- ~.0x0001 }
 
-    let push_stack_u16 (cpu : t) (value : uint16) : t =
+    let push_stack_ui16 (cpu : t) (value : uint16) : t =
         let stack_loc = absolute_loc_stack cpu in
         write_ui16 cpu stack_loc value;
         { cpu with stack_pointer = cpu.stack_pointer -- ~.0x0002 }

@@ -78,12 +78,14 @@ let check_least_bit_tests : test list =
     ]
 
 (** UInt8 tests to be run. *)
-let tests : test list = List.flatten [
-    UInt8Test.tests;
-    to_string_tests;
-    bool_to_ui8_tests;
-    add_compare_tests;
-    check_most_bit_tests;
-    check_zero_tests;
-    check_least_bit_tests;
-]
+let tests : test list =
+    List.flatten
+        [
+            UInt8Test.tests;
+            to_string_tests;
+            bool_to_ui8_tests;
+            add_compare_tests;
+            check_most_bit_tests;
+            check_zero_tests;
+            check_least_bit_tests;
+        ]

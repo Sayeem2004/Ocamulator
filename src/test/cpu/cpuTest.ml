@@ -1,5 +1,179 @@
 open OUnit2
+open Lib__UInt8
+open Lib__UInt16
 open Lib__Cpu
+open Lib__Ram
+
+(** [cpu_zero] is a CPU with an empty RAM array. *)
+let cpu_zero : CPU.t = CPU.nes_cpu (UInt16.from_int 0) (RAM.nes_zero_ram ())
+
+(** [cpu_ui8] is a CPU with a RAM array with value 128 set at position 0. *)
+let cpu_ui8 : CPU.t =
+    let cpu = CPU.nes_cpu (UInt16.from_int 0) (RAM.nes_zero_ram ()) in
+    CPU.write_ui8 cpu (UInt16.from_int 0) (UInt8.from_int 128);
+    cpu
+
+(** [cpu_ui16] is a CPU with a RAM array with value 256 set at position 0. *)
+let cpu_ui16 : CPU.t =
+    let cpu = CPU.nes_cpu (UInt16.from_int 0) (RAM.nes_zero_ram ()) in
+    CPU.write_ui16 cpu (UInt16.from_int 0) (UInt16.from_int 256);
+    cpu
+
+(** [flags_ui8_test name cpu exp] tests equivalence between [flags_ui8 cpu] and
+    [exp]. *)
+let flags_ui8_test (name : string) (cpu : CPU.t) (exp : uint8) : test =
+    name >:: fun _ ->
+        assert_equal exp (CPU.flags_ui8 cpu) ~printer:UInt8.to_string
+
+(** Flags_ui8 tests to be run. *)
+let flags_ui8_tests : test list =
+    [
+        flags_ui8_test "flags_ui8_test_zero" cpu_zero (UInt8.from_int 0x10);
+        flags_ui8_test "flags_ui8_test_ui8" cpu_ui8 (UInt8.from_int 0x10);
+        flags_ui8_test "flags_ui8_test_ui16" cpu_ui16 (UInt8.from_int 0x10);
+    ]
+
+(** [fetch_ui8_test name cpu addr exp] tests equivalence between [fetch_ui8 cpu
+    addr] and [exp]. *)
+let fetch_ui8_test (name : string) (cpu : CPU.t) (addr : uint16) (exp : uint8) :
+    test =
+    name >:: fun _ ->
+        assert_equal exp (CPU.fetch_ui8 cpu addr) ~printer:UInt8.to_string
+
+(** Fetch_ui8 tests to be run. *)
+let fetch_ui8_tests : test list =
+    [
+        fetch_ui8_test "fetch_ui8_test_zero" cpu_zero (UInt16.from_int 0)
+            (UInt8.from_int 0);
+        fetch_ui8_test "fetch_ui8_test_ui8" cpu_ui8 (UInt16.from_int 0)
+            (UInt8.from_int 128);
+        fetch_ui8_test "fetch_ui8_test_ui16" cpu_ui16 (UInt16.from_int 0)
+            (UInt8.from_int 0);
+    ]
+
+(** [fetch_ui16_test name cpu addr exp] tests equivalence between [fetch_ui16
+    cpu addr] and [exp]. *)
+let fetch_ui16_test (name : string) (cpu : CPU.t) (addr : uint16) (exp : uint16)
+    : test =
+    name >:: fun _ ->
+        assert_equal exp (CPU.fetch_ui16 cpu addr) ~printer:UInt16.to_string
+
+(** Fetch_ui16 tests to be run. *)
+let fetch_ui16_tests : test list =
+    [
+        fetch_ui16_test "fetch_ui16_test_zero" cpu_zero (UInt16.from_int 0)
+            (UInt16.from_int 0);
+        fetch_ui16_test "fetch_ui16_test_ui8" cpu_ui8 (UInt16.from_int 0)
+            (UInt16.from_int 128);
+        fetch_ui16_test "fetch_ui16_test_ui16" cpu_ui16 (UInt16.from_int 0)
+            (UInt16.from_int 256);
+    ]
+
+(** [fetch_current_instruction_test name cpu exp] tests equivalence between
+    [fetch_current_instruction cpu] and [exp]. *)
+let fetch_current_instruction_test (name : string) (cpu : CPU.t) (exp : uint8) :
+    test =
+    name >:: fun _ ->
+        assert_equal exp (CPU.fetch_current_instruction cpu) ~printer:UInt8.to_string
+
+(** Fetch_current_instruction tests to be run. *)
+let fetch_current_instruction_tests : test list =
+    [
+        fetch_current_instruction_test "fetch_current_instruction_test_zero"
+            cpu_zero (UInt8.from_int 0);
+        fetch_current_instruction_test "fetch_current_instruction_test_ui8" cpu_ui8
+            (UInt8.from_int 128);
+        fetch_current_instruction_test "fetch_current_instruction_test_ui16"
+            cpu_ui16 (UInt8.from_int 0);
+    ]
+
+(** [absolute_loc_stack_test name cpu exp] tests equivalence between
+    [absolute_loc_stack cpu] and [exp]. *)
+let absolute_loc_stack_test (name : string) (cpu : CPU.t) (exp : uint16) : test
+    =
+    name >:: fun _ ->
+        assert_equal exp (CPU.absolute_loc_stack cpu) ~printer:UInt16.to_string
+
+(** Absolute_loc_stack tests to be run. *)
+let absolute_loc_stack_tests : test list =
+    [
+        absolute_loc_stack_test "absolute_loc_stack_test_zero" cpu_zero
+            (UInt16.from_int 0x01FF);
+        absolute_loc_stack_test "absolute_loc_stack_test_ui8" cpu_ui8
+            (UInt16.from_int 0x01FF);
+        absolute_loc_stack_test "absolute_loc_stack_test_ui16" cpu_ui16
+            (UInt16.from_int 0x01FF);
+    ]
+
+(** [push_stack_ui8_test name cpu v exp] tests equivalence between [push_stack_ui8
+    cpu v] and [exp]. *)
+let push_stack_ui8_test (name : string) (cpu : CPU.t) (v : uint8) (exp : uint8)
+    : test =
+    name >:: fun _ ->
+        let _ = CPU.push_stack_ui8 cpu v in
+        assert_equal exp (CPU.peek_stack cpu) ~printer:UInt8.to_string
+
+(** Push_stack_ui8 tests to be run. *)
+let push_stack_ui8_tests : test list =
+    [
+        push_stack_ui8_test "push_stack_ui8_test_zero" cpu_zero
+            (UInt8.from_int 0x01) (UInt8.from_int 0x01);
+        push_stack_ui8_test "push_stack_ui8_test_ui8" cpu_ui8 (UInt8.from_int 0x01)
+            (UInt8.from_int 0x01);
+        push_stack_ui8_test "push_stack_ui8_test_ui16" cpu_ui16
+            (UInt8.from_int 0x01) (UInt8.from_int 0x01);
+    ]
+
+(** [push_stack_ui16_test name cpu v exp] tests equivalence between [push_stack_ui16
+    cpu v] and [exp]. *)
+let push_stack_ui16_test (name : string) (cpu : CPU.t) (v : uint16)
+        (exp : uint8) : test =
+    name >:: fun _ ->
+        let _ = CPU.push_stack_ui16 cpu v in
+        assert_equal exp (CPU.peek_stack cpu) ~printer:UInt8.to_string
+
+(** Push_stack_ui16 tests to be run. *)
+let push_stack_ui16_tests : test list =
+    [
+        push_stack_ui16_test "push_stack_ui16_test_zero" cpu_zero
+            (UInt16.from_int 0x01) (UInt8.from_int 0x01);
+        push_stack_ui16_test "push_stack_ui16_test_ui8" cpu_ui8
+            (UInt16.from_int 0x01) (UInt8.from_int 0x01);
+        push_stack_ui16_test "push_stack_ui16_test_ui16" cpu_ui16
+            (UInt16.from_int 0x01) (UInt8.from_int 0x01);
+    ]
+
+(** [pop_stack_test name cpu exp] tests equivalence between [pop_stack (push_stack
+    (push_stack cpu v) v)] and [exp]. *)
+let pop_stack_test (name : string) (cpu : CPU.t) (v : uint8) (exp : uint8) :
+    test =
+    name >:: fun _ ->
+        let _ = CPU.push_stack_ui8 cpu v in
+        let _ = CPU.push_stack_ui8 cpu v in
+        let _ = CPU.pop_stack cpu in
+        assert_equal exp (CPU.peek_stack cpu) ~printer:UInt8.to_string
+
+(** Pop_stack tests to be run. *)
+let pop_stack_tests : test list =
+    [
+        pop_stack_test "pop_stack_test_zero" cpu_zero (UInt8.from_int 0x01)
+            (UInt8.from_int 0x01);
+        pop_stack_test "pop_stack_test_ui8" cpu_ui8 (UInt8.from_int 0x01)
+            (UInt8.from_int 0x01);
+        pop_stack_test "pop_stack_test_ui16" cpu_ui16 (UInt8.from_int 0x01)
+            (UInt8.from_int 0x01);
+    ]
 
 (** Cpu tests to be run. *)
-let tests : test list = List.flatten []
+let tests : test list =
+    List.flatten
+        [
+            flags_ui8_tests;
+            fetch_ui8_tests;
+            fetch_ui16_tests;
+            fetch_current_instruction_tests;
+            absolute_loc_stack_tests;
+            push_stack_ui8_tests;
+            push_stack_ui16_tests;
+            pop_stack_tests;
+        ]

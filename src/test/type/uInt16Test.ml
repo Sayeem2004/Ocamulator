@@ -78,11 +78,13 @@ let ui16_to_ui8_tests : test list =
     ]
 
 (** UInt16 tests to be run. *)
-let tests : test list = List.flatten [
-    UInt16Test.tests;
-    to_string_tests;
-    ui16_from_ui8_tests;
-    ui16_combine_ui8_tests;
-    bool_to_ui16_tests;
-    ui16_to_ui8_tests;
-]
+let tests : test list =
+    List.flatten
+        [
+            UInt16Test.tests;
+            to_string_tests;
+            ui16_from_ui8_tests;
+            ui16_combine_ui8_tests;
+            bool_to_ui16_tests;
+            ui16_to_ui8_tests;
+        ]

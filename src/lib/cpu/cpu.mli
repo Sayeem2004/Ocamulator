@@ -32,6 +32,7 @@ module CPU : sig
         could possibly interact with.  *)
 
     val nes_cpu : uint16 -> RAM.t -> t
+    (** [nes_cpu pc ram] is a [CPU.t] with the given program_counter and ram. *)
 
     val flags_ui8 : t -> uint8
     (** [flags_ui8 cpu] is the [uint8] representation of the [cpu] flags. *)
@@ -60,11 +61,11 @@ module CPU : sig
     (** [absolute_loc_stack cpu] is the absolute location of the stack pointer
         in the RAM array. *)
 
-    val push_stack_u8 : t -> uint8 -> t
+    val push_stack_ui8 : t -> uint8 -> t
     (** [push_stack_u8 cpu value] pushes [value] to the stack and updates the
         position of the stack_pointer. *)
 
-    val push_stack_u16 : t -> uint16 -> t
+    val push_stack_ui16 : t -> uint16 -> t
     (** [push_stack_u16 cpu value] pushes [value] to the stack and updates the
         position of the stack_pointer. *)
 

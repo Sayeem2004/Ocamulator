@@ -1,13 +1,13 @@
 open UInt8
 
-module UInt16Set : UIntSet.S with type t := int
+module UInt16Set : UIntX.USet with type t := int
 (** [UInt16Set] describes an unsigned integer with 16 bits by specifying min and
     max values along with the number of bits. *)
 
 (** [UInt16] represents an unsigned integer with 16 bits that has defined integer
     operations. *)
 module UInt16 : sig
-    include UInt.S
+    include UIntX.UInt
 
     val ui16_from_ui8 : uint8 -> t
     val ui16_combine_ui8 : uint8 -> uint8 -> t

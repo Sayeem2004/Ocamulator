@@ -1,6 +1,6 @@
 open UInt8
 
-module UInt16Set : UIntSet.S with type t := int = struct
+module UInt16Set : UIntX.USet with type t := int = struct
     let max_value : int = 0xFFFF
     let zero : int = 0
     let one : int = 1
@@ -8,7 +8,7 @@ module UInt16Set : UIntSet.S with type t := int = struct
 end
 
 module UInt16 = struct
-    include UIntX.F (UInt16Set)
+    include UIntX.SetToInt (UInt16Set)
 
     let ui16_from_ui8 (ui8 : uint8) : t = from_int (UInt8.to_int ui8)
 
