@@ -1,8 +1,8 @@
-module UInt8Set : UIntSet.S with type t := int
+module UInt8Set : UIntX.USet with type t := int
 (** [UInt8Set] describes an unsigned integer with 8 bits by specifying min and
     max values along with the number of bits. *)
 
-module UInt8 : UInt.S
+module UInt8 : UIntX.UInt
 (** [UInt8] represents an unsigned integer with 8 bits that has defined integer
     operations. *)
 

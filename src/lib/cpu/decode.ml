@@ -1,6 +1,6 @@
+open Cpu
 open UInt8
 open UInt16
-open Cpu
 
 module Decode = struct
     type _ memory_mode =
@@ -60,8 +60,16 @@ module Decode = struct
         | ZeropageY zero_addr_y -> !^(zero_addr_y ++ cpu.register_Y)
         | _ -> raise (Failure "Memory mode incompatible with decode address")
 
-    let overflow (op_1 : uint8) (op_2 : uint8) (res : uint8) : bool =
-        (?-op_1 && ?-op_2 && not ?-res) || ((not ?-op_1) && (not ?-op_2) && ?-res)
+    let add_overflow (op_1 : uint8) (op_2 : uint8) (res : uint8) : bool =
+        let lft = not ?-(op_1 |/. op_2) in
+        let rgt = ?-(op_1 |/. res) in
+        lft && rgt
+
+    let sub_overflow (op_1 : uint8) (op_2 : uint8) (res : uint8) : bool =
+        let op_2 = UInt8.max_value -- op_2 in
+        let lft = not ?-(op_1 |/. op_2) in
+        let rgt = ?-(op_1 |/. res) in
+        lft && rgt
 
     let incr_cpu_pc (cpu : CPU.t) (size : int) : CPU.t =
         { cpu with program_counter = cpu.program_counter +++ ~^size }

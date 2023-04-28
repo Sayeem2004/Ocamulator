@@ -3,7 +3,11 @@
 *.swp
 *~
 \#*\#
+
+# Project Specific
 assignment/
+data/opcode
+data/rom
 *.zip
 
 # Ocaml

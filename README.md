@@ -166,5 +166,6 @@ However, we did have a lot of help from the following sources:
   and [Nes Emu](https://yizhang82.dev/nes-emu-overview) were used as reference.
 - The [NES Dev Wiki](https://www.nesdev.org/wiki/Nesdev) led us to different
   resources that helped us understand the NES architecture.
+- Opcode tests were scraped from Tom Harte's [Processor Tests](https://github.com/TomHarte/ProcessorTests)
 - Inspiration for project structure and utilities came from previous CS 3110
   assignments and labs.

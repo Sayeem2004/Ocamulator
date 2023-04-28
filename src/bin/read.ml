@@ -1,21 +1,23 @@
 open Lib__Cpu
 open Lib__Ram
 open Lib__UInt8
-open Lib__UInt16
 open Lib__Opcode
+open Lib__UInt16
 
 (** [pp_cpu cpu] is a pretty-printed string representing the CPU state. *)
 let pp_cpu (cpu : CPU.t) : unit =
-    print_endline "CPU {";
-    print_endline ("    Accumulator: " ^ UInt8.to_string cpu.accumulator);
-    print_endline ("    Register X: " ^ UInt8.to_string cpu.register_X);
-    print_endline ("    Register Y: " ^ UInt8.to_string cpu.register_Y);
-    print_endline ("    Program Counter: " ^ UInt16.to_string cpu.program_counter);
-    print_endline
-        ("    Stack Pointer: " ^ UInt16.to_string (~^0x01 +++ !^(cpu.stack_pointer)));
-    print_endline "    RAM: [ ... ... ... ]";
-    print_endline ("    Flags: " ^ UInt8.to_string (CPU.flags_ui8 cpu));
-    print_endline "}"
+    let str8 = UInt8.to_string in
+    let str16 = UInt16.to_string in
+    let ptr = ~^0x01 +++ !^(cpu.stack_pointer) in
+    print_endline ("CPU " ^ "{");
+    print_endline ("    Accumulator: " ^ str8 cpu.accumulator);
+    print_endline ("    Register X: " ^ str8 cpu.register_X);
+    print_endline ("    Register Y: " ^ str8 cpu.register_Y);
+    print_endline ("    Program Counter: " ^ str16 cpu.program_counter);
+    print_endline ("    Stack Pointer: " ^ str16 ptr);
+    print_endline ("    RAM: " ^ "[ ... ... ... ]");
+    print_endline ("    Flags: " ^ str8 (CPU.flags_ui8 cpu));
+    print_endline ("}" ^ " ")
 
 (** [fetch_current_opcode cpu] is the opcode that was just run. *)
 let fetch_current_opcode (cpu : CPU.t) : uint8 =
@@ -31,13 +33,14 @@ let rec step (cpu : CPU.t) : unit =
     print_string "Step: ";
     match read_line () with
     | exception End_of_file -> ()
-    | command ->
-        if command = "quit" || command = "exit" then ()
-        else
-            let opcode = fetch_current_opcode cpu in
-            let cpu_stepped_pc = step_cpu_pc cpu in
-            let stepped_cpu = Opcode.step cpu_stepped_pc opcode in
-            step stepped_cpu
+    | command -> (
+            match command with
+            | "quit" | "exit" -> ()
+            | _ ->
+                let opcode = fetch_current_opcode cpu in
+                let cpu_stepped_pc = step_cpu_pc cpu in
+                let stepped_cpu = Opcode.step cpu_stepped_pc opcode in
+                step stepped_cpu)
 
 (** [main ()] enters the user interface pipeline for this project. It parses the
     ROM file specified by the first command line argument. It then initializes
@@ -45,12 +48,12 @@ let rec step (cpu : CPU.t) : unit =
     ROM file and displays the CPU and RAM state after every instruction. *)
 let main () : unit =
     print_newline ();
-    print_endline
-        "Please enter the name of the ROM file in ./data you would like to run:";
+    print_endline "Please enter the ROM file in ./data/rom to run:";
     match read_line () with
     | exception End_of_file -> ()
     | file_name ->
-        let file_dir = "data" ^ Filename.dir_sep ^ file_name in
+        let sep = Filename.dir_sep in
+        let file_dir = "data" ^ sep ^ "rom" ^ sep ^ file_name in
         let _ = print_endline file_dir in
         let nes_channel_in = open_in file_dir in
         let nes_rom_buffer = Bytes.make (0xFFFF + 1) ' ' in
