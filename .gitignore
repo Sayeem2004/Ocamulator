@@ -6,8 +6,9 @@
 
 # Project Specific
 assignment/
+data/opcode
+data/rom
 *.zip
-*.nes
 
 # Ocaml
 *.cmo

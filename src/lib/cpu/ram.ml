@@ -8,14 +8,17 @@ module RAM = struct
     }
 
     let nes_zero_ram () : t =
-        { max_mem = 0xFFFF + 1; ram_memory = Bytes.make 0xFFFF '\x00' }
+        { max_mem = 0xFFFF + 1; ram_memory = Bytes.make (0xFFFF + 1) '\x00' }
 
-    let nes_ram (rom : bytes) = { max_mem = 0xFFFF + 1; ram_memory = rom }
+    let nes_ram (rom_file : bytes) =
+        { max_mem = 0xFFFF + 1; ram_memory = rom_file }
+
     let byte_to_uint8 (byte : char) = Char.code byte |> UInt8.from_int
-    let uint8_to_byte (u8 : uint8) = UInt8.to_int u8 |> Char.chr
 
     let read_ui8 (ram : t) (addr : uint16) : uint8 =
         Bytes.get ram.ram_memory (UInt16.to_int addr) |> byte_to_uint8
+
+    let uint8_to_byte (u8 : uint8) = UInt8.to_int u8 |> Char.chr
 
     let read_ui16 (ram : t) (addr : uint16) : uint16 =
         let mem_addr_int = UInt16.to_int addr in

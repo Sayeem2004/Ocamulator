@@ -54,8 +54,11 @@ module CPU = struct
         let zero_flag = decimal_flag ++ ?.(cpu.flags.zero) << 1 in
         zero_flag ++ ?.(cpu.flags.carr_bit)
 
-    let fetch_ui8 (cpu : t) (addr : uint16) : uint8 = RAM.read_ui8 cpu.ram addr
-    let fetch_ui16 (cpu : t) (addr : uint16) : uint16 = RAM.read_ui16 cpu.ram addr
+    let fetch_ui8 (cpu : t) (address : uint16) : uint8 =
+        RAM.read_ui8 cpu.ram address
+
+    let fetch_ui16 (cpu : t) (address : uint16) : uint16 =
+        RAM.read_ui16 cpu.ram address
 
     let fetch_current_instruction (cpu : t) : uint8 =
         fetch_ui8 cpu cpu.program_counter

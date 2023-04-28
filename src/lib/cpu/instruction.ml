@@ -7,7 +7,7 @@ module Instruction = struct
     let adc_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let operand = Decode.contents cpu mode in
         let summed_acc = cpu.accumulator ++ operand ++ ?.(cpu.flags.carr_bit) in
-        let overflow = Decode.overflow operand cpu.accumulator summed_acc in
+        let overflow = Decode.add_overflow operand cpu.accumulator summed_acc in
         let neg_bit = ?-summed_acc in
         let zero_bit = ?*summed_acc in
         {
