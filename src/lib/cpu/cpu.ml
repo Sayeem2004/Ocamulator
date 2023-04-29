@@ -24,6 +24,18 @@ module CPU = struct
         flags : cpu_flags;
     }
 
+    let def_flag () : cpu_flags =
+        {
+            carr_bit = false;
+            zero = false;
+            interrupt = true;
+            decimal = false;
+            negative = false;
+            overflow = false;
+            break = false;
+            reserved = true;
+        }
+
     let nes_cpu (init_pc : uint16) (nes_ram : RAM.t) : t =
         {
             accumulator = ~.0;
@@ -32,17 +44,7 @@ module CPU = struct
             program_counter = init_pc;
             stack_pointer = ~.0xFF;
             ram = nes_ram;
-            flags =
-                {
-                    carr_bit = false;
-                    zero = false;
-                    interrupt = true;
-                    decimal = false;
-                    negative = false;
-                    overflow = false;
-                    break = false;
-                    reserved = true;
-                };
+            flags = def_flag ();
         }
 
     let flags_ui8 (cpu : t) : uint8 =
@@ -51,7 +53,8 @@ module CPU = struct
         let reserved_flag = overflow_flag ++ ?.(cpu.flags.reserved) << 1 in
         let break_flag = reserved_flag ++ ?.(cpu.flags.break) << 1 in
         let decimal_flag = break_flag ++ ?.(cpu.flags.decimal) << 1 in
-        let zero_flag = decimal_flag ++ ?.(cpu.flags.zero) << 1 in
+        let interrupt_flag = decimal_flag ++ ?.(cpu.flags.interrupt) << 1 in
+        let zero_flag = interrupt_flag ++ ?.(cpu.flags.zero) << 1 in
         zero_flag ++ ?.(cpu.flags.carr_bit)
 
     let flags_from_ui8 (cpu : t) (f : uint8) : t =
@@ -59,16 +62,31 @@ module CPU = struct
             cpu with
             flags =
                 {
-                    cpu.flags with
-                    negative = not (f &&. ~.0b1000000 <-> ~.0x00);
-                    overflow = not (f &&. ~.0b0100000 <-> ~.0x00);
-                    reserved = true;
-                    break = not (f &&. ~.0b0001000 <-> ~.0x00);
-                    decimal = not (f &&. ~.0b0000100 <-> ~.0x00);
-                    zero = not (f &&. ~.0b0000010 <-> ~.0x00);
-                    carr_bit = not (f &&. ~.0b0000001 <-> ~.0x00);
+                    negative = not (f &&. ~.0b10000000 <-> ~.0x00);
+                    overflow = not (f &&. ~.0b01000000 <-> ~.0x00);
+                    reserved = not (f &&. ~.0b00100000 <-> ~.0x00);
+                    break = not (f &&. ~.0b00010000 <-> ~.0x00);
+                    decimal = not (f &&. ~.0b00001000 <-> ~.0x00);
+                    interrupt = not (f &&. ~.0b00000100 <-> ~.0x00);
+                    zero = not (f &&. ~.0b00000010 <-> ~.0x00);
+                    carr_bit = not (f &&. ~.0b00000001 <-> ~.0x00);
                 };
         }
+
+    let spec_cpu (pc : uint16) (sp : uint8) (acc : uint8) (reg_x : uint8)
+            (reg_y : uint8) (flags : uint8) : t =
+        let cpu : t =
+            {
+                accumulator = acc;
+                register_X = reg_x;
+                register_Y = reg_y;
+                program_counter = pc;
+                stack_pointer = sp;
+                ram = RAM.nes_zero_ram ();
+                flags = def_flag ();
+            }
+        in
+        flags_from_ui8 cpu flags
 
     let fetch_ui8 (cpu : t) (address : uint16) : uint8 =
         RAM.read_ui8 cpu.ram address
@@ -100,7 +118,7 @@ module CPU = struct
     let peek_stack_ui8 (cpu : t) : uint8 =
         let stack_loc = absolute_loc_stack cpu in
         fetch_ui8 cpu (stack_loc +++ ~^0x0001)
-    
+
     let peek_stack_ui16 (cpu : t) : uint16 =
         let stack_loc = absolute_loc_stack cpu in
         fetch_ui16 cpu (stack_loc +++ ~^0x0002)
@@ -110,4 +128,13 @@ module CPU = struct
 
     let pop_stack_ui16 (cpu : t) : t =
         { cpu with stack_pointer = cpu.stack_pointer ++ ~.0x0002 }
+
+    let to_string (cpu : t) : string =
+        Printf.sprintf "CPU: { PC: %s, SP: %s, A: %s, X: %s, Y: %s, F: %s }"
+            (UInt16.to_string cpu.program_counter)
+            (UInt8.to_string cpu.stack_pointer)
+            (UInt8.to_string cpu.accumulator)
+            (UInt8.to_string cpu.register_X)
+            (UInt8.to_string cpu.register_Y)
+            (UInt8.to_string (flags_ui8 cpu))
 end

@@ -31,6 +31,10 @@ module CPU : sig
     (** [CPU.t] is a record type containing all necessary data types that a CPU
         could possibly interact with.  *)
 
+    val def_flag : unit -> cpu_flags
+    (** [def_flag ()] is the default [cpu_flags] with all flags set to false except
+        the reserved flag which is true. *)
+
     val nes_cpu : uint16 -> RAM.t -> t
     (** [nes_cpu pc ram] is a [CPU.t] with the given program_counter and ram. *)
 
@@ -38,7 +42,12 @@ module CPU : sig
     (** [flags_ui8 cpu] is the [uint8] representation of the [cpu] flags. *)
 
     val flags_from_ui8 : t -> uint8 -> t
-    (** [flags_from_ui8 cpu flags] is cpu with flags read in from the uint8 arg *)
+    (** [flags_from_ui8 cpu flags] is cpu with flags read in from the uint8 arg. *)
+
+    val spec_cpu : uint16 -> uint8 -> uint8 -> uint8 -> uint8 -> uint8 -> t
+    (** [spec_cpu pc acc x y sp flags] is a [CPU.t] with the given program_counter,
+        accumulator, register_X, register_Y, stack_pointer, and flags. The ram is
+        set to the zero array. *)
 
     val fetch_ui8 : t -> uint16 -> uint8
     (** [fetch_ui8 cpu addr] is the [uint8] found in the index [addr] in the RAM
@@ -79,10 +88,13 @@ module CPU : sig
     (** [peek_stack cpu] is the [uint8] value at the top of the stack. *)
 
     val pop_stack_ui8 : t -> t
-    (** [pop_stack cpu] pops the top [uint8] 
+    (** [pop_stack cpu] pops the top [uint8]
         value of the stack and updates the position of the stack_pointer. *)
 
-    val pop_stack_ui16: t -> t
-    (** [pop_stack cpu] pops the top [uint16] 
+    val pop_stack_ui16 : t -> t
+    (** [pop_stack cpu] pops the top [uint16]
         value of the stack and updates the position of the stack_pointer. *)
+
+    val to_string : t -> string
+    (** [to_string cpu] is a string representation of the cpu. *)
 end

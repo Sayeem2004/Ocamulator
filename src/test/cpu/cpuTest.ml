@@ -28,9 +28,9 @@ let flags_ui8_test (name : string) (cpu : CPU.t) (exp : uint8) : test =
 (** Flags_ui8 tests to be run. *)
 let flags_ui8_tests : test list =
     [
-        flags_ui8_test "flags_ui8_test_zero" cpu_zero (UInt8.from_int 0x10);
-        flags_ui8_test "flags_ui8_test_ui8" cpu_ui8 (UInt8.from_int 0x10);
-        flags_ui8_test "flags_ui8_test_ui16" cpu_ui16 (UInt8.from_int 0x10);
+        flags_ui8_test "flags_ui8_test_zero" cpu_zero (UInt8.from_int 0x24);
+        flags_ui8_test "flags_ui8_test_ui8" cpu_ui8 (UInt8.from_int 0x24);
+        flags_ui8_test "flags_ui8_test_ui16" cpu_ui16 (UInt8.from_int 0x24);
     ]
 
 (** [fetch_ui8_test name cpu addr exp] tests equivalence between [fetch_ui8 cpu

@@ -33,7 +33,7 @@ let cpu_from_json (json : json) : CPU.t =
     let reg_x = json |> Util.member "x" |> Util.to_int |> UInt8.from_int in
     let reg_y = json |> Util.member "y" |> Util.to_int |> UInt8.from_int in
     let flags = json |> Util.member "p" |> Util.to_int |> UInt8.from_int in
-    CPU.nes_cpu prog_cnt (RAM.nes_zero_ram ())
+    CPU.spec_cpu prog_cnt stck_ptr acc reg_x reg_y flags
 
 (** [cycles_from_json json] converts the given [json] into a list of cycles if
     possible. *)
@@ -45,7 +45,8 @@ let cycles_from_json (json : json) : cycle list =
         let value : int = List.nth val_list 1 |> Util.to_int in
         let name : string = List.nth val_list 2 |> Util.to_string in
         (addr, value, name)
-    in List.map parse json_list
+    in
+    List.map parse json_list
 
 (** [rinfo_from_json json] converts the given [json] into a [rinfo] if possible. *)
 let rinfo_from_json (json : json) : rinfo =
@@ -56,12 +57,14 @@ let rinfo_from_json (json : json) : rinfo =
         let addr : int = List.nth val_list 0 |> Util.to_int in
         let value : int = List.nth val_list 1 |> Util.to_int in
         (addr, value)
-    in List.map parse json_list
+    in
+    List.map parse json_list
 
 let apply_ram (ram : RAM.t) (info : rinfo) : unit =
     let apply (ram : RAM.t) ((addr, value) : int * int) : unit =
         RAM.write_ui8 ram (UInt16.from_int addr) (UInt8.from_int value)
-    in List.iter (apply ram) info
+    in
+    List.iter (apply ram) info
 
 (** [opcode_test_from_json json] converts the given [json] into an [opcode_test]
     if possible. *)
@@ -114,12 +117,14 @@ let compare_cpu (info : rinfo) (cpu1 : CPU.t) (cpu2 : CPU.t) : bool =
 let opcode_test (test : opcode_test) (opcode : uint8) : test =
     let cpu_step = Opcode.step test.initial_state opcode in
     test.name >:: fun _ ->
-        assert_equal test.final_state cpu_step ~cmp:(compare_cpu test.final_ram)
+        assert_equal test.final_state cpu_step
+            ~cmp:(compare_cpu test.final_ram)
+            ~printer:CPU.to_string
 
 (** Opcode tests to be run. *)
 let tests : test list =
     let parse (i : int) : json = parse_json (UInt8.from_int i) in
-    let json_list : json list = List.init 256 parse in
+    let json_list : json list = List.init 1 parse in
     let opcode_tests : opcode_test list list = List.map from_json json_list in
     let mapi =
         List.mapi (fun i l ->

@@ -391,7 +391,7 @@ module Instruction = struct
     let rol_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         match mode with
         | Accumulator ->
-            let shifted_acc = (cpu.accumulator << 1) ++ (?. (cpu.flags.carr_bit)) in
+            let shifted_acc = (cpu.accumulator << 1) ++ ?.(cpu.flags.carr_bit) in
             let carry_bit = ?-(cpu.accumulator) in
             let zero_bit = ?*shifted_acc in
             let neg_bit = ?-shifted_acc in
@@ -409,7 +409,9 @@ module Instruction = struct
         | addr_mode ->
             let operand_addr = Decode.address cpu addr_mode in
             let operand_contents = Decode.contents cpu addr_mode in
-            let shifted_contents = (operand_contents << 1) ++ (?. (cpu.flags.carr_bit)) in
+            let shifted_contents =
+                (operand_contents << 1) ++ ?.(cpu.flags.carr_bit)
+            in
             let carry_bit = ?-operand_contents in
             let zero_bit = ?*shifted_contents in
             let neg_bit = ?-shifted_contents in
