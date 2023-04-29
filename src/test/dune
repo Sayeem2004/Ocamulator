@@ -1,5 +1,5 @@
 (test
  (name "main")
- (libraries "ounit2" "lib"))
+ (libraries "ounit2" "lib" "yojson"))
 
 (include_subdirs unqualified)

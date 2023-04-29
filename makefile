@@ -57,4 +57,4 @@ zip:
 
 scrape:
 	@python util/scrape.py
-	@prettier --write data/opcode
+	@prettier --write data/opcode &> /dev/null
