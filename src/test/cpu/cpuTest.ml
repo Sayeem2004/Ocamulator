@@ -48,7 +48,7 @@ let fetch_ui8_tests : test list =
         fetch_ui8_test "fetch_ui8_test_ui8" cpu_ui8 (UInt16.from_int 0)
             (UInt8.from_int 128);
         fetch_ui8_test "fetch_ui8_test_ui16" cpu_ui16 (UInt16.from_int 0)
-            (UInt8.from_int 0);
+            (UInt8.from_int 256);
     ]
 
 (** [fetch_ui16_test name cpu addr exp] tests equivalence between [fetch_ui16
@@ -82,7 +82,7 @@ let fetch_current_instruction_tests : test list =
         fetch_current_instruction_test "fetch_current_instruction_test_zero"
             cpu_zero (UInt8.from_int 0);
         fetch_current_instruction_test "fetch_current_instruction_test_ui8" cpu_ui8
-            (UInt8.from_int 128);
+            (UInt8.from_int 0x80);
         fetch_current_instruction_test "fetch_current_instruction_test_ui16"
             cpu_ui16 (UInt8.from_int 0);
     ]
@@ -110,8 +110,8 @@ let absolute_loc_stack_tests : test list =
 let push_stack_ui8_test (name : string) (cpu : CPU.t) (v : uint8) (exp : uint8)
     : test =
     name >:: fun _ ->
-        let _ = CPU.push_stack_ui8 cpu v in
-        assert_equal exp (CPU.peek_stack cpu) ~printer:UInt8.to_string
+        let pushed_cpu = CPU.push_stack_ui8 cpu v in
+        assert_equal exp (CPU.peek_stack_ui8 pushed_cpu) ~printer:UInt8.to_string
 
 (** Push_stack_ui8 tests to be run. *)
 let push_stack_ui8_tests : test list =
@@ -127,20 +127,20 @@ let push_stack_ui8_tests : test list =
 (** [push_stack_ui16_test name cpu v exp] tests equivalence between [push_stack_ui16
     cpu v] and [exp]. *)
 let push_stack_ui16_test (name : string) (cpu : CPU.t) (v : uint16)
-        (exp : uint8) : test =
+        (exp : uint16) : test =
     name >:: fun _ ->
-        let _ = CPU.push_stack_ui16 cpu v in
-        assert_equal exp (CPU.peek_stack cpu) ~printer:UInt8.to_string
+        let pushed_cpu = CPU.push_stack_ui16 cpu v in
+        assert_equal exp (CPU.peek_stack_ui16 pushed_cpu) ~printer:UInt16.to_string
 
 (** Push_stack_ui16 tests to be run. *)
 let push_stack_ui16_tests : test list =
     [
         push_stack_ui16_test "push_stack_ui16_test_zero" cpu_zero
-            (UInt16.from_int 0x01) (UInt8.from_int 0x01);
+            (UInt16.from_int 0x01) (UInt16.from_int 0x01);
         push_stack_ui16_test "push_stack_ui16_test_ui8" cpu_ui8
-            (UInt16.from_int 0x01) (UInt8.from_int 0x01);
+            (UInt16.from_int 0x01) (UInt16.from_int 0x01);
         push_stack_ui16_test "push_stack_ui16_test_ui16" cpu_ui16
-            (UInt16.from_int 0x01) (UInt8.from_int 0x01);
+            (UInt16.from_int 0x01) (UInt16.from_int 0x01);
     ]
 
 (** [pop_stack_test name cpu exp] tests equivalence between [pop_stack (push_stack
@@ -148,10 +148,10 @@ let push_stack_ui16_tests : test list =
 let pop_stack_test (name : string) (cpu : CPU.t) (v : uint8) (exp : uint8) :
     test =
     name >:: fun _ ->
-        let _ = CPU.push_stack_ui8 cpu v in
-        let _ = CPU.push_stack_ui8 cpu v in
-        let _ = CPU.pop_stack cpu in
-        assert_equal exp (CPU.peek_stack cpu) ~printer:UInt8.to_string
+        let pushed_1_cpu = CPU.push_stack_ui8 cpu v in
+        let pushed_2_cpu = CPU.push_stack_ui8 pushed_1_cpu v in
+        let popped_cpu = CPU.pop_stack_ui8 pushed_2_cpu in
+        assert_equal exp (CPU.peek_stack_ui8 popped_cpu) ~printer:UInt8.to_string
 
 (** Pop_stack tests to be run. *)
 let pop_stack_tests : test list =

@@ -20,12 +20,6 @@ module RAM : sig
     (** [nes_ram b] is an instantiation of type [t] containing the bytes
         sequence given by [b] *)
 
-    val byte_to_uint8 : char -> uint8
-    (** [byte_to_uint8 c] is the [uint8] representation of the [char] [c]. *)
-
-    val uint8_to_byte : uint8 -> char
-    (** [uint8_to_byte u] is the [char] representation of the [uint8] [u]. *)
-
     val read_ui8 : t -> uint16 -> uint8
     (** [read_ui8 ram addr] is the [uint8] stored in the index of [ram] at
         [addr]. *)
