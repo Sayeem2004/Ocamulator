@@ -119,14 +119,14 @@ module Instruction = struct
         else cpu
 
     let brk_op (cpu : CPU.t) : CPU.t =
-        let cpu_pushed_pc = CPU.push_stack_ui16 cpu cpu.program_counter in
-        let uint8_flags = CPU.flags_ui8 cpu in
+        let cpu_pushed_pc = CPU.push_stack_ui16 cpu (cpu.program_counter +++ ~^2) in
+        let uint8_flags = CPU.flags_ui8 {cpu_pushed_pc with flags = { cpu_pushed_pc.flags with break = true }} in
         let cpu_pushed_flags = CPU.push_stack_ui8 cpu_pushed_pc uint8_flags in
-        let interrupt_vector = CPU.fetch_ui16 cpu_pushed_flags ~^0xFFFE in
+        let interrupt_vector = CPU.fetch_ui16 cpu_pushed_flags ~^ 0xFFFE in
         {
             cpu_pushed_flags with
             program_counter = interrupt_vector;
-            flags = { cpu_pushed_flags.flags with break = true };
+            flags = { cpu_pushed_flags.flags with interrupt = true };
         }
 
     let bvc_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =

@@ -12,9 +12,12 @@ module UInt16 = struct
 
     let ui16_from_ui8 (ui8 : uint8) : t = from_int (UInt8.to_int ui8)
 
-    let ui16_combine_ui8 (most_sig_bit : uint8) (least_sig_bit : uint8) : t =
+    let combine_ui8 (most_sig_bit : uint8) (least_sig_bit : uint8) : t =
         shift_left (ui16_from_ui8 most_sig_bit) 8
         |> add (ui16_from_ui8 least_sig_bit)
+
+    let split_ui16 (ui16 : t) : uint8 * uint8 =
+        (shift_right ui16 8 |> to_int |> UInt8.from_int, ui16 |> to_int |> UInt8.from_int)
 end
 
 type uint16 = UInt16.t

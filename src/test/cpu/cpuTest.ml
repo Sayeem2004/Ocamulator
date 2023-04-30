@@ -13,12 +13,6 @@ let cpu_ui8 : CPU.t =
     CPU.write_ui8 cpu (UInt16.from_int 0) (UInt8.from_int 128);
     cpu
 
-(** [cpu_ui16] is a CPU with a RAM array with value 256 set at position 0. *)
-let cpu_ui16 : CPU.t =
-    let cpu = CPU.nes_cpu (UInt16.from_int 0) (RAM.nes_zero_ram ()) in
-    CPU.write_ui16 cpu (UInt16.from_int 0) (UInt16.from_int 256);
-    cpu
-
 (** [flags_ui8_test name cpu exp] tests equivalence between [flags_ui8 cpu] and
     [exp]. *)
 let flags_ui8_test (name : string) (cpu : CPU.t) (exp : uint8) : test =
@@ -30,7 +24,6 @@ let flags_ui8_tests : test list =
     [
         flags_ui8_test "flags_ui8_test_zero" cpu_zero (UInt8.from_int 0x24);
         flags_ui8_test "flags_ui8_test_ui8" cpu_ui8 (UInt8.from_int 0x24);
-        flags_ui8_test "flags_ui8_test_ui16" cpu_ui16 (UInt8.from_int 0x24);
     ]
 
 (** [fetch_ui8_test name cpu addr exp] tests equivalence between [fetch_ui8 cpu
@@ -47,8 +40,6 @@ let fetch_ui8_tests : test list =
             (UInt8.from_int 0);
         fetch_ui8_test "fetch_ui8_test_ui8" cpu_ui8 (UInt16.from_int 0)
             (UInt8.from_int 128);
-        fetch_ui8_test "fetch_ui8_test_ui16" cpu_ui16 (UInt16.from_int 0)
-            (UInt8.from_int 256);
     ]
 
 (** [fetch_ui16_test name cpu addr exp] tests equivalence between [fetch_ui16
@@ -65,8 +56,6 @@ let fetch_ui16_tests : test list =
             (UInt16.from_int 0);
         fetch_ui16_test "fetch_ui16_test_ui8" cpu_ui8 (UInt16.from_int 0)
             (UInt16.from_int 128);
-        fetch_ui16_test "fetch_ui16_test_ui16" cpu_ui16 (UInt16.from_int 0)
-            (UInt16.from_int 256);
     ]
 
 (** [fetch_current_instruction_test name cpu exp] tests equivalence between
@@ -83,8 +72,6 @@ let fetch_current_instruction_tests : test list =
             cpu_zero (UInt8.from_int 0);
         fetch_current_instruction_test "fetch_current_instruction_test_ui8" cpu_ui8
             (UInt8.from_int 0x80);
-        fetch_current_instruction_test "fetch_current_instruction_test_ui16"
-            cpu_ui16 (UInt8.from_int 0);
     ]
 
 (** [absolute_loc_stack_test name cpu exp] tests equivalence between
@@ -100,8 +87,6 @@ let absolute_loc_stack_tests : test list =
         absolute_loc_stack_test "absolute_loc_stack_test_zero" cpu_zero
             (UInt16.from_int 0x01FF);
         absolute_loc_stack_test "absolute_loc_stack_test_ui8" cpu_ui8
-            (UInt16.from_int 0x01FF);
-        absolute_loc_stack_test "absolute_loc_stack_test_ui16" cpu_ui16
             (UInt16.from_int 0x01FF);
     ]
 
@@ -120,8 +105,6 @@ let push_stack_ui8_tests : test list =
             (UInt8.from_int 0x01) (UInt8.from_int 0x01);
         push_stack_ui8_test "push_stack_ui8_test_ui8" cpu_ui8 (UInt8.from_int 0x01)
             (UInt8.from_int 0x01);
-        push_stack_ui8_test "push_stack_ui8_test_ui16" cpu_ui16
-            (UInt8.from_int 0x01) (UInt8.from_int 0x01);
     ]
 
 (** [push_stack_ui16_test name cpu v exp] tests equivalence between [push_stack_ui16
@@ -138,8 +121,6 @@ let push_stack_ui16_tests : test list =
         push_stack_ui16_test "push_stack_ui16_test_zero" cpu_zero
             (UInt16.from_int 0x01) (UInt16.from_int 0x01);
         push_stack_ui16_test "push_stack_ui16_test_ui8" cpu_ui8
-            (UInt16.from_int 0x01) (UInt16.from_int 0x01);
-        push_stack_ui16_test "push_stack_ui16_test_ui16" cpu_ui16
             (UInt16.from_int 0x01) (UInt16.from_int 0x01);
     ]
 
@@ -159,8 +140,6 @@ let pop_stack_tests : test list =
         pop_stack_test "pop_stack_test_zero" cpu_zero (UInt8.from_int 0x01)
             (UInt8.from_int 0x01);
         pop_stack_test "pop_stack_test_ui8" cpu_ui8 (UInt8.from_int 0x01)
-            (UInt8.from_int 0x01);
-        pop_stack_test "pop_stack_test_ui16" cpu_ui16 (UInt8.from_int 0x01)
             (UInt8.from_int 0x01);
     ]
 

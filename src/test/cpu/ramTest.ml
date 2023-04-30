@@ -12,12 +12,6 @@ let ram_ui8 : RAM.t =
     RAM.write_ui8 ram (UInt16.from_int 0) (UInt8.from_int 128);
     ram
 
-(** [ram_ui16] is a RAM array with value 256 set at position 0. *)
-let ram_ui16 : RAM.t =
-    let ram : RAM.t = RAM.nes_zero_ram () in
-    RAM.write_ui16 ram (UInt16.from_int 0) (UInt16.from_int 256);
-    ram
-
 (** [byte_to_uint8_test name c exp] tests equivalence between [byte_to_uint8 c]
     and [exp]. *)
 let byte_to_uint8_test (name : string) (c : char) (exp : uint8) : test =
@@ -61,29 +55,8 @@ let read_ui8_tests : test list =
         read_ui8_test "read_ui8_test 0" ram_zero (UInt16.from_int 0) UInt8.zero;
         read_ui8_test "read_ui8_test 1" ram_ui8 (UInt16.from_int 0)
             (UInt8.from_int 128);
-        read_ui8_test "read_ui8_test 2" ram_ui16 (UInt16.from_int 0) UInt8.zero;
-    ]
-
-(** [read_ui16_test name ram addr exp] tests equivalence between [read_ui16 ram
-    add] and [exp]. *)
-let read_ui16_test (name : string) (ram : RAM.t) (addr : UInt16.t)
-        (exp : UInt16.t) : test =
-    name >:: fun _ ->
-        assert_equal exp (RAM.read_ui16 ram addr) ~printer:UInt16.to_string
-
-(** Read_ui16 tests to be run. *)
-let read_ui16_tests : test list =
-    [
-        read_ui16_test "read_ui16_test 0" ram_zero (UInt16.from_int 0) UInt16.zero;
-        read_ui16_test "read_ui16_test 1" ram_ui8 (UInt16.from_int 0)
-            (UInt16.from_int 128);
-        read_ui16_test "read_ui16_test 2" ram_ui16 (UInt16.from_int 0)
-            (UInt16.from_int 256);
     ]
 
 (** Ram tests to be run. *)
 let tests : test list =
-    List.flatten
-        [
-            byte_to_uint8_tests; uint8_to_byte_tests; read_ui8_tests; read_ui16_tests;
-        ]
+    List.flatten [ byte_to_uint8_tests; uint8_to_byte_tests; read_ui8_tests; ]

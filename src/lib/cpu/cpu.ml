@@ -62,14 +62,14 @@ module CPU = struct
             cpu with
             flags =
                 {
-                    negative = not (f &&. ~.0b10000000 <-> ~.0x00);
-                    overflow = not (f &&. ~.0b01000000 <-> ~.0x00);
-                    reserved = not (f &&. ~.0b00100000 <-> ~.0x00);
-                    break = not (f &&. ~.0b00010000 <-> ~.0x00);
-                    decimal = not (f &&. ~.0b00001000 <-> ~.0x00);
+                    negative  = not (f &&. ~.0b10000000 <-> ~.0x00);
+                    overflow  = not (f &&. ~.0b01000000 <-> ~.0x00);
+                    reserved  = not (f &&. ~.0b00100000 <-> ~.0x00);
+                    break     = not (f &&. ~.0b00010000 <-> ~.0x00);
+                    decimal   = not (f &&. ~.0b00001000 <-> ~.0x00);
                     interrupt = not (f &&. ~.0b00000100 <-> ~.0x00);
-                    zero = not (f &&. ~.0b00000010 <-> ~.0x00);
-                    carr_bit = not (f &&. ~.0b00000001 <-> ~.0x00);
+                    zero      = not (f &&. ~.0b00000010 <-> ~.0x00);
+                    carr_bit  = not (f &&. ~.0b00000001 <-> ~.0x00);
                 };
         }
 
@@ -92,7 +92,9 @@ module CPU = struct
         RAM.read_ui8 cpu.ram address
 
     let fetch_ui16 (cpu : t) (address : uint16) : uint16 =
-        RAM.read_ui16 cpu.ram address
+        let lo = fetch_ui8 cpu address in
+        let hi = fetch_ui8 cpu (address +++ ~^ 0x0001) in
+        UInt16.combine_ui8 hi lo
 
     let fetch_current_instruction (cpu : t) : uint8 =
         fetch_ui8 cpu cpu.program_counter
@@ -100,41 +102,31 @@ module CPU = struct
     let write_ui8 (cpu : t) (addr : uint16) (value : uint8) : unit =
         RAM.write_ui8 cpu.ram addr value
 
-    let write_ui16 (cpu : t) (addr : uint16) (value : uint16) : unit =
-        RAM.write_ui16 cpu.ram addr value
-
-    let absolute_loc_stack (cpu : t) : uint16 = ~^0x0100 +++ !^(cpu.stack_pointer)
+    let absolute_loc_stack (cpu : t) : uint16 = ~^ 0x0100 +++ !^ (cpu.stack_pointer)
 
     let push_stack_ui8 (cpu : t) (value : uint8) : t =
         let stack_loc = absolute_loc_stack cpu in
         write_ui8 cpu stack_loc value;
-        { cpu with stack_pointer = cpu.stack_pointer -- ~.0x0001 }
+        { cpu with stack_pointer = cpu.stack_pointer -- ~. 0x0001 }
 
     let push_stack_ui16 (cpu : t) (value : uint16) : t =
-        let stack_loc = absolute_loc_stack cpu in
-        write_ui16 cpu stack_loc value;
-        { cpu with stack_pointer = cpu.stack_pointer -- ~.0x0002 }
+        let (hi, lo) = UInt16.split_ui16 value in
+        let pushed_cpu = push_stack_ui8 cpu hi in
+        push_stack_ui8 pushed_cpu lo
 
     let peek_stack_ui8 (cpu : t) : uint8 =
         let stack_loc = absolute_loc_stack cpu in
-        fetch_ui8 cpu (stack_loc +++ ~^0x0001)
+        fetch_ui8 cpu (stack_loc +++ ~^ 0x0001)
 
     let peek_stack_ui16 (cpu : t) : uint16 =
         let stack_loc = absolute_loc_stack cpu in
-        fetch_ui16 cpu (stack_loc +++ ~^0x0002)
+        let hi = fetch_ui8 cpu (stack_loc +++ ~^ 0x0002) in
+        let lo = fetch_ui8 cpu (stack_loc +++ ~^ 0x0001) in
+        UInt16.combine_ui8 hi lo
 
     let pop_stack_ui8 (cpu : t) : t =
-        { cpu with stack_pointer = cpu.stack_pointer ++ ~.0x0001 }
+        { cpu with stack_pointer = cpu.stack_pointer ++ ~. 0x0001 }
 
     let pop_stack_ui16 (cpu : t) : t =
-        { cpu with stack_pointer = cpu.stack_pointer ++ ~.0x0002 }
-
-    let to_string (cpu : t) : string =
-        Printf.sprintf "CPU: { PC: %s, SP: %s, A: %s, X: %s, Y: %s, F: %s }"
-            (UInt16.to_string cpu.program_counter)
-            (UInt8.to_string cpu.stack_pointer)
-            (UInt8.to_string cpu.accumulator)
-            (UInt8.to_string cpu.register_X)
-            (UInt8.to_string cpu.register_Y)
-            (UInt8.to_string (flags_ui8 cpu))
+        { cpu with stack_pointer = cpu.stack_pointer ++ ~. 0x0002 }
 end

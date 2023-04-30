@@ -32,26 +32,44 @@ let ui16_from_ui8_tests : test list =
             (UInt16.from_int 0xFF);
     ]
 
-(** [ui16_combine_ui8_test name a b expected] tests equivalence between
-    [ui16_combine_ui8 a b] and [expected]. *)
-let ui16_combine_ui8_test (name : string) (a : uint8) (b : uint8)
+(** [combine_ui8_test name a b expected] tests equivalence between
+    [combine_ui8 a b] and [expected]. *)
+let combine_ui8_test (name : string) (a : uint8) (b : uint8)
         (expected : uint16) =
     name >:: fun _ ->
-        assert_equal expected (UInt16.ui16_combine_ui8 a b) ~printer:UInt16.to_string
+        assert_equal expected (UInt16.combine_ui8 a b) ~printer:UInt16.to_string
 
-(** Ui16_combine_ui8 tests to be run. *)
+(** Combine_ui8 tests to be run. *)
 let ui16_combine_ui8_tests : test list =
     [
-        ui16_combine_ui8_test "UI16_Combine_UI8 Zero Zero -> $0000" UInt8.zero
+        combine_ui8_test "UI16_Combine_UI8 Zero Zero -> $0000" UInt8.zero
             UInt8.zero UInt16.zero;
-        ui16_combine_ui8_test "UI16_Combine_UI8 Zero Ones -> $0001" UInt8.zero
+        combine_ui8_test "UI16_Combine_UI8 Zero Ones -> $0001" UInt8.zero
             UInt8.one UInt16.one;
-        ui16_combine_ui8_test "UI16_Combine_UI8 Ones Zero -> $0100" UInt8.one
+        combine_ui8_test "UI16_Combine_UI8 Ones Zero -> $0100" UInt8.one
             UInt8.zero (UInt16.from_int 0x0100);
-        ui16_combine_ui8_test "UI16_Combine_UI8 Ones Ones -> $0101" UInt8.one
+        combine_ui8_test "UI16_Combine_UI8 Ones Ones -> $0101" UInt8.one
             UInt8.one (UInt16.from_int 0x0101);
-        ui16_combine_ui8_test "UI16_Combine_UI8 Maxx Maxx -> $FFFF" UInt8.max_value
+        combine_ui8_test "UI16_Combine_UI8 Maxx Maxx -> $FFFF" UInt8.max_value
             UInt8.max_value UInt16.max_value;
+    ]
+
+(** [split_ui16_test name n expected] tests equivalence between
+    [split_ui16 n] and [expected]. *)
+let split_ui16_test (name : string) (n : uint16) (expected : uint8 * uint8) =
+    name >:: fun _ ->
+        assert_equal expected (UInt16.split_ui16 n)
+            ~printer:(fun (a, b) -> "(" ^ UInt8.to_string a ^ ", " ^ UInt8.to_string b ^ ")")
+
+(** Split_ui16 tests to be run. *)
+let ui16_split_ui16_tests : test list =
+    [
+        split_ui16_test "UI16_Split_UI16 Zero -> (Zero, Zero)" UInt16.zero
+            (UInt8.zero, UInt8.zero);
+        split_ui16_test "UI16_Split_UI16 Ones -> (Zero, Ones)" UInt16.one
+            (UInt8.zero, UInt8.one);
+        split_ui16_test "UI16_Split_UI16 Maxx -> (Maxx, Maxx)" UInt16.max_value
+            (UInt8.max_value, UInt8.max_value);
     ]
 
 (** [bool_to_ui16 name b expected] tests equivalence between [?^ b] and [expected]. *)

@@ -24,15 +24,7 @@ module RAM : sig
     (** [read_ui8 ram addr] is the [uint8] stored in the index of [ram] at
         [addr]. *)
 
-    val read_ui16 : t -> uint16 -> uint16
-    (** [read_ui16 ram addr] is the [uint16] formed from combining the two
-        [uint8]'s stored in [ram] at [addr] and [addr + 1]. *)
-
     val write_ui8 : t -> uint16 -> uint8 -> unit
     (** [write_ui8 ram addr val] writes [val] to the index of [ram] at
         [addr]. *)
-
-    val write_ui16 : t -> uint16 -> uint16 -> unit
-    (** [write_ui16 ram addr val] writes [val] to the indices of [ram] at
-        [addr] and [addr + 1]. *)
 end

@@ -14,12 +14,6 @@ let cpu_ui8 : CPU.t =
     CPU.write_ui8 cpu (UInt16.from_int 0) (UInt8.from_int 128);
     cpu
 
-(** [cpu_ui16] is a CPU with a RAM array with value 256 set at position 0. *)
-let cpu_ui16 : CPU.t =
-    let cpu = CPU.nes_cpu (UInt16.from_int 0) (RAM.nes_zero_ram ()) in
-    CPU.write_ui16 cpu (UInt16.from_int 0) (UInt16.from_int 256);
-    cpu
-
 (** [contents_test name cpu mode exp] asserts the equivalence between [contents
     cpu mode] and [exp]. *)
 let contents_test (name : string) (cpu : CPU.t) (mode : 'a Decode.memory_mode)
@@ -187,7 +181,6 @@ let fetch_uint8_op_tests : test list =
     [
         fetch_uint8_op_test "fetch uint8 op cpu_zero" cpu_zero (UInt8.from_int 0);
         fetch_uint8_op_test "fetch uint8 op cpu_ui8" cpu_ui8 (UInt8.from_int 128);
-        fetch_uint8_op_test "fetch uint8 op cpu_ui16" cpu_ui16 (UInt8.from_int 0);
     ]
 
 (** [fetch_uint16_op_test name cpu exp] asserts the equivalence between
@@ -201,8 +194,6 @@ let fetch_uint16_op_tests : test list =
     [
         fetch_uint16_op_test "fetch uint16 op cpu_zero" cpu_zero (UInt16.from_int 0);
         fetch_uint16_op_test "fetch uint16 op cpu_ui8" cpu_ui8 (UInt16.from_int 128);
-        fetch_uint16_op_test "fetch uint16 op cpu_ui16" cpu_ui16
-            (UInt16.from_int 256);
     ]
 
 (** Decode tests to be run. *)

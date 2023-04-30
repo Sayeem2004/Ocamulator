@@ -65,10 +65,6 @@ module CPU : sig
     (** [write_ui8 cpu addr value] writes [value] to the index [addr] in the
         RAM array. *)
 
-    val write_ui16 : t -> uint16 -> uint16 -> unit
-    (** [write_ui16 cpu addr value] writes [value] to the index [addr] in the
-        RAM array. *)
-
     val absolute_loc_stack : t -> uint16
     (** [absolute_loc_stack cpu] is the absolute location of the stack pointer
         in the RAM array. *)
@@ -94,7 +90,4 @@ module CPU : sig
     val pop_stack_ui16 : t -> t
     (** [pop_stack cpu] pops the top [uint16]
         value of the stack and updates the position of the stack_pointer. *)
-
-    val to_string : t -> string
-    (** [to_string cpu] is a string representation of the cpu. *)
 end

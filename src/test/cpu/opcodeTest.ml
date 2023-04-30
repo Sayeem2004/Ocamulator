@@ -113,13 +113,34 @@ let compare_cpu (info : rinfo) (cpu1 : CPU.t) (cpu2 : CPU.t) : bool =
     && CPU.flags_ui8 cpu1 <-> CPU.flags_ui8 cpu2
     && check_ram cpu1.ram cpu2.ram info
 
+(** [ram_to_string info cpu] converts the given [info] and [cpu] into a ram string. *)
+let ram_to_string (info : rinfo) (cpu : CPU.t) : string =
+    Printf.sprintf "RAM: [ %s ]\n"
+        (String.concat ", "
+            (List.map (fun (addr, value) ->
+                Printf.sprintf "(%s, %s)"
+                    (UInt16.to_string (UInt16.from_int addr))
+                    (UInt8.to_string (RAM.read_ui8 cpu.ram (UInt16.from_int addr))))
+                info))
+
+(** [cpu_to_string info cpu] converts the given [info] and [cpu] into a cpu string. *)
+let cpu_to_string (info : rinfo) (cpu : CPU.t) : string =
+    Printf.sprintf "CPU: { PC: %s, SP: %s, A: %s, X: %s, Y: %s, F: %s }\n"
+        (UInt16.to_string cpu.program_counter)
+        (UInt8.to_string cpu.stack_pointer)
+        (UInt8.to_string cpu.accumulator)
+        (UInt8.to_string cpu.register_X)
+        (UInt8.to_string cpu.register_Y)
+        (UInt8.to_string (CPU.flags_ui8 cpu))
+    ^ ram_to_string info cpu
+
 (** [opcode_test test opcode] confirms the given opcode steps properly. *)
 let opcode_test (test : opcode_test) (opcode : uint8) : test =
     let cpu_step = Opcode.step test.initial_state opcode in
     test.name >:: fun _ ->
         assert_equal test.final_state cpu_step
             ~cmp:(compare_cpu test.final_ram)
-            ~printer:CPU.to_string
+            ~printer:(cpu_to_string test.final_ram)
 
 (** Opcode tests to be run. *)
 let tests : test list =

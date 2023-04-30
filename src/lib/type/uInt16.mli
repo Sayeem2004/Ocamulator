@@ -10,7 +10,13 @@ module UInt16 : sig
     include UIntX.UInt
 
     val ui16_from_ui8 : uint8 -> t
-    val ui16_combine_ui8 : uint8 -> uint8 -> t
+    (** Converts a uint8 to a uint16. *)
+
+    val combine_ui8 : uint8 -> uint8 -> t
+    (** Combines two uint8s into a uint16. *)
+
+    val split_ui16 : t -> uint8 * uint8
+    (** Splits a uint16 into two uint8s. *)
 end
 
 type uint16 = UInt16.t
