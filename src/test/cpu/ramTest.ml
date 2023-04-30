@@ -59,4 +59,4 @@ let read_ui8_tests : test list =
 
 (** Ram tests to be run. *)
 let tests : test list =
-    List.flatten [ byte_to_uint8_tests; uint8_to_byte_tests; read_ui8_tests; ]
+    List.flatten [ byte_to_uint8_tests; uint8_to_byte_tests; read_ui8_tests ]
