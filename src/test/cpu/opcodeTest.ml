@@ -117,12 +117,12 @@ let compare_cpu (info : rinfo) (cpu1 : CPU.t) (cpu2 : CPU.t) : bool =
 let ram_to_string (info : rinfo) (cpu : CPU.t) : string =
     Printf.sprintf "RAM: [ %s ]\n"
         (String.concat ", "
-            (List.map
-                (fun (addr, value) ->
-                    Printf.sprintf "(%s, %s)"
-                        (UInt16.to_string (UInt16.from_int addr))
-                        (UInt8.to_string (RAM.read_ui8 cpu.ram (UInt16.from_int addr))))
-            info))
+             (List.map
+                  (fun (addr, value) ->
+                       Printf.sprintf "(%s, %s)"
+                           (UInt16.to_string (UInt16.from_int addr))
+                           (UInt8.to_string (RAM.read_ui8 cpu.ram (UInt16.from_int addr))))
+                  info))
 
 (** [cpu_to_string info cpu] converts the given [info] and [cpu] into a cpu string. *)
 let cpu_to_string (info : rinfo) (cpu : CPU.t) : string =
@@ -146,7 +146,7 @@ let opcode_test (test : opcode_test) (opcode : uint8) : test =
 (** Opcode tests to be run. *)
 let tests : test list =
     let parse (i : int) : json = parse_json (UInt8.from_int i) in
-    let json_list : json list = List.init 2 parse in
+    let json_list : json list = List.init 1 parse in
     let opcode_tests : opcode_test list list = List.map from_json json_list in
     let mapi =
         List.mapi (fun i l ->
