@@ -487,7 +487,7 @@ module Instruction = struct
         let popped_pc_cpu = CPU.pop_stack_ui16 popped_flags_cpu in
         { popped_pc_cpu with flags = CPU.flags_from_ui8 stack_flags;
         program_counter = pc}
-        
+
     let rts_op (cpu : CPU.t) : CPU.t =
         let pc = CPU.peek_stack_ui16 cpu --- ~^1 in
         let popped_cpu = CPU.pop_stack_ui16 cpu in
@@ -594,6 +594,9 @@ module Instruction = struct
             flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
 
-    let slo_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        asl_op mode cpu |> ora_op mode
+    let dop_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        cpu
+
+    let top_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        cpu
 end

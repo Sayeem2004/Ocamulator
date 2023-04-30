@@ -165,12 +165,17 @@ module Opcode = struct
         | 0x29 -> step_imed_inst cpu Instruction.and_op
         | 0x49 -> step_imed_inst cpu Instruction.eor_op
         | 0x69 -> step_imed_inst cpu Instruction.adc_op
+        | 0x80 -> step_imed_inst cpu Instruction.dop_op
+        | 0x82 -> step_imed_inst cpu Instruction.dop_op
+        | 0x89 -> step_imed_inst cpu Instruction.dop_op
         | 0xA0 -> step_imed_inst cpu Instruction.ldy_op
         | 0xA2 -> step_imed_inst cpu Instruction.ldx_op
         | 0xA9 -> step_imed_inst cpu Instruction.lda_op
         | 0xC0 -> step_imed_inst cpu Instruction.cpy_op
+        | 0xC2 -> step_imed_inst cpu Instruction.dop_op
         | 0xC9 -> step_imed_inst cpu Instruction.cmp_op
         | 0xE0 -> step_imed_inst cpu Instruction.cpx_op
+        | 0xE2 -> step_imed_inst cpu Instruction.dop_op
         | 0xE9 -> step_imed_inst cpu Instruction.sbc_op
         | _ -> cpu
 

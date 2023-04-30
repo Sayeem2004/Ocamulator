@@ -146,7 +146,7 @@ let make_opcode_test (test : opcode_test) (opcode : uint8) : test =
 (** Opcode tests to be run. *)
 (* let tests : test list =
     let parse (i : int) : json = parse_json (UInt8.from_int i) in
-    let json_list : json list = List.init 2 parse in
+    let json_list : json list = List.init 256 parse in
     let opcode_tests : opcode_test list list = List.map from_json json_list in
     let mapi =
         List.mapi (fun i l ->
