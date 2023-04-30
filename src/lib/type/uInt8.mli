@@ -54,6 +54,9 @@ val ( >> ) : uint8 -> int -> uint8
 val ( ~. ) : int -> uint8
 (** Infix alias for UInt8.from_int. *)
 
+val (~--. ) : uint8 -> int
+(** Infix for signed integer of uint8 *)
+
 val ( ?. ) : bool -> uint8
 (** Converts a bool to a uint8. [true] -> [1], [false] -> [0]. *)
 
