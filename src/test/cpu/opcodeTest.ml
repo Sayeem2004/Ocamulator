@@ -25,7 +25,7 @@ type opcode_test = {
 }
 (** Type representing an opcode_test stored in data/opcode. *)
 
-(** [cpu_from_json nson] converts the given [json] into a cpu if possible. *)
+(** [cpu_from_json json] converts the given [json] into a cpu if possible. *)
 let cpu_from_json (json : json) : CPU.t =
     let prog_cnt = json |> Util.member "pc" |> Util.to_int |> UInt16.from_int in
     let stck_ptr = json |> Util.member "s" |> Util.to_int |> UInt8.from_int in
@@ -90,8 +90,8 @@ let from_json (json : json) : opcode_test list =
 (** Converts the json file corresponding to the given opcode into a json type. *)
 let parse_json (opcode : uint8) : json =
     let str = UInt8.to_string opcode in
-    let folder = "../data/opcode/0x" ^ String.make 1 str.[2] ^ "/0x" in
-    let file = folder ^ String.make 1 str.[2] ^ String.make 1 str.[3] ^ ".json" in
+    let folder = "../data/opcode/0x" ^ String.make 1 str.[3] ^ "/0x" in
+    let file = folder ^ String.make 1 str.[3] ^ String.make 1 str.[4] ^ ".json" in
     Yojson.Basic.from_file file
 
 (** [check_ram ram1 ram2 info] checks to see if the address value pairs described
@@ -146,7 +146,7 @@ let opcode_test (test : opcode_test) (opcode : uint8) : test =
 (** Opcode tests to be run. *)
 let tests : test list =
     let parse (i : int) : json = parse_json (UInt8.from_int i) in
-    let json_list : json list = List.init 1 parse in
+    let json_list : json list = List.init 2 parse in
     let opcode_tests : opcode_test list list = List.map from_json json_list in
     let mapi =
         List.mapi (fun i l ->
@@ -154,3 +154,10 @@ let tests : test list =
     in
     let tests : test list list = mapi opcode_tests in
     List.flatten tests
+
+let print_opcode_test (test : opcode_test) : unit =
+    Printf.printf "Name: %s\n" test.name;
+    Printf.printf "Initial State:\n";
+    Printf.printf "%s\n" (cpu_to_string test.initial_ram test.initial_state);
+    Printf.printf "Final State:\n";
+    Printf.printf "%s\n" (cpu_to_string test.final_ram test.final_state)

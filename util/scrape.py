@@ -2,7 +2,7 @@ import requests, json, os
 
 url = 'https://raw.githubusercontent.com/TomHarte/ProcessorTests/main/nes6502/v1/'
 path = 'data/opcode/'
-num = 100
+num = 25
 
 for hx in range(256):
     strhx = hex(hx)[2:].zfill(2)
