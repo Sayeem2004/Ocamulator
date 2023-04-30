@@ -114,19 +114,20 @@ module CPU = struct
         let pushed_cpu = push_stack_ui8 cpu hi in
         push_stack_ui8 pushed_cpu lo
 
+    let pop_stack_ui8 (cpu : t) : t =
+        { cpu with stack_pointer = cpu.stack_pointer ++ ~. 0x0001 }
+
+    let pop_stack_ui16 (cpu : t) : t =
+        let pop_cpu = pop_stack_ui8 cpu in
+        pop_stack_ui8 pop_cpu
+
     let peek_stack_ui8 (cpu : t) : uint8 =
         let stack_loc = absolute_loc_stack cpu in
         fetch_ui8 cpu (stack_loc +++ ~^ 0x0001)
 
     let peek_stack_ui16 (cpu : t) : uint16 =
-        let stack_loc = absolute_loc_stack cpu in
-        let hi = fetch_ui8 cpu (stack_loc +++ ~^ 0x0002) in
-        let lo = fetch_ui8 cpu (stack_loc +++ ~^ 0x0001) in
+        let lo = peek_stack_ui8 cpu in
+        let pop_cpu = pop_stack_ui8 cpu in
+        let hi = peek_stack_ui8 pop_cpu in
         UInt16.combine_ui8 hi lo
-
-    let pop_stack_ui8 (cpu : t) : t =
-        { cpu with stack_pointer = cpu.stack_pointer ++ ~. 0x0001 }
-
-    let pop_stack_ui16 (cpu : t) : t =
-        { cpu with stack_pointer = cpu.stack_pointer ++ ~. 0x0002 }
 end
