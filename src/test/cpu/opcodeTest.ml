@@ -110,7 +110,7 @@ let compare_cpu (info : rinfo) (cpu1 : CPU.t) (cpu2 : CPU.t) : bool =
     && cpu1.register_Y <-> cpu2.register_Y
     && cpu1.program_counter <--> cpu2.program_counter
     && cpu1.stack_pointer <-> cpu2.stack_pointer
-    && CPU.flags_ui8 cpu1 <-> CPU.flags_ui8 cpu2
+    && CPU.flags_ui8 cpu1.flags <-> CPU.flags_ui8 cpu2.flags
     && check_ram cpu1.ram cpu2.ram info
 
 (** [ram_to_string info cpu] converts the given [info] and [cpu] into a ram string. *)
@@ -132,7 +132,7 @@ let cpu_to_string (info : rinfo) (cpu : CPU.t) : string =
         (UInt8.to_string cpu.accumulator)
         (UInt8.to_string cpu.register_X)
         (UInt8.to_string cpu.register_Y)
-        (UInt8.to_string (CPU.flags_ui8 cpu))
+        (UInt8.to_string (CPU.flags_ui8 cpu.flags))
     ^ ram_to_string info cpu
 
 (** [make_opcode_test test opcode] confirms the given opcode steps properly. *)
@@ -156,7 +156,7 @@ let make_opcode_test (test : opcode_test) (opcode : uint8) : test =
     List.flatten tests *)
 
 let tests : test list =
-    let num : uint8 = UInt8.from_int 0x02 in
+    let num : uint8 = UInt8.from_int 0x08 in
     let json : json = parse_json num in
     let opcode_tests : opcode_test list = from_json json in
     List.map (fun t -> make_opcode_test t num) opcode_tests

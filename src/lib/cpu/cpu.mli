@@ -38,11 +38,11 @@ module CPU : sig
     val nes_cpu : uint16 -> RAM.t -> t
     (** [nes_cpu pc ram] is a [CPU.t] with the given program_counter and ram. *)
 
-    val flags_ui8 : t -> uint8
+    val flags_ui8 : cpu_flags -> uint8
     (** [flags_ui8 cpu] is the [uint8] representation of the [cpu] flags. *)
 
-    val flags_from_ui8 : t -> uint8 -> t
-    (** [flags_from_ui8 cpu flags] is cpu with flags read in from the uint8 arg. *)
+    val flags_from_ui8 : uint8 -> cpu_flags
+    (** [flags_from_ui8 flags] is flags read in from the uint8 arg. *)
 
     val spec_cpu : uint16 -> uint8 -> uint8 -> uint8 -> uint8 -> uint8 -> t
     (** [spec_cpu pc acc x y sp flags] is a [CPU.t] with the given program_counter,

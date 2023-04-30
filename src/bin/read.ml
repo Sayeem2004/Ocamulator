@@ -16,7 +16,7 @@ let pp_cpu (cpu : CPU.t) : unit =
     print_endline ("    Program Counter: " ^ str16 cpu.program_counter);
     print_endline ("    Stack Pointer: " ^ str16 ptr);
     print_endline ("    RAM: " ^ "[ ... ... ... ]");
-    print_endline ("    Flags: " ^ str8 (CPU.flags_ui8 cpu));
+    print_endline ("    Flags: " ^ str8 (CPU.flags_ui8 cpu.flags));
     print_endline ("}" ^ " ")
 
 (** [fetch_current_opcode cpu] is the opcode that was just run. *)
