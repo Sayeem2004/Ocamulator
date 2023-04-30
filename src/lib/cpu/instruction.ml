@@ -490,35 +490,29 @@ module Instruction = struct
         let popped_cpu = CPU.pop_stack_ui16 cpu in
         { popped_cpu with program_counter = pc }
 
-    (* TODO: Finish implemetning this function. *)
     let sbc_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        match mode with
-        | Accumulator | Immediate _ -> cpu
-        | addr_mode ->
-            let operand_addr = Decode.address cpu addr_mode in
-            let operand_contents = Decode.contents cpu addr_mode in
-            let first_sub = cpu.accumulator -- operand_contents in
-            let contents = first_sub -- ?.(not cpu.flags.carr_bit) in
-            let first_overflow =
-                Decode.sub_overflow cpu.accumulator operand_contents first_sub
-            in
-            let second_overflow =
-                Decode.sub_overflow first_sub ?.(not cpu.flags.carr_bit) contents
-            in
-            let carry_bit = not (first_overflow || second_overflow) in
-            let zero_bit = ?*contents in
-            let neg_bit = first_overflow || second_overflow in
-            CPU.write_ui8 cpu operand_addr contents;
-            {
-                cpu with
-                flags =
-                    {
-                        cpu.flags with
-                        zero = zero_bit;
-                        carr_bit = carry_bit;
-                        negative = neg_bit;
-                    };
-            }
+        let operand_contents = Decode.contents cpu mode in
+        let first_sub = cpu.accumulator -- operand_contents in
+        let contents = first_sub -- ?.(not cpu.flags.carr_bit) in
+        let first_overflow =
+            Decode.sub_overflow cpu.accumulator operand_contents first_sub
+        in
+        let second_overflow =
+            Decode.sub_overflow first_sub ?.(not cpu.flags.carr_bit) contents
+        in
+        let carry_bit = not (first_overflow || second_overflow) in
+        let zero_bit = ?*contents in
+        let neg_bit = first_overflow || second_overflow in
+        {
+            cpu with
+            flags =
+                {
+                    cpu.flags with
+                    zero = zero_bit;
+                    carr_bit = carry_bit;
+                    negative = neg_bit;
+                };
+        }
 
     let sec_op (cpu : CPU.t) : CPU.t =
         { cpu with flags = { cpu.flags with carr_bit = true } }
