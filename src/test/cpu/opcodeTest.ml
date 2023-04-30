@@ -156,7 +156,7 @@ let make_opcode_test (test : opcode_test) (opcode : uint8) : test =
     List.flatten tests *)
 
 let tests : test list =
-    let num : uint8 = UInt8.from_int 0x08 in
+    let num : uint8 = UInt8.from_int 0x09 in
     let json : json = parse_json num in
     let opcode_tests : opcode_test list = from_json json in
     List.map (fun t -> make_opcode_test t num) opcode_tests
