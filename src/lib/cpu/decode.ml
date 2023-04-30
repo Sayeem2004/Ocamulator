@@ -30,7 +30,7 @@ module Decode = struct
         | Immediate b -> b
         | Indirect ind_addr -> CPU.fetch_ui16 cpu ind_addr |> CPU.fetch_ui8 cpu
         | XIndirect x_ind_addr ->
-            !^x_ind_addr +++ !^(cpu.register_X)
+            !^(x_ind_addr ++ cpu.register_X)
             |> CPU.fetch_ui16 cpu |> CPU.fetch_ui8 cpu
         | IndirectY ind_addr_y ->
             CPU.fetch_ui16 cpu !^ind_addr_y
