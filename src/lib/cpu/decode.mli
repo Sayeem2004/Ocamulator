@@ -36,7 +36,7 @@ module Decode : sig
         [c]. *)
 
     val sub_overflow : uint8 -> uint8 -> uint8 -> bool
-    (** [sub_overflow a b c] is true if the subtraction of [a] and [b] underflows
+    (** [sub_overflow a b c] is true if the subtraction of [a] and [b] overflow
         to [c]. *)
 
     val incr_cpu_pc : CPU.t -> int -> CPU.t

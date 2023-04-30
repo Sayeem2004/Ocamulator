@@ -7,7 +7,12 @@ module Instruction = struct
     let adc_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let operand = Decode.contents cpu mode in
         let summed_acc = cpu.accumulator ++ operand ++ ?.(cpu.flags.carr_bit) in
-        let overflow = Decode.add_overflow operand cpu.accumulator summed_acc in
+        let overflow =
+            Decode.add_overflow operand cpu.accumulator (cpu.accumulator ++ operand)
+            || Decode.add_overflow
+                (cpu.accumulator ++ operand)
+                ?.(cpu.flags.carr_bit) summed_acc
+        in
         let neg_bit = ?-summed_acc in
         let zero_bit = ?*summed_acc in
         {
@@ -120,9 +125,12 @@ module Instruction = struct
 
     let brk_op (cpu : CPU.t) : CPU.t =
         let cpu_pushed_pc = CPU.push_stack_ui16 cpu (cpu.program_counter +++ ~^2) in
-        let uint8_flags = CPU.flags_ui8 {cpu_pushed_pc with flags = { cpu_pushed_pc.flags with break = true }} in
+        let uint8_flags =
+            CPU.flags_ui8
+                { cpu_pushed_pc with flags = { cpu_pushed_pc.flags with break = true } }
+        in
         let cpu_pushed_flags = CPU.push_stack_ui8 cpu_pushed_pc uint8_flags in
-        let interrupt_vector = CPU.fetch_ui16 cpu_pushed_flags ~^ 0xFFFE in
+        let interrupt_vector = CPU.fetch_ui16 cpu_pushed_flags ~^0xFFFE in
         {
             cpu_pushed_flags with
             program_counter = interrupt_vector;
@@ -427,56 +435,165 @@ module Instruction = struct
                     };
             }
 
-    (* TODO: Finish implemetning this function. *)
     let ror_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+        match mode with
+        | Accumulator ->
+            let shifted_acc =
+                cpu.accumulator >> 1 &&. ~.0b01111111 ||. (?.(cpu.flags.carr_bit) << 7)
+            in
+            let carry_bit = ?+(cpu.accumulator) in
+            let zero_bit = ?*shifted_acc in
+            let neg_bit = ?-shifted_acc in
+            {
+                cpu with
+                accumulator = shifted_acc;
+                flags =
+                    {
+                        cpu.flags with
+                        zero = zero_bit;
+                        carr_bit = carry_bit;
+                        negative = neg_bit;
+                    };
+            }
+        | addr_mode ->
+            let operand_addr = Decode.address cpu addr_mode in
+            let operand_contents = Decode.contents cpu addr_mode in
+            let shifted_contents =
+                operand_contents >> 1 &&. ~.0b01111111
+                                    ||. (?.(cpu.flags.carr_bit) << 7)
+            in
+            let carry_bit = ?+operand_contents in
+            let zero_bit = ?*shifted_contents in
+            let neg_bit = ?-shifted_contents in
+            CPU.write_ui8 cpu operand_addr shifted_contents;
+            {
+                cpu with
+                flags =
+                    {
+                        cpu.flags with
+                        zero = zero_bit;
+                        carr_bit = carry_bit;
+                        negative = neg_bit;
+                    };
+            }
 
-    (* TODO: Finish implemetning this function. *)
-    let rti_op (cpu : CPU.t) : CPU.t = cpu
+    let rti_op (cpu : CPU.t) : CPU.t =
+        let stack_flags = CPU.peek_stack_ui8 cpu in
+        let popped_flags_cpu = CPU.pop_stack_ui8 cpu in
+        let pc = CPU.peek_stack_ui16 popped_flags_cpu in
+        let popped_pc_cpu = CPU.pop_stack_ui16 popped_flags_cpu in
+        let stack_cpu = CPU.flags_from_ui8 popped_pc_cpu stack_flags in
+        { stack_cpu with program_counter = pc }
 
-    (* TODO: Finish implemetning this function. *)
-    let rts_op (cpu : CPU.t) : CPU.t = cpu
+    let rts_op (cpu : CPU.t) : CPU.t =
+        let pc = CPU.peek_stack_ui16 cpu --- ~^1 in
+        let popped_cpu = CPU.pop_stack_ui16 cpu in
+        { popped_cpu with program_counter = pc }
 
     (* TODO: Finish implemetning this function. *)
     let sbc_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+        match mode with
+        | Accumulator | Immediate _ -> cpu
+        | addr_mode ->
+            let operand_addr = Decode.address cpu addr_mode in
+            let operand_contents = Decode.contents cpu addr_mode in
+            let first_sub = cpu.accumulator -- operand_contents in
+            let contents = first_sub -- ?.(not cpu.flags.carr_bit) in
+            let first_overflow =
+                Decode.sub_overflow cpu.accumulator operand_contents first_sub
+            in
+            let second_overflow =
+                Decode.sub_overflow first_sub ?.(not cpu.flags.carr_bit) contents
+            in
+            let carry_bit = not (first_overflow || second_overflow) in
+            let zero_bit = ?*contents in
+            let neg_bit = first_overflow || second_overflow in
+            CPU.write_ui8 cpu operand_addr contents;
+            {
+                cpu with
+                flags =
+                    {
+                        cpu.flags with
+                        zero = zero_bit;
+                        carr_bit = carry_bit;
+                        negative = neg_bit;
+                    };
+            }
 
-    (* TODO: Finish implemetning this function. *)
-    let sec_op (cpu : CPU.t) : CPU.t = cpu
+    let sec_op (cpu : CPU.t) : CPU.t =
+        { cpu with flags = { cpu.flags with carr_bit = true } }
 
-    (* TODO: Finish implemetning this function. *)
-    let sed_op (cpu : CPU.t) : CPU.t = cpu
+    let sed_op (cpu : CPU.t) : CPU.t =
+        { cpu with flags = { cpu.flags with decimal = true } }
 
-    (* TODO: Finish implemetning this function. *)
-    let sei_op (cpu : CPU.t) : CPU.t = cpu
+    let sei_op (cpu : CPU.t) : CPU.t =
+        { cpu with flags = { cpu.flags with interrupt = true } }
 
-    (* TODO: Finish implemetning this function. *)
     let sta_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+        match mode with
+        | addr_mode ->
+            let operand_addr = Decode.address cpu addr_mode in
+            CPU.write_ui8 cpu operand_addr cpu.accumulator;
+            cpu
 
-    (* TODO: Finish implemetning this function. *)
     let stx_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+        match mode with
+        | addr_mode ->
+            let operand_addr = Decode.address cpu addr_mode in
+            CPU.write_ui8 cpu operand_addr cpu.register_X;
+            cpu
 
-    (* TODO: Finish implemetning this function. *)
     let sty_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        cpu
+        match mode with
+        | addr_mode ->
+            let operand_addr = Decode.address cpu addr_mode in
+            CPU.write_ui8 cpu operand_addr cpu.register_Y;
+            cpu
 
-    (* TODO: Finish implemetning this function. *)
-    let tax_op (cpu : CPU.t) : CPU.t = cpu
+    let tax_op (cpu : CPU.t) : CPU.t =
+        let zero_bit = ?*(cpu.accumulator) in
+        let neg_bit = ?-(cpu.accumulator) in
+        {
+            cpu with
+            register_X = cpu.accumulator;
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
+        }
 
-    (* TODO: Finish implemetning this function. *)
-    let tay_op (cpu : CPU.t) : CPU.t = cpu
+    let tay_op (cpu : CPU.t) : CPU.t =
+        let zero_bit = ?*(cpu.accumulator) in
+        let neg_bit = ?-(cpu.accumulator) in
+        {
+            cpu with
+            register_Y = cpu.accumulator;
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
+        }
 
-    (* TODO: Finish implemetning this function. *)
-    let tsx_op (cpu : CPU.t) : CPU.t = cpu
+    let tsx_op (cpu : CPU.t) : CPU.t =
+        let zero_bit = ?*(cpu.stack_pointer) in
+        let neg_bit = ?-(cpu.stack_pointer) in
+        {
+            cpu with
+            register_X = cpu.stack_pointer;
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
+        }
 
-    (* TODO: Finish implemetning this function. *)
-    let txa_op (cpu : CPU.t) : CPU.t = cpu
+    let txa_op (cpu : CPU.t) : CPU.t =
+        let zero_bit = ?*(cpu.register_X) in
+        let neg_bit = ?-(cpu.register_X) in
+        {
+            cpu with
+            accumulator = cpu.register_X;
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
+        }
 
-    (* TODO: Finish implemetning this function. *)
-    let txs_op (cpu : CPU.t) : CPU.t = cpu
+    let txs_op (cpu : CPU.t) : CPU.t = { cpu with stack_pointer = cpu.register_X }
 
-    (* TODO: Finish implemetning this function. *)
-    let tya_op (cpu : CPU.t) : CPU.t = cpu
+    let tya_op (cpu : CPU.t) : CPU.t =
+        let zero_bit = ?*(cpu.register_Y) in
+        let neg_bit = ?-(cpu.register_Y) in
+        {
+            cpu with
+            accumulator = cpu.register_Y;
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
+        }
 end
