@@ -490,45 +490,38 @@ module Instruction = struct
         let popped_cpu = CPU.pop_stack_ui16 cpu in
         { popped_cpu with program_counter = pc }
 
-    (* TODO: Finish implemetning this function. *)
     let sbc_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        match mode with
-        | Accumulator | Immediate _ -> cpu 
-        | addr_mode ->
-            let operand_addr = Decode.address cpu addr_mode in
-            let operand_contents = Decode.contents cpu addr_mode in
-            let first_sub = cpu.accumulator -- operand_contents in
-            let contents = first_sub -- ?.(not cpu.flags.carr_bit) in
-            let first_overflow =
-                Decode.sub_overflow cpu.accumulator operand_contents first_sub
-            in
-            let second_overflow =
-                Decode.sub_overflow first_sub ?.(not cpu.flags.carr_bit) contents
-            in
-            let carry_bit = not (first_overflow || second_overflow) in
-            let zero_bit = ?*contents in
-            let neg_bit = first_overflow || second_overflow in
-            CPU.write_ui8 cpu operand_addr contents;
-            {
-                cpu with
-                flags =
-                    {
-                        cpu.flags with
-                        zero = zero_bit;
-                        carr_bit = carry_bit;
-                        negative = neg_bit;
-                    };
-            }
+        let operand_contents = Decode.contents cpu mode in
+        let first_sub = cpu.accumulator -- operand_contents in
+        let contents = first_sub -- ?.(not cpu.flags.carr_bit) in
+        let first_overflow =
+            Decode.sub_overflow cpu.accumulator operand_contents first_sub
+        in
+        let second_overflow =
+            Decode.sub_overflow first_sub ?.(not cpu.flags.carr_bit) contents
+        in
+        let carry_bit = not (first_overflow || second_overflow) in
+        let zero_bit = ?*contents in
+        let neg_bit = first_overflow || second_overflow in
+        {
+            cpu with
+            flags =
+                {
+                    cpu.flags with
+                    zero = zero_bit;
+                    carr_bit = carry_bit;
+                    negative = neg_bit;
+                };
+        }
 
     let sec_op (cpu : CPU.t) : CPU.t =
         { cpu with flags = { cpu.flags with carr_bit = true } }
 
-    let sed_op (cpu : CPU.t) : CPU.t = 
+    let sed_op (cpu : CPU.t) : CPU.t =
         { cpu with flags = { cpu.flags with decimal = true } }
 
     let sei_op (cpu : CPU.t) : CPU.t =
         { cpu with flags = { cpu.flags with interrupt = true } }
-
 
     let sta_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         match mode with
@@ -536,7 +529,6 @@ module Instruction = struct
             let operand_addr = Decode.address cpu addr_mode in
             CPU.write_ui8 cpu operand_addr cpu.accumulator;
             cpu
-
 
     let stx_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         match mode with
@@ -554,52 +546,48 @@ module Instruction = struct
 
     let tax_op (cpu : CPU.t) : CPU.t =
         let zero_bit = ?*(cpu.accumulator) in
-        let neg_bit = ?-(cpu.accumulator) in    
+        let neg_bit = ?-(cpu.accumulator) in
         {
             cpu with
             register_X = cpu.accumulator;
-            flags = { cpu.flags with zero = zero_bit; negative = neg_bit }
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
 
     let tay_op (cpu : CPU.t) : CPU.t =
         let zero_bit = ?*(cpu.accumulator) in
-        let neg_bit = ?-(cpu.accumulator) in    
+        let neg_bit = ?-(cpu.accumulator) in
         {
             cpu with
             register_Y = cpu.accumulator;
-            flags = { cpu.flags with zero = zero_bit; negative = neg_bit }
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
 
     let tsx_op (cpu : CPU.t) : CPU.t =
         let zero_bit = ?*(cpu.stack_pointer) in
-        let neg_bit = ?-(cpu.stack_pointer) in    
+        let neg_bit = ?-(cpu.stack_pointer) in
         {
             cpu with
             register_X = cpu.stack_pointer;
-            flags = { cpu.flags with zero = zero_bit; negative = neg_bit }
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
 
     let txa_op (cpu : CPU.t) : CPU.t =
         let zero_bit = ?*(cpu.register_X) in
-        let neg_bit = ?-(cpu.register_X) in    
+        let neg_bit = ?-(cpu.register_X) in
         {
             cpu with
             accumulator = cpu.register_X;
-            flags = { cpu.flags with zero = zero_bit; negative = neg_bit }
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
 
-    let txs_op (cpu : CPU.t) : CPU.t =
-        {
-            cpu with
-            stack_pointer = cpu.register_X;
-        }
+    let txs_op (cpu : CPU.t) : CPU.t = { cpu with stack_pointer = cpu.register_X }
 
     let tya_op (cpu : CPU.t) : CPU.t =
         let zero_bit = ?*(cpu.register_Y) in
-        let neg_bit = ?-(cpu.register_Y) in    
+        let neg_bit = ?-(cpu.register_Y) in
         {
             cpu with
             accumulator = cpu.register_Y;
-            flags = { cpu.flags with zero = zero_bit; negative = neg_bit }
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
 end
