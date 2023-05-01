@@ -62,14 +62,18 @@ module Opcode = struct
         | 0x00 -> step_none_inst cpu Instruction.brk_op
         | 0x08 -> step_none_inst cpu Instruction.php_op
         | 0x18 -> step_none_inst cpu Instruction.clc_op
+        | 0x1A -> step_none_inst cpu Instruction.nop_op
         | 0x28 -> step_none_inst cpu Instruction.plp_op
         | 0x38 -> step_none_inst cpu Instruction.sec_op
+        | 0x3A -> step_none_inst cpu Instruction.nop_op
         | 0x40 -> step_none_inst cpu Instruction.rti_op
         | 0x48 -> step_none_inst cpu Instruction.pha_op
         | 0x58 -> step_none_inst cpu Instruction.cli_op
+        | 0x5A -> step_none_inst cpu Instruction.nop_op
         | 0x60 -> step_none_inst cpu Instruction.rts_op
         | 0x68 -> step_none_inst cpu Instruction.pla_op
         | 0x78 -> step_none_inst cpu Instruction.sei_op
+        | 0x7A -> step_none_inst cpu Instruction.nop_op
         | 0x88 -> step_none_inst cpu Instruction.dey_op
         | 0x8A -> step_none_inst cpu Instruction.txa_op
         | 0x98 -> step_none_inst cpu Instruction.tya_op
@@ -81,9 +85,11 @@ module Opcode = struct
         | 0xC8 -> step_none_inst cpu Instruction.iny_op
         | 0xCA -> step_none_inst cpu Instruction.dex_op
         | 0xD8 -> step_none_inst cpu Instruction.cld_op
+        | 0xDA -> step_none_inst cpu Instruction.nop_op
         | 0xE8 -> step_none_inst cpu Instruction.inx_op
         | 0xEA -> step_none_inst cpu Instruction.nop_op
         | 0xF8 -> step_none_inst cpu Instruction.sed_op
+        | 0xFA -> step_none_inst cpu Instruction.nop_op
         | _ -> cpu
 
     let step_accm (opcode : int) (cpu : CPU.t) : CPU.t =
