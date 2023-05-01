@@ -17,7 +17,7 @@ let cpu_ui8 : CPU.t =
     [exp]. *)
 let flags_ui8_test (name : string) (cpu : CPU.t) (exp : uint8) : test =
     name >:: fun _ ->
-        assert_equal exp (CPU.flags_ui8 cpu) ~printer:UInt8.to_string
+        assert_equal exp (CPU.flags_ui8 cpu.flags) ~printer:UInt8.to_string
 
 (** Flags_ui8 tests to be run. *)
 let flags_ui8_tests : test list =
