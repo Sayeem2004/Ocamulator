@@ -33,9 +33,9 @@ module Decode = struct
             !^(x_ind_addr ++ cpu.register_X)
             |> CPU.fetch_ui16 cpu |> CPU.fetch_ui8 cpu
         | IndirectY ind_addr_y ->
-            CPU.fetch_ui16 cpu !^ind_addr_y
-            |> CPU.fetch_ui8 cpu
-            |> ( ++ ) (cpu.register_Y ++ ?.(cpu.flags.carr_bit))
+            let ll_addr = CPU.fetch_ui16 cpu !^ind_addr_y in
+            let add_addr = ll_addr +++ !^(cpu.register_Y) in
+            CPU.fetch_ui8 cpu add_addr
         | Relative b -> !^b +++ cpu.program_counter |> CPU.fetch_ui8 cpu
         | Zeropage zero_addr -> CPU.fetch_ui8 cpu !^zero_addr
         | ZeropageX zero_addr_x ->
@@ -54,7 +54,8 @@ module Decode = struct
         | XIndirect x_ind_addr ->
             !^x_ind_addr +++ !^(cpu.register_X) |> CPU.fetch_ui16 cpu
         | IndirectY ind_addr_y -> CPU.fetch_ui16 cpu !^ind_addr_y
-        | Relative b -> !^b +++ cpu.program_counter
+        | Relative b ->
+            ~^(~--.b + UInt16.to_int cpu.program_counter)
         | Zeropage zero_addr -> !^zero_addr
         | ZeropageX zero_addr_x -> !^(zero_addr_x ++ cpu.register_X)
         | ZeropageY zero_addr_y -> !^(zero_addr_y ++ cpu.register_Y)

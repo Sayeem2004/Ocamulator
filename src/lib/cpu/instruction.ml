@@ -602,4 +602,21 @@ module Instruction = struct
 
     let alr_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         and_op mode cpu |> lsr_op Accumulator
+
+    let anc_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        let operand = Decode.contents cpu mode in
+        let modif_acc = cpu.accumulator &&. operand in
+        let zero_bit = ?*modif_acc in
+        let neg_bit = ?-modif_acc in
+        {
+            cpu with
+            accumulator = modif_acc;
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit; carr_bit = neg_bit };
+        }
+
+    let sax_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        let and_val = cpu.accumulator &&. cpu.register_X in
+        let addr = Decode.address cpu mode in
+        CPU.write_ui8 cpu addr and_val;
+        cpu
 end

@@ -117,6 +117,7 @@ module Opcode = struct
         | 0x8C -> step_abst_inst cpu Instruction.sty_op
         | 0x8D -> step_abst_inst cpu Instruction.sta_op
         | 0x8E -> step_abst_inst cpu Instruction.stx_op
+        | 0x8F -> step_abst_inst cpu Instruction.sax_op
         | 0xAC -> step_abst_inst cpu Instruction.ldy_op
         | 0xAD -> step_abst_inst cpu Instruction.lda_op
         | 0xAE -> step_abst_inst cpu Instruction.ldx_op
@@ -169,10 +170,13 @@ module Opcode = struct
     let step_imed (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
         | 0x09 -> step_imed_inst cpu Instruction.ora_op
+        | 0x0B -> step_imed_inst cpu Instruction.anc_op
         | 0x29 -> step_imed_inst cpu Instruction.and_op
+        | 0x2B -> step_imed_inst cpu Instruction.anc_op
         | 0x49 -> step_imed_inst cpu Instruction.eor_op
         | 0x4B -> step_imed_inst cpu Instruction.alr_op
         | 0x69 -> step_imed_inst cpu Instruction.adc_op
+        | 0x6B -> step_imed_inst cpu Instruction.arr_op
         | 0x80 -> step_imed_inst cpu Instruction.dop_op
         | 0x82 -> step_imed_inst cpu Instruction.dop_op
         | 0x89 -> step_imed_inst cpu Instruction.dop_op
@@ -197,6 +201,7 @@ module Opcode = struct
         | 0x41 -> step_xind_inst cpu Instruction.eor_op
         | 0x61 -> step_xind_inst cpu Instruction.adc_op
         | 0x81 -> step_xind_inst cpu Instruction.sta_op
+        | 0x83 -> step_xind_inst cpu Instruction.sax_op
         | 0xA1 -> step_xind_inst cpu Instruction.lda_op
         | 0xC1 -> step_xind_inst cpu Instruction.cmp_op
         | 0xE1 -> step_xind_inst cpu Instruction.sbc_op
@@ -243,6 +248,7 @@ module Opcode = struct
         | 0x84 -> step_zero_inst cpu Instruction.sty_op
         | 0x85 -> step_zero_inst cpu Instruction.sta_op
         | 0x86 -> step_zero_inst cpu Instruction.stx_op
+        | 0x87 -> step_zero_inst cpu Instruction.sax_op
         | 0xA4 -> step_zero_inst cpu Instruction.ldy_op
         | 0xA5 -> step_zero_inst cpu Instruction.lda_op
         | 0xA6 -> step_zero_inst cpu Instruction.ldx_op
@@ -283,6 +289,7 @@ module Opcode = struct
     let step_zery (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
         | 0x96 -> step_zery_inst cpu Instruction.stx_op
+        | 0x97 -> step_zery_inst cpu Instruction.sax_op
         | 0xB6 -> step_zery_inst cpu Instruction.ldx_op
         | _ -> cpu
 

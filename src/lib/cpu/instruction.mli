@@ -241,4 +241,12 @@ module Instruction : sig
     val alr_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [alr_op] implements the ALR instruction found here:
         https://www.masswerk.at/6502/6502_instruction_set.html#ALR *)
+
+    val anc_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [anc_op] implements the ANC instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#ANC *)
+
+    val sax_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [sax_op] implements the SAX instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#SAX *)
 end
