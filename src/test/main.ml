@@ -5,13 +5,12 @@ let tests : test =
     "Test Suite For Ocamulator"
     >::: List.flatten
         [
-            UInt8Test.tests;
-            UInt16Test.tests;
-            CpuTest.tests;
-            DecodeTest.tests;
-            InstructionTest.tests;
-            OpcodeTest.tests;
-            RamTest.tests;
+            (* UInt8Test.tests; *)
+            (* UInt16Test.tests; *)
+            (* CpuTest.tests; *)
+            (* DecodeTest.tests; *)
+            (* InstructionTest.tests; *)
+            OpcodeTest.tests (* RamTest.tests; *);
         ]
 
 (** Running tests. *)

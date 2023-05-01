@@ -8,10 +8,8 @@ module Instruction = struct
         let operand = Decode.contents cpu mode in
         let summed_acc = cpu.accumulator ++ operand ++ ?.(cpu.flags.carr_bit) in
         let overflow =
-            Decode.add_overflow operand cpu.accumulator (cpu.accumulator ++ operand)
-            || Decode.add_overflow
-                (cpu.accumulator ++ operand)
-                ?.(cpu.flags.carr_bit) summed_acc
+            Decode.add_overflow operand cpu.accumulator
+            || Decode.add_overflow (cpu.accumulator ++ operand) ?.(cpu.flags.carr_bit)
         in
         let neg_bit = ?-summed_acc in
         let zero_bit = ?*summed_acc in
@@ -510,11 +508,9 @@ module Instruction = struct
         let operand_contents = Decode.contents cpu mode in
         let first_sub = cpu.accumulator -- operand_contents in
         let contents = first_sub -- ?.(not cpu.flags.carr_bit) in
-        let first_overflow =
-            Decode.sub_overflow cpu.accumulator operand_contents first_sub
-        in
+        let first_overflow = Decode.sub_overflow cpu.accumulator operand_contents in
         let second_overflow =
-            Decode.sub_overflow first_sub ?.(not cpu.flags.carr_bit) contents
+            Decode.sub_overflow first_sub ?.(not cpu.flags.carr_bit)
         in
         let carry_bit = not (first_overflow || second_overflow) in
         let zero_bit = ?*contents in
@@ -624,7 +620,13 @@ module Instruction = struct
         {
             cpu with
             accumulator = modif_acc;
-            flags = { cpu.flags with zero = zero_bit; negative = neg_bit; carr_bit = neg_bit };
+            flags =
+                {
+                    cpu.flags with
+                    zero = zero_bit;
+                    negative = neg_bit;
+                    carr_bit = neg_bit;
+                };
         }
 
     let sax_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
@@ -632,4 +634,31 @@ module Instruction = struct
         let addr = Decode.address cpu mode in
         CPU.write_ui8 cpu addr and_val;
         cpu
+
+    let ane_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        let operand = Decode.contents cpu mode in
+        let modif_acc = ~.0xEE ||. cpu.accumulator &&. cpu.register_X &&. operand in
+        let zero_bit = ?* modif_acc in
+        let neg_bit = ?- modif_acc in
+        {
+            cpu with
+            accumulator = modif_acc;
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
+        }
+
+    let lax_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        lda_op mode cpu |> ldx_op mode
+
+    let las_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        let operand = Decode.contents cpu mode in
+        let value = cpu.stack_pointer &&. operand in
+        let zero_bit = ?* value in
+        let neg_bit = ?- value in
+        {
+            cpu with
+            accumulator = value;
+            register_X = value;
+            stack_pointer = value;
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
+        }
 end

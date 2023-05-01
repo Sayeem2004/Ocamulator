@@ -249,4 +249,16 @@ module Instruction : sig
     val sax_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [sax_op] implements the SAX instruction found here:
         https://www.masswerk.at/6502/6502_instruction_set.html#SAX *)
+
+    val ane_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [ane_op] implements the ANE instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#ANE *)
+
+    val lax_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [lax_op] implements the LAX instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#LAX *)
+
+    val las_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [las_op] implements the LAS instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#LAS *)
 end

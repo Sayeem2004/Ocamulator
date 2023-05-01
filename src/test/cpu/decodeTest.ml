@@ -115,42 +115,42 @@ let address_tests : test list =
 
 (** [add_overflow_test name a b c exp] asserts the equivalence between
     [add_overflow a b c] and [exp]. *)
-let add_overflow_test (name : string) (a : uint8) (b : uint8) (c : uint8)
-        (exp : bool) : test =
+let add_overflow_test (name : string) (a : uint8) (b : uint8) (exp : bool) :
+    test =
     name >:: fun _ ->
-        assert_equal exp (Decode.add_overflow a b c) ~printer:string_of_bool
+        assert_equal exp (Decode.add_overflow a b) ~printer:string_of_bool
 
 (** Add_overflow tests to be run. *)
 let add_overflow_tests : test list =
     [
         add_overflow_test "add overflow 0 0 0" (UInt8.from_int 0) (UInt8.from_int 0)
-            (UInt8.from_int 0) false;
+            false;
         add_overflow_test "add overflow 0 1 1" (UInt8.from_int 0) (UInt8.from_int 1)
-            (UInt8.from_int 1) false;
+            false;
         add_overflow_test "add overflow 128 0 128" (UInt8.from_int 128)
-            (UInt8.from_int 0) (UInt8.from_int 128) false;
+            (UInt8.from_int 0) false;
         add_overflow_test "add overflow 128 128 0" (UInt8.from_int 128)
-            (UInt8.from_int 128) (UInt8.from_int 0) true;
+            (UInt8.from_int 128) true;
     ]
 
 (** [sub_overflow_test name a b c exp] asserts the equivalence between
     [sub_overflow a b c] and [exp]. *)
-let sub_overflow_test (name : string) (a : uint8) (b : uint8) (c : uint8)
-        (exp : bool) : test =
+let sub_overflow_test (name : string) (a : uint8) (b : uint8) (exp : bool) :
+    test =
     name >:: fun _ ->
-        assert_equal exp (Decode.sub_overflow a b c) ~printer:string_of_bool
+        assert_equal exp (Decode.sub_overflow a b) ~printer:string_of_bool
 
 (** Sub_overflow tests to be run. *)
 let sub_overflow_tests : test list =
     [
         sub_overflow_test "sub overflow 0 0 0" (UInt8.from_int 0) (UInt8.from_int 0)
-            (UInt8.from_int 0) false;
+            false;
         sub_overflow_test "sub overflow 1 0 1" (UInt8.from_int 1) (UInt8.from_int 0)
-            (UInt8.from_int 1) false;
+            false;
         sub_overflow_test "sub overflow 128 0 128" (UInt8.from_int 128)
-            (UInt8.from_int 0) (UInt8.from_int 128) false;
+            (UInt8.from_int 0) false;
         sub_overflow_test "sub overflow 0 128 128" (UInt8.from_int 0)
-            (UInt8.from_int 128) (UInt8.from_int 128) true;
+            (UInt8.from_int 128) true;
     ]
 
 (** [incr_cpu_pc_test name cpu size exp] asserts the equivalence between [incr_cpu_pc

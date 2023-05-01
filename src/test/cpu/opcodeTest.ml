@@ -155,14 +155,12 @@ let tests : test list =
     let tests : test list list = mapi opcode_tests in
     List.flatten tests
 
-(* let tests : test list =
-    let num : uint8 = UInt8.from_int 0x6B in
-    let json : json = parse_json num in
-    let opcode_tests : opcode_test list = from_json json in
-    List.map (fun t -> make_opcode_test t num) opcode_tests *)
+(* let tests : test list = let num : uint8 = UInt8.from_int 0xBB in let json :
+   json = parse_json num in let opcode_tests : opcode_test list = from_json json
+   in List.map (fun t -> make_opcode_test t num) opcode_tests *)
 
 (* let print_opcode_test (test : opcode_test) : unit = Printf.printf "Name:
-    %s\n" test.name; Printf.printf "Initial State:\n"; Printf.printf "%s\n"
-    (cpu_to_string test.initial_ram test.initial_state); Printf.printf "Final
-    State:\n"; Printf.printf "%s\n" (cpu_to_string test.final_ram
-    test.final_state) *)
+   %s\n" test.name; Printf.printf "Initial State:\n"; Printf.printf "%s\n"
+   (cpu_to_string test.initial_ram test.initial_state); Printf.printf "Final
+   State:\n"; Printf.printf "%s\n" (cpu_to_string test.final_ram
+   test.final_state) *)

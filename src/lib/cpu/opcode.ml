@@ -132,6 +132,7 @@ module Opcode = struct
         | 0xAC -> step_abst_inst cpu Instruction.ldy_op
         | 0xAD -> step_abst_inst cpu Instruction.lda_op
         | 0xAE -> step_abst_inst cpu Instruction.ldx_op
+        | 0xAF -> step_abst_inst cpu Instruction.lax_op
         | 0xCC -> step_abst_inst cpu Instruction.cpy_op
         | 0xCD -> step_abst_inst cpu Instruction.cmp_op
         | 0xCE -> step_abst_inst cpu Instruction.dec_op
@@ -172,8 +173,10 @@ module Opcode = struct
         | 0x59 -> step_absy_inst cpu Instruction.eor_op
         | 0x79 -> step_absy_inst cpu Instruction.adc_op
         | 0x99 -> step_absy_inst cpu Instruction.sta_op
+        | 0xBB -> step_absy_inst cpu Instruction.las_op
         | 0xB9 -> step_absy_inst cpu Instruction.lda_op
         | 0xBE -> step_absy_inst cpu Instruction.ldx_op
+        | 0xBf -> step_absy_inst cpu Instruction.lax_op
         | 0xD9 -> step_absy_inst cpu Instruction.cmp_op
         | 0xF9 -> step_absy_inst cpu Instruction.sbc_op
         | _ -> cpu
@@ -190,6 +193,7 @@ module Opcode = struct
         | 0x80 -> step_imed_inst cpu Instruction.dop_op
         | 0x82 -> step_imed_inst cpu Instruction.dop_op
         | 0x89 -> step_imed_inst cpu Instruction.dop_op
+        | 0x8B -> step_imed_inst cpu Instruction.ane_op
         | 0xA0 -> step_imed_inst cpu Instruction.ldy_op
         | 0xA2 -> step_imed_inst cpu Instruction.ldx_op
         | 0xA9 -> step_imed_inst cpu Instruction.lda_op
@@ -213,6 +217,7 @@ module Opcode = struct
         | 0x81 -> step_xind_inst cpu Instruction.sta_op
         | 0x83 -> step_xind_inst cpu Instruction.sax_op
         | 0xA1 -> step_xind_inst cpu Instruction.lda_op
+        | 0xA3 -> step_xind_inst cpu Instruction.lax_op
         | 0xC1 -> step_xind_inst cpu Instruction.cmp_op
         | 0xE1 -> step_xind_inst cpu Instruction.sbc_op
         | _ -> cpu
@@ -225,6 +230,7 @@ module Opcode = struct
         | 0x71 -> step_indy_inst cpu Instruction.adc_op
         | 0x91 -> step_indy_inst cpu Instruction.sta_op
         | 0xB1 -> step_indy_inst cpu Instruction.lda_op
+        | 0XB3 -> step_indy_inst cpu Instruction.lax_op
         | 0xD1 -> step_indy_inst cpu Instruction.cmp_op
         | 0xF1 -> step_indy_inst cpu Instruction.sbc_op
         | _ -> cpu
@@ -262,6 +268,7 @@ module Opcode = struct
         | 0xA4 -> step_zero_inst cpu Instruction.ldy_op
         | 0xA5 -> step_zero_inst cpu Instruction.lda_op
         | 0xA6 -> step_zero_inst cpu Instruction.ldx_op
+        | 0xA7 -> step_zero_inst cpu Instruction.lax_op
         | 0xC4 -> step_zero_inst cpu Instruction.cpy_op
         | 0xC5 -> step_zero_inst cpu Instruction.cmp_op
         | 0xC6 -> step_zero_inst cpu Instruction.dec_op
@@ -301,6 +308,7 @@ module Opcode = struct
         | 0x96 -> step_zery_inst cpu Instruction.stx_op
         | 0x97 -> step_zery_inst cpu Instruction.sax_op
         | 0xB6 -> step_zery_inst cpu Instruction.ldx_op
+        | 0xB7 -> step_zery_inst cpu Instruction.lax_op
         | _ -> cpu
 
     let step (cpu : CPU.t) (opcode : uint8) : CPU.t =

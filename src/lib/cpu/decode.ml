@@ -58,12 +58,14 @@ module Decode = struct
         | ZeropageY zero_addr_y -> !^(zero_addr_y ++ cpu.register_Y)
         | _ -> raise (Failure "Memory mode incompatible with decode address")
 
-    let add_overflow (op_1 : uint8) (op_2 : uint8) (res : uint8) : bool =
+    let add_overflow (op_1 : uint8) (op_2 : uint8) : bool =
+        let res = op_1 ++ op_2 in
         let lft = not ?-(op_1 |/. op_2) in
         let rgt = ?-(op_1 |/. res) in
         lft && rgt
 
-    let sub_overflow (op_1 : uint8) (op_2 : uint8) (res : uint8) : bool =
+    let sub_overflow (op_1 : uint8) (op_2 : uint8) : bool =
+        let res = op_1 -- op_2 in
         let op_2 = UInt8.max_value -- op_2 in
         let lft = not ?-(op_1 |/. op_2) in
         let rgt = ?-(op_1 |/. res) in

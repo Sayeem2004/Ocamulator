@@ -31,11 +31,11 @@ module Decode : sig
     val address : CPU.t -> 'a memory_mode -> uint16
     (** [address cpu mode] is the address the memory mode represents. *)
 
-    val add_overflow : uint8 -> uint8 -> uint8 -> bool
+    val add_overflow : uint8 -> uint8 -> bool
     (** [add_overflow a b c] is true if the addition of [a] and [b] overflows to
         [c]. *)
 
-    val sub_overflow : uint8 -> uint8 -> uint8 -> bool
+    val sub_overflow : uint8 -> uint8 -> bool
     (** [sub_overflow a b c] is true if the subtraction of [a] and [b] overflow
         to [c]. *)
 
