@@ -237,4 +237,8 @@ module Instruction : sig
     val top_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [top_op] implements the TOP instruction found here:
         https://www.masswerk.at/6502/6502_instruction_set.html#TOP *)
+
+    val alr_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [alr_op] implements the ALR instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#ALR *)
 end

@@ -599,4 +599,7 @@ module Instruction = struct
 
     let top_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         cpu
+
+    let alr_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        and_op mode cpu |> lsr_op Accumulator
 end
