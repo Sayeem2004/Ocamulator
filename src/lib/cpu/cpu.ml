@@ -82,7 +82,7 @@ module CPU = struct
                 flags = def_flag ();
             }
         in
-        {cpu with flags = flags_from_ui8 flags}
+        { cpu with flags = flags_from_ui8 flags }
 
     let fetch_ui8 (cpu : t) (address : uint16) : uint8 =
         RAM.read_ui8 cpu.ram address

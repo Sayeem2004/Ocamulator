@@ -22,11 +22,11 @@ module Decode = struct
         | Accumulator -> cpu.accumulator
         | Absolute abs_addr -> CPU.fetch_ui8 cpu abs_addr
         | AbsoluteX abs_addr_x ->
-            abs_addr_x +++ !^(cpu.register_X) +++ ?^(cpu.flags.carr_bit)
-            |> CPU.fetch_ui8 cpu
+            let incr_addr = abs_addr_x +++ !^(cpu.register_X) in
+            CPU.fetch_ui8 cpu incr_addr
         | AbsoluteY abs_addr_y ->
-            abs_addr_y +++ !^(cpu.register_Y) +++ ?^(cpu.flags.carr_bit)
-            |> CPU.fetch_ui8 cpu
+            let incr_addr = abs_addr_y +++ !^(cpu.register_Y) in
+            CPU.fetch_ui8 cpu incr_addr
         | Immediate b -> b
         | Indirect ind_addr -> CPU.fetch_ui16 cpu ind_addr |> CPU.fetch_ui8 cpu
         | XIndirect x_ind_addr ->
@@ -46,16 +46,13 @@ module Decode = struct
     let address (cpu : CPU.t) (type a) (mode : a memory_mode) : uint16 =
         match mode with
         | Absolute abs_addr -> abs_addr
-        | AbsoluteX abs_addr_x ->
-            abs_addr_x +++ !^(cpu.register_X) +++ ?^(cpu.flags.carr_bit)
-        | AbsoluteY abs_addr_y ->
-            abs_addr_y +++ !^(cpu.register_Y) +++ ?^(cpu.flags.carr_bit)
+        | AbsoluteX abs_addr_x -> abs_addr_x +++ !^(cpu.register_X)
+        | AbsoluteY abs_addr_y -> abs_addr_y +++ !^(cpu.register_Y)
         | Indirect ind_addr -> CPU.fetch_ui16 cpu ind_addr
         | XIndirect x_ind_addr ->
             !^x_ind_addr +++ !^(cpu.register_X) |> CPU.fetch_ui16 cpu
         | IndirectY ind_addr_y -> CPU.fetch_ui16 cpu !^ind_addr_y
-        | Relative b ->
-            ~^(~--.b + UInt16.to_int cpu.program_counter)
+        | Relative b -> ~^(~--.b + UInt16.to_int cpu.program_counter)
         | Zeropage zero_addr -> !^zero_addr
         | ZeropageX zero_addr_x -> !^(zero_addr_x ++ cpu.register_X)
         | ZeropageY zero_addr_y -> !^(zero_addr_y ++ cpu.register_Y)
