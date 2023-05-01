@@ -591,6 +591,9 @@ module Instruction = struct
             flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
 
-    let slo_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        asl_op mode cpu |> ora_op mode
+    let dop_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        cpu
+
+    let top_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        cpu
 end
