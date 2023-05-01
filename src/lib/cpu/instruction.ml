@@ -159,8 +159,8 @@ module Instruction = struct
     let cmp_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
         let cmp_mem_acc = cpu.accumulator -- mem_contents in
-        let carry_flag = cmp_mem_acc <?> ~.0 > 0 in
-        let zero_flag = ?*cmp_mem_acc in
+        let carry_flag = (cpu.accumulator <?> mem_contents) >= 0 in
+        let zero_flag = (cpu.accumulator == mem_contents) in
         let neg_flag = ?-cmp_mem_acc in
         {
             cpu with
@@ -638,8 +638,8 @@ module Instruction = struct
     let ane_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let operand = Decode.contents cpu mode in
         let modif_acc = ~.0xEE ||. cpu.accumulator &&. cpu.register_X &&. operand in
-        let zero_bit = ?* modif_acc in
-        let neg_bit = ?- modif_acc in
+        let zero_bit = ?*modif_acc in
+        let neg_bit = ?-modif_acc in
         {
             cpu with
             accumulator = modif_acc;
@@ -661,4 +661,34 @@ module Instruction = struct
             stack_pointer = value;
             flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
+
+    let dcp_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        dec_op mode cpu |> cmp_op mode
+
+    let lxa_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        let operand = Decode.contents cpu mode in
+        let modif_acc = (~.0xEE ||. cpu.accumulator) &&. operand in
+        let zero_bit = ?*modif_acc in
+        let neg_bit = ?-modif_acc in
+        {
+            cpu with
+            accumulator = modif_acc;
+            register_X = modif_acc;
+            flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
+        }
+
+    let isc_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        inc_op mode cpu |> sbc_op mode
+
+    let rla_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        rol_op mode cpu |> and_op mode
+
+    let slo_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        asl_op mode cpu |> ora_op mode
+
+    let sre_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        lsr_op mode cpu |> eor_op mode
+
+    let jam_op (cpu : CPU.t) : CPU.t =
+        { cpu with program_counter = cpu.program_counter --- ~^ 0x0001 }
 end

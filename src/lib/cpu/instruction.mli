@@ -261,4 +261,32 @@ module Instruction : sig
     val las_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [las_op] implements the LAS instruction found here:
         https://www.masswerk.at/6502/6502_instruction_set.html#LAS *)
+
+    val dcp_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [dcp_op] implements the DCP instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#DCP *)
+
+    val lxa_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [lxa_op] implements the LXA instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#LXA *)
+
+    val isc_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [isc_op] implements the ISC instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#ISC *)
+
+    val rla_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [rla_op] implements the RLA instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#RLA *)
+
+    val slo_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [slo_op] implements the SLO instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#SLO *)
+
+    val sre_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [sre_op] implements the SRE instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#SRE *)
+
+    val jam_op : CPU.t -> CPU.t
+    (** [jam_op] implements the JAM instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#JAM *)
 end
