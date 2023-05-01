@@ -369,8 +369,8 @@ module Instruction = struct
     let ora_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let operand = Decode.contents cpu mode in
         let or_acc = cpu.accumulator ||. operand in
-        let zero_bit = ?*or_acc in
-        let neg_bit = ?-or_acc in
+        let zero_bit = ?* or_acc in
+        let neg_bit = ?- or_acc in
         {
             cpu with
             accumulator = or_acc;
@@ -590,4 +590,7 @@ module Instruction = struct
             accumulator = cpu.register_Y;
             flags = { cpu.flags with zero = zero_bit; negative = neg_bit };
         }
+
+    let slo_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        asl_op mode cpu |> ora_op mode
 end

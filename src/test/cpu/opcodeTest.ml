@@ -135,8 +135,8 @@ let cpu_to_string (info : rinfo) (cpu : CPU.t) : string =
         (UInt8.to_string (CPU.flags_ui8 cpu))
     ^ ram_to_string info cpu
 
-(** [opcode_test test opcode] confirms the given opcode steps properly. *)
-let opcode_test (test : opcode_test) (opcode : uint8) : test =
+(** [make_opcode_test test opcode] confirms the given opcode steps properly. *)
+let make_opcode_test (test : opcode_test) (opcode : uint8) : test =
     let cpu_step = Opcode.step test.initial_state opcode in
     test.name >:: fun _ ->
         assert_equal test.final_state cpu_step
@@ -150,14 +150,20 @@ let tests : test list =
     let opcode_tests : opcode_test list list = List.map from_json json_list in
     let mapi =
         List.mapi (fun i l ->
-            List.map (fun t -> opcode_test t (UInt8.from_int i)) l)
+            List.map (fun t -> make_opcode_test t (UInt8.from_int i)) l)
     in
     let tests : test list list = mapi opcode_tests in
     List.flatten tests
 
-let print_opcode_test (test : opcode_test) : unit =
+(* let tests : test list =
+    let num : uint8 = UInt8.from_int 0x04 in
+    let json : json = parse_json num in
+    let opcode_tests : opcode_test list = from_json json in
+    List.map (fun t -> make_opcode_test t num) opcode_tests *)
+
+(* let print_opcode_test (test : opcode_test) : unit =
     Printf.printf "Name: %s\n" test.name;
     Printf.printf "Initial State:\n";
     Printf.printf "%s\n" (cpu_to_string test.initial_ram test.initial_state);
     Printf.printf "Final State:\n";
-    Printf.printf "%s\n" (cpu_to_string test.final_ram test.final_state)
+    Printf.printf "%s\n" (cpu_to_string test.final_ram test.final_state) *)

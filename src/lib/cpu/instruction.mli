@@ -229,4 +229,8 @@ module Instruction : sig
     val tya_op : CPU.t -> CPU.t
     (** [tya_op] implements the TYA instruction found here:
         https://www.nesdev.org/obelisk-6502-guide/reference.html#TYA *)
+
+    val slo_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [slo_op] implements the SLO instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#SLO *)
 end
