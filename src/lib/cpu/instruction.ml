@@ -125,10 +125,7 @@ module Instruction = struct
 
     let brk_op (cpu : CPU.t) : CPU.t =
         let cpu_pushed_pc = CPU.push_stack_ui16 cpu (cpu.program_counter +++ ~^1) in
-        let uint8_flags =
-            CPU.flags_ui8
-                { cpu_pushed_pc.flags with break = true }
-        in
+        let uint8_flags = CPU.flags_ui8 { cpu_pushed_pc.flags with break = true } in
         let cpu_pushed_flags = CPU.push_stack_ui8 cpu_pushed_pc uint8_flags in
         let interrupt_vector = CPU.fetch_ui16 cpu_pushed_flags ~^0xFFFE in
         {
@@ -150,7 +147,7 @@ module Instruction = struct
         else cpu
 
     let clc_op (cpu : CPU.t) : CPU.t =
-        { cpu with flags = { cpu.flags with zero = false } }
+        { cpu with flags = { cpu.flags with carr_bit = false } }
 
     let cld_op (cpu : CPU.t) : CPU.t =
         { cpu with flags = { cpu.flags with decimal = false } }
@@ -369,8 +366,8 @@ module Instruction = struct
     let ora_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let operand = Decode.contents cpu mode in
         let or_acc = cpu.accumulator ||. operand in
-        let zero_bit = ?* or_acc in
-        let neg_bit = ?- or_acc in
+        let zero_bit = ?*or_acc in
+        let neg_bit = ?-or_acc in
         {
             cpu with
             accumulator = or_acc;
@@ -378,9 +375,10 @@ module Instruction = struct
         }
 
     let pha_op (cpu : CPU.t) : CPU.t = CPU.push_stack_ui8 cpu cpu.accumulator
+
     let php_op (cpu : CPU.t) : CPU.t =
-        let proc_status_flags = { cpu.flags with break = true; reserved = true} in
-        CPU.push_stack_ui8 cpu (CPU.flags_ui8 proc_status_flags )
+        let proc_status_flags = { cpu.flags with break = true; reserved = true } in
+        CPU.push_stack_ui8 cpu (CPU.flags_ui8 proc_status_flags)
 
     let pla_op (cpu : CPU.t) : CPU.t =
         let pulled_acc = CPU.peek_stack_ui8 cpu in
@@ -397,7 +395,19 @@ module Instruction = struct
         let pulled_flags = CPU.peek_stack_ui8 cpu in
         let popped_cpu = CPU.pop_stack_ui8 cpu in
         let new_flags = CPU.flags_from_ui8 pulled_flags in
-        { popped_cpu with flags = new_flags }
+        {
+            popped_cpu with
+            flags =
+                {
+                    popped_cpu.flags with
+                    overflow = new_flags.overflow;
+                    carr_bit = new_flags.carr_bit;
+                    negative = new_flags.negative;
+                    decimal = new_flags.decimal;
+                    interrupt = new_flags.interrupt;
+                    zero = new_flags.zero;
+                };
+        }
 
     let rol_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         match mode with
@@ -485,8 +495,11 @@ module Instruction = struct
         let popped_flags_cpu = CPU.pop_stack_ui8 cpu in
         let pc = CPU.peek_stack_ui16 popped_flags_cpu in
         let popped_pc_cpu = CPU.pop_stack_ui16 popped_flags_cpu in
-        { popped_pc_cpu with flags = CPU.flags_from_ui8 stack_flags;
-        program_counter = pc}
+        {
+            popped_pc_cpu with
+            flags = CPU.flags_from_ui8 stack_flags;
+            program_counter = pc;
+        }
 
     let rts_op (cpu : CPU.t) : CPU.t =
         let pc = CPU.peek_stack_ui16 cpu --- ~^1 in

@@ -54,7 +54,7 @@ val ( >> ) : uint8 -> int -> uint8
 val ( ~. ) : int -> uint8
 (** Infix alias for UInt8.from_int. *)
 
-val (~--. ) : uint8 -> int
+val ( ~--. ) : uint8 -> int
 (** Infix for signed integer of uint8 *)
 
 val ( ?. ) : bool -> uint8

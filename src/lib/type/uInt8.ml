@@ -29,6 +29,7 @@ let ( ?> ) u8_1 u8_2 = u8_1 ++ u8_2 <?> u8_1 < 0
 let ( ?- ) u8 = not (u8 &&. ~.0b10000000 <-> ~.0x00)
 let ( ?* ) u8 = u8 <?> UInt8.zero = 0
 let ( ?+ ) u8 = not (u8 &&. ~.0b00000001 <-> ~.0x00)
-let ( ~--. ) u = 
+
+let ( ~--. ) u =
     let of_int = UInt8.to_int u in
-    if ?- u then of_int - 2*0b10000000 else of_int
+    if ?-u then of_int - (2 * 0b10000000) else of_int
