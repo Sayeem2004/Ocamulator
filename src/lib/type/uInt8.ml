@@ -32,4 +32,4 @@ let ( ?+ ) u8 = not (u8 &&. ~.0b00000001 <-> ~.0x00)
 
 let ( ~--. ) u =
     let of_int = UInt8.to_int u in
-    if ?-u then of_int - (2 * 0b10000000) else of_int
+    if ?-u then - (256 - of_int) else of_int

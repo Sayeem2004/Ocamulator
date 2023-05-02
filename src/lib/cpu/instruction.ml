@@ -521,21 +521,15 @@ module Instruction = struct
 
     let sbc_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let operand = Decode.contents cpu mode in
-        let fir_sub = cpu.accumulator -- operand in
-        let sec_sub = fir_sub -- ?.(not cpu.flags.carr_bit) in
-        let overflow =
-            Decode.sub_signed_overflow cpu.accumulator operand
-            || Decode.sub_signed_overflow fir_sub ?.(not cpu.flags.carr_bit)
-        in
-        let carr_bit =
-            (not (Decode.sub_unsigned_overflow cpu.accumulator operand))
-            && not (Decode.sub_unsigned_overflow fir_sub ?.(not cpu.flags.carr_bit))
-        in
-        let zero_bit = ?*sec_sub in
-        let neg_bit = ?-sec_sub in
+        let sub_sum = operand ++ ?.(not cpu.flags.carr_bit) in
+        let sub_res = cpu.accumulator -- sub_sum in
+        let overflow = Decode.sub_signed_overflow cpu.accumulator sub_sum in
+        let carr_bit = not (Decode.sub_unsigned_overflow cpu.accumulator sub_sum) in
+        let zero_bit = ?*sub_res in
+        let neg_bit = ?-sub_res in
         {
             cpu with
-            accumulator = sec_sub;
+            accumulator = sub_res;
             flags =
                 {
                     cpu.flags with
@@ -759,6 +753,22 @@ module Instruction = struct
         cpu
 
     let arr_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
-        let value = Decode.contents cpu mode &&. cpu.accumulator in
-        ror_op Accumulator {cpu with accumulator = value}
+        let value = (cpu.accumulator &&. Decode.contents cpu mode) >> 1 in
+        let value = if cpu.flags.carr_bit then value ||. ~.0x80 else value in
+        let carr_bit = not ((value &&. ~.0x01) <-> ~. 0) in
+        let zero_bit = value <-> ~. 0 in
+        let ngtv_bit = not ((value &&. ~.0x80) <-> ~. 0) in
+        let over_bit = not ((value &&. (value << 1) &&. ~. 0x40) <-> ~. 0) in
+        {
+            cpu with
+            accumulator = value;
+            flags =
+                {
+                    cpu.flags with
+                    zero = zero_bit;
+                    negative = ngtv_bit;
+                    carr_bit = carr_bit;
+                    overflow = over_bit;
+                };
+        }
 end
