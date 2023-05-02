@@ -301,4 +301,20 @@ module Instruction : sig
     val sha_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [sha_op] implements the SHA instruction found here:
         https://www.masswerk.at/6502/6502_instruction_set.html#SHA *)
+
+    val tas_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [tas_op] implements the TAS instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#TAS *)
+
+    val shy_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [shy_op] implements the SHY instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#SHY *)
+
+    val shx_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [shx_op] implements the SHX instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#SHX *)
+
+    val arr_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [arr_op] implements the ARR instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#ARR *)
 end

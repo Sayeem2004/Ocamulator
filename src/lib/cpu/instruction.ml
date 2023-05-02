@@ -730,8 +730,35 @@ module Instruction = struct
 
     let sha_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let addr = Decode.address cpu mode in
-        let high = !.(addr &&& ~^0x0080) in
-        let value = cpu.accumulator &&. cpu.register_X &&. high in
+        let high = !. ((addr &&& ~^ 0xFF00) >>> 8) in
+        let value = cpu.accumulator &&. cpu.register_X &&. (high ++ ~. 0x01) in
         CPU.write_ui8 cpu addr value;
         cpu
+
+    let tas_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        let stack_val = cpu.accumulator &&. cpu.register_X in
+        let new_cpu = { cpu with stack_pointer = stack_val } in
+        let addr = Decode.address new_cpu mode in
+        let high = !. ((addr &&& ~^ 0xFF00) >>> 8) in
+        let value = stack_val &&. (high ++ ~. 0x01) in
+        CPU.write_ui8 new_cpu addr value;
+        new_cpu
+
+    let shy_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        let addr = Decode.address cpu mode in
+        let high = !. ((addr &&& ~^ 0xFF00) >>> 8) in
+        let value = cpu.register_Y &&. (high ++ ~. 0x01) in
+        CPU.write_ui8 cpu addr value;
+        cpu
+
+    let shx_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        let addr = Decode.address cpu mode in
+        let high = !. ((addr &&& ~^ 0xFF00) >>> 8) in
+        let value = cpu.register_X &&. (high ++ ~. 0x01) in
+        CPU.write_ui8 cpu addr value;
+        cpu
+
+    let arr_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
+        let value = Decode.contents cpu mode &&. cpu.accumulator in
+        ror_op Accumulator {cpu with accumulator = value}
 end
