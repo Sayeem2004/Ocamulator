@@ -155,9 +155,11 @@ let tests : test list =
     let tests : test list list = mapi opcode_tests in
     List.flatten tests
 
-(* let tests : test list = let num : uint8 = UInt8.from_int 0xE9 in let json :
-   json = parse_json num in let opcode_tests : opcode_test list = from_json json
-   in List.map (fun t -> make_opcode_test t num) opcode_tests *)
+(* let tests : test list =
+    let num : uint8 = UInt8.from_int 0x60 in
+    let json : json = parse_json num in
+    let opcode_tests : opcode_test list = from_json json in
+    List.map (fun t -> make_opcode_test t num) opcode_tests *)
 
 (* let print_opcode_test (test : opcode_test) : unit = Printf.printf "Name:
    %s\n" test.name; Printf.printf "Initial State:\n"; Printf.printf "%s\n"

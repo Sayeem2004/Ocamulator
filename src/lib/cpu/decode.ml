@@ -30,12 +30,18 @@ module Decode = struct
         | Immediate b -> b
         | Indirect ind_addr -> CPU.fetch_ui16 cpu ind_addr |> CPU.fetch_ui8 cpu
         | XIndirect x_ind_addr ->
-            !^(x_ind_addr ++ cpu.register_X)
-            |> CPU.fetch_ui16 cpu |> CPU.fetch_ui8 cpu
+            let low_byte_targ =
+                CPU.fetch_ui8 cpu !^(x_ind_addr ++ cpu.register_X)
+            in
+            let high_byte_targ =
+                CPU.fetch_ui8 cpu !^(x_ind_addr ++ cpu.register_X ++ ~.0x01)
+            in
+            UInt16.combine_ui8 high_byte_targ low_byte_targ |> CPU.fetch_ui8 cpu
         | IndirectY ind_addr_y ->
-            let ll_addr = CPU.fetch_ui16 cpu !^ind_addr_y in
-            let add_addr = ll_addr +++ !^(cpu.register_Y) in
-            CPU.fetch_ui8 cpu add_addr
+            let low_byte_targ = CPU.fetch_ui8 cpu !^ind_addr_y in
+            let high_byte_targ = CPU.fetch_ui8 cpu !^(ind_addr_y ++ ~.0x01) in
+            UInt16.combine_ui8 high_byte_targ low_byte_targ +++ !^(cpu.register_Y)
+            |> CPU.fetch_ui8 cpu
         | Relative b -> !^b +++ cpu.program_counter |> CPU.fetch_ui8 cpu
         | Zeropage zero_addr -> CPU.fetch_ui8 cpu !^zero_addr
         | ZeropageX zero_addr_x ->
@@ -50,10 +56,17 @@ module Decode = struct
         | AbsoluteY abs_addr_y -> abs_addr_y +++ !^(cpu.register_Y)
         | Indirect ind_addr -> CPU.fetch_ui16 cpu ind_addr
         | XIndirect x_ind_addr ->
-            !^x_ind_addr +++ !^(cpu.register_X) |> CPU.fetch_ui16 cpu
+            let low_byte_targ =
+                CPU.fetch_ui8 cpu !^(x_ind_addr ++ cpu.register_X)
+            in
+            let high_byte_targ =
+                CPU.fetch_ui8 cpu !^(x_ind_addr ++ cpu.register_X ++ ~.0x01)
+            in
+            UInt16.combine_ui8 high_byte_targ low_byte_targ
         | IndirectY ind_addr_y ->
-            let ll_addr = CPU.fetch_ui16 cpu !^ind_addr_y in
-            ll_addr +++ !^(cpu.register_Y)
+            let low_byte_targ = CPU.fetch_ui8 cpu !^ind_addr_y in
+            let high_byte_targ = CPU.fetch_ui8 cpu !^(ind_addr_y ++ ~.0x01) in
+            UInt16.combine_ui8 high_byte_targ low_byte_targ +++ !^(cpu.register_Y)
         | Relative b -> ~^(~--.b + UInt16.to_int cpu.program_counter)
         | Zeropage zero_addr -> !^zero_addr
         | ZeropageX zero_addr_x -> !^(zero_addr_x ++ cpu.register_X)

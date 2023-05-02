@@ -1,4 +1,6 @@
+src/_build/
 src/_build/*
+src/_coverage/
 src/_coverage/*
 .DS_Store
 *.zip

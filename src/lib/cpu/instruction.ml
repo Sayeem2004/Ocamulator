@@ -181,8 +181,8 @@ module Instruction = struct
     let cpx_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
         let cmp_mem_x = cpu.register_X -- mem_contents in
-        let carry_flag = cmp_mem_x <?> ~.0 > 0 in
-        let zero_flag = ?*cmp_mem_x in
+        let carry_flag = cpu.register_X <?> mem_contents >= 0 in
+        let zero_flag = cpu.register_X == mem_contents in
         let neg_flag = ?-cmp_mem_x in
         {
             cpu with
@@ -198,8 +198,8 @@ module Instruction = struct
     let cpy_op (type a') (mode : a' Decode.memory_mode) (cpu : CPU.t) : CPU.t =
         let mem_contents = Decode.contents cpu mode in
         let cmp_mem_x = cpu.register_Y -- mem_contents in
-        let carry_flag = cmp_mem_x <?> ~.0 > 0 in
-        let zero_flag = ?*cmp_mem_x in
+        let carry_flag = cpu.register_Y <?> mem_contents >= 0 in
+        let zero_flag = cpu.register_Y == mem_contents in
         let neg_flag = ?-cmp_mem_x in
         {
             cpu with
@@ -494,18 +494,28 @@ module Instruction = struct
             }
 
     let rti_op (cpu : CPU.t) : CPU.t =
-        let stack_flags = CPU.peek_stack_ui8 cpu in
+        let stack_flags_ui8 = CPU.peek_stack_ui8 cpu in
+        let stack_flags = CPU.flags_from_ui8 stack_flags_ui8 in
         let popped_flags_cpu = CPU.pop_stack_ui8 cpu in
         let pc = CPU.peek_stack_ui16 popped_flags_cpu in
         let popped_pc_cpu = CPU.pop_stack_ui16 popped_flags_cpu in
         {
             popped_pc_cpu with
-            flags = CPU.flags_from_ui8 stack_flags;
+            flags =
+                {
+                    popped_flags_cpu.flags with
+                    negative = stack_flags.negative;
+                    zero = stack_flags.zero;
+                    carr_bit = stack_flags.carr_bit;
+                    interrupt = stack_flags.interrupt;
+                    decimal = stack_flags.decimal;
+                    overflow = stack_flags.overflow;
+                };
             program_counter = pc;
         }
 
     let rts_op (cpu : CPU.t) : CPU.t =
-        let pc = CPU.peek_stack_ui16 cpu --- ~^1 in
+        let pc = CPU.peek_stack_ui16 cpu +++ ~^1 in
         let popped_cpu = CPU.pop_stack_ui16 cpu in
         { popped_cpu with program_counter = pc }
 

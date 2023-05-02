@@ -33,7 +33,7 @@ format:
 	@for file in $(MLI_FILES); do ocp-indent --inplace $$file; done
 
 cloc:
-	@cloc --by-file --include-lang=OCaml .
+	@cloc --by-file --exclude-list-file=data/exclude.lst --include-lang=OCaml  .
 
 bisect:
 	@cd src && dune exec --instrument-with bisect_ppx test/main.exe
