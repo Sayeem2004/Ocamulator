@@ -51,25 +51,28 @@ module Decode = struct
         | Indirect ind_addr -> CPU.fetch_ui16 cpu ind_addr
         | XIndirect x_ind_addr ->
             !^x_ind_addr +++ !^(cpu.register_X) |> CPU.fetch_ui16 cpu
-        | IndirectY ind_addr_y -> CPU.fetch_ui16 cpu !^ind_addr_y
+        | IndirectY ind_addr_y ->
+            let ll_addr = CPU.fetch_ui16 cpu !^ind_addr_y in
+            ll_addr +++ !^(cpu.register_Y)
         | Relative b -> ~^(~--.b + UInt16.to_int cpu.program_counter)
         | Zeropage zero_addr -> !^zero_addr
         | ZeropageX zero_addr_x -> !^(zero_addr_x ++ cpu.register_X)
         | ZeropageY zero_addr_y -> !^(zero_addr_y ++ cpu.register_Y)
         | _ -> raise (Failure "Memory mode incompatible with decode address")
 
-    let add_overflow (op_1 : uint8) (op_2 : uint8) : bool =
-        let res = op_1 ++ op_2 in
-        let lft = not ?-(op_1 |/. op_2) in
-        let rgt = ?-(op_1 |/. res) in
-        lft && rgt
+    let add_unsigned_overflow (op_1 : uint8) (op_2 : uint8) : bool =
+        if UInt8.to_int op_1 + UInt8.to_int op_2 > 0xFF then true else false
 
-    let sub_overflow (op_1 : uint8) (op_2 : uint8) : bool =
-        let res = op_1 -- op_2 in
-        let op_2 = UInt8.max_value -- op_2 in
-        let lft = not ?-(op_1 |/. op_2) in
-        let rgt = ?-(op_1 |/. res) in
-        lft && rgt
+    let add_signed_overflow (op_1 : uint8) (op_2 : uint8) : bool =
+        let signed_sum = ~--.op_1 + ~--.op_2 in
+        if signed_sum > 127 || signed_sum < -128 then true else false
+
+    let sub_unsigned_overflow (op_1 : uint8) (op_2 : uint8) : bool =
+        if UInt8.to_int op_1 - UInt8.to_int op_2 < 0 then true else false
+
+    let sub_signed_overflow (op_1 : uint8) (op_2 : uint8) : bool =
+        let signed_diff = ~--.op_1 - ~--.op_2 in
+        if signed_diff > 127 || signed_diff < -128 then true else false
 
     let incr_cpu_pc (cpu : CPU.t) (size : int) : CPU.t =
         { cpu with program_counter = cpu.program_counter +++ ~^size }

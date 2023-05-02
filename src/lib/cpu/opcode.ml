@@ -140,6 +140,7 @@ module Opcode = struct
         | 0x4F -> step_abst_inst cpu Instruction.sre_op
         | 0x6D -> step_abst_inst cpu Instruction.adc_op
         | 0x6E -> step_abst_inst cpu Instruction.ror_op
+        | 0x6F -> step_abst_inst cpu Instruction.rra_op
         | 0x8C -> step_abst_inst cpu Instruction.sty_op
         | 0x8D -> step_abst_inst cpu Instruction.sta_op
         | 0x8E -> step_abst_inst cpu Instruction.stx_op
@@ -175,7 +176,9 @@ module Opcode = struct
         | 0x7C -> step_absx_inst cpu Instruction.top_op
         | 0x7D -> step_absx_inst cpu Instruction.adc_op
         | 0x7E -> step_absx_inst cpu Instruction.ror_op
+        | 0x7F -> step_absx_inst cpu Instruction.rra_op
         | 0x9D -> step_absx_inst cpu Instruction.sta_op
+        | 0x9F -> step_absx_inst cpu Instruction.sha_op
         | 0xBC -> step_absx_inst cpu Instruction.ldy_op
         | 0xBD -> step_absx_inst cpu Instruction.lda_op
         | 0xDC -> step_absx_inst cpu Instruction.top_op
@@ -197,7 +200,9 @@ module Opcode = struct
         | 0x59 -> step_absy_inst cpu Instruction.eor_op
         | 0x5B -> step_absy_inst cpu Instruction.sre_op
         | 0x79 -> step_absy_inst cpu Instruction.adc_op
+        | 0x7B -> step_absy_inst cpu Instruction.rra_op
         | 0x99 -> step_absy_inst cpu Instruction.sta_op
+        | 0x9F -> step_absy_inst cpu Instruction.sha_op
         | 0xBB -> step_absy_inst cpu Instruction.las_op
         | 0xB9 -> step_absy_inst cpu Instruction.lda_op
         | 0xBE -> step_absy_inst cpu Instruction.ldx_op
@@ -228,14 +233,14 @@ module Opcode = struct
         | 0xC0 -> step_imed_inst cpu Instruction.cpy_op
         | 0xC2 -> step_imed_inst cpu Instruction.dop_op
         | 0xC9 -> step_imed_inst cpu Instruction.cmp_op
+        | 0xCB -> step_imed_inst cpu Instruction.sbx_op
         | 0xE0 -> step_imed_inst cpu Instruction.cpx_op
         | 0xE2 -> step_imed_inst cpu Instruction.dop_op
         | 0xE9 -> step_imed_inst cpu Instruction.sbc_op
         | _ -> cpu
 
     let step_indr (opcode : int) (cpu : CPU.t) : CPU.t =
-        match opcode with
-        | 0x6C -> step_indr_inst cpu Instruction.jmp_op | _ -> cpu
+        match opcode with 0x6C -> step_indr_inst cpu Instruction.jmp_op | _ -> cpu
 
     let step_xind (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -246,6 +251,7 @@ module Opcode = struct
         | 0x41 -> step_xind_inst cpu Instruction.eor_op
         | 0x43 -> step_xind_inst cpu Instruction.sre_op
         | 0x61 -> step_xind_inst cpu Instruction.adc_op
+        | 0x63 -> step_xind_inst cpu Instruction.rra_op
         | 0x81 -> step_xind_inst cpu Instruction.sta_op
         | 0x83 -> step_xind_inst cpu Instruction.sax_op
         | 0xA1 -> step_xind_inst cpu Instruction.lda_op
@@ -265,7 +271,9 @@ module Opcode = struct
         | 0x51 -> step_indy_inst cpu Instruction.eor_op
         | 0x53 -> step_indy_inst cpu Instruction.sre_op
         | 0x71 -> step_indy_inst cpu Instruction.adc_op
+        | 0x73 -> step_indy_inst cpu Instruction.rra_op
         | 0x91 -> step_indy_inst cpu Instruction.sta_op
+        | 0x93 -> step_indy_inst cpu Instruction.sha_op
         | 0xB1 -> step_indy_inst cpu Instruction.lda_op
         | 0XB3 -> step_indy_inst cpu Instruction.lax_op
         | 0xD1 -> step_indy_inst cpu Instruction.cmp_op
@@ -303,6 +311,7 @@ module Opcode = struct
         | 0x64 -> step_zero_inst cpu Instruction.dop_op
         | 0x65 -> step_zero_inst cpu Instruction.adc_op
         | 0x66 -> step_zero_inst cpu Instruction.ror_op
+        | 0x67 -> step_zero_inst cpu Instruction.rra_op
         | 0x84 -> step_zero_inst cpu Instruction.sty_op
         | 0x85 -> step_zero_inst cpu Instruction.sta_op
         | 0x86 -> step_zero_inst cpu Instruction.stx_op
@@ -338,6 +347,7 @@ module Opcode = struct
         | 0x74 -> step_zerx_inst cpu Instruction.dop_op
         | 0x75 -> step_zerx_inst cpu Instruction.adc_op
         | 0x76 -> step_zerx_inst cpu Instruction.ror_op
+        | 0x77 -> step_zerx_inst cpu Instruction.rra_op
         | 0x94 -> step_zerx_inst cpu Instruction.sty_op
         | 0x95 -> step_zerx_inst cpu Instruction.sta_op
         | 0xB4 -> step_zerx_inst cpu Instruction.ldy_op

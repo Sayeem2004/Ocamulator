@@ -289,4 +289,16 @@ module Instruction : sig
     val jam_op : CPU.t -> CPU.t
     (** [jam_op] implements the JAM instruction found here:
         https://www.masswerk.at/6502/6502_instruction_set.html#JAM *)
+
+    val rra_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [rra_op] implements the RRA instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#RRA *)
+
+    val sbx_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [sbx_op] implements the SBX instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#SBX *)
+
+    val sha_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
+    (** [sha_op] implements the SHA instruction found here:
+        https://www.masswerk.at/6502/6502_instruction_set.html#SHA *)
 end
