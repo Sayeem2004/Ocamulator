@@ -12,8 +12,8 @@ module RAM : sig
     (** [RAM.t] is a record type that stores the array representing RAM and an
         int representing its size. *)
 
-    val nes_zero_ram : unit -> t
-    (** [nes_zero_ram ()] is an instantiation of type [t] with size equivalent
+    val zero_ram : unit -> t
+    (** [zero_ram ()] is an instantiation of type [t] with size equivalent
         to the [UInt16.max_value + 1]. *)
 
     val nes_ram : bytes -> t

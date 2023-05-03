@@ -10,7 +10,8 @@ let tests : test =
             (* CpuTest.tests; *)
             (* DecodeTest.tests; *)
             (* InstructionTest.tests; *)
-            OpcodeTest.tests (* RamTest.tests; *);
+            OpcodeTest.tests;
+            (* RamTest.tests; *)
         ]
 
 (** Running tests. *)

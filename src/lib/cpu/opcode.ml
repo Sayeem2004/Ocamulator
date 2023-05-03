@@ -14,58 +14,58 @@ module Opcode = struct
         inst Accumulator cpu
 
     let step_abst_inst (cpu : CPU.t) (inst : uint16 some_inst) : CPU.t =
-        let operand = Decode.fetch_uint16_op cpu in
-        let step_cpu = Decode.incr_cpu_pc cpu 2 in
+        let operand = Decode.fetch_ui16_op cpu in
+        let step_cpu = Decode.increment_pc cpu 2 in
         inst (Absolute operand) step_cpu
 
     let step_absx_inst (cpu : CPU.t) (inst : uint16 some_inst) : CPU.t =
-        let operand = Decode.fetch_uint16_op cpu in
-        let step_cpu = Decode.incr_cpu_pc cpu 2 in
+        let operand = Decode.fetch_ui16_op cpu in
+        let step_cpu = Decode.increment_pc cpu 2 in
         inst (AbsoluteX operand) step_cpu
 
     let step_absy_inst (cpu : CPU.t) (inst : uint16 some_inst) : CPU.t =
-        let operand = Decode.fetch_uint16_op cpu in
-        let step_cpu = Decode.incr_cpu_pc cpu 2 in
+        let operand = Decode.fetch_ui16_op cpu in
+        let step_cpu = Decode.increment_pc cpu 2 in
         inst (AbsoluteY operand) step_cpu
 
     let step_imed_inst (cpu : CPU.t) (inst : uint8 some_inst) : CPU.t =
-        let operand = Decode.fetch_uint8_op cpu in
-        let step_cpu = Decode.incr_cpu_pc cpu 1 in
+        let operand = Decode.fetch_ui8_op cpu in
+        let step_cpu = Decode.increment_pc cpu 1 in
         inst (Immediate operand) step_cpu
 
     let step_indr_inst (cpu : CPU.t) (inst : uint16 some_inst) : CPU.t =
-        let operand = Decode.fetch_uint16_op cpu in
-        let step_cpu = Decode.incr_cpu_pc cpu 2 in
+        let operand = Decode.fetch_ui16_op cpu in
+        let step_cpu = Decode.increment_pc cpu 2 in
         inst (Indirect operand) step_cpu
 
     let step_xind_inst (cpu : CPU.t) (inst : uint16 some_inst) : CPU.t =
-        let operand = Decode.fetch_uint8_op cpu in
-        let step_cpu = Decode.incr_cpu_pc cpu 1 in
+        let operand = Decode.fetch_ui8_op cpu in
+        let step_cpu = Decode.increment_pc cpu 1 in
         inst (XIndirect operand) step_cpu
 
     let step_indy_inst (cpu : CPU.t) (inst : uint16 some_inst) : CPU.t =
-        let operand = Decode.fetch_uint8_op cpu in
-        let step_cpu = Decode.incr_cpu_pc cpu 1 in
+        let operand = Decode.fetch_ui8_op cpu in
+        let step_cpu = Decode.increment_pc cpu 1 in
         inst (IndirectY operand) step_cpu
 
     let step_relt_inst (cpu : CPU.t) (inst : uint16 some_inst) : CPU.t =
-        let operand = Decode.fetch_uint8_op cpu in
-        let step_cpu = Decode.incr_cpu_pc cpu 1 in
+        let operand = Decode.fetch_ui8_op cpu in
+        let step_cpu = Decode.increment_pc cpu 1 in
         inst (Relative operand) step_cpu
 
     let step_zero_inst (cpu : CPU.t) (inst : uint8 some_inst) : CPU.t =
-        let operand = Decode.fetch_uint8_op cpu in
-        let step_cpu = Decode.incr_cpu_pc cpu 1 in
+        let operand = Decode.fetch_ui8_op cpu in
+        let step_cpu = Decode.increment_pc cpu 1 in
         inst (Zeropage operand) step_cpu
 
     let step_zerx_inst (cpu : CPU.t) (inst : uint16 some_inst) : CPU.t =
-        let operand = Decode.fetch_uint8_op cpu in
-        let step_cpu = Decode.incr_cpu_pc cpu 1 in
+        let operand = Decode.fetch_ui8_op cpu in
+        let step_cpu = Decode.increment_pc cpu 1 in
         inst (ZeropageX operand) step_cpu
 
     let step_zery_inst (cpu : CPU.t) (inst : uint16 some_inst) : CPU.t =
-        let operand = Decode.fetch_uint8_op cpu in
-        let step_cpu = Decode.incr_cpu_pc cpu 1 in
+        let operand = Decode.fetch_ui8_op cpu in
+        let step_cpu = Decode.increment_pc cpu 1 in
         inst (ZeropageY operand) step_cpu
 
     let step_none (opcode : int) (cpu : CPU.t) : CPU.t =
@@ -113,7 +113,7 @@ module Opcode = struct
         | 0xF2 -> step_none_inst cpu Instruction.jam_op
         | 0xF8 -> step_none_inst cpu Instruction.sed_op
         | 0xFA -> step_none_inst cpu Instruction.nop_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step_accm (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -121,7 +121,7 @@ module Opcode = struct
         | 0x2A -> step_accm_inst cpu Instruction.rol_op
         | 0x4A -> step_accm_inst cpu Instruction.lsr_op
         | 0x6A -> step_accm_inst cpu Instruction.ror_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step_abst (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -157,7 +157,7 @@ module Opcode = struct
         | 0xED -> step_abst_inst cpu Instruction.sbc_op
         | 0xEE -> step_abst_inst cpu Instruction.inc_op
         | 0xEF -> step_abst_inst cpu Instruction.isc_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step_absx (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -189,7 +189,7 @@ module Opcode = struct
         | 0xFD -> step_absx_inst cpu Instruction.sbc_op
         | 0xFE -> step_absx_inst cpu Instruction.inc_op
         | 0xFF -> step_absx_inst cpu Instruction.isc_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step_absy (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -213,7 +213,7 @@ module Opcode = struct
         | 0xD9 -> step_absy_inst cpu Instruction.cmp_op
         | 0xF9 -> step_absy_inst cpu Instruction.sbc_op
         | 0xFB -> step_absy_inst cpu Instruction.isc_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step_imed (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -241,10 +241,12 @@ module Opcode = struct
         | 0xE2 -> step_imed_inst cpu Instruction.dop_op
         | 0xE9 -> step_imed_inst cpu Instruction.sbc_op
         | 0xEB -> step_imed_inst cpu Instruction.sbc_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step_indr (opcode : int) (cpu : CPU.t) : CPU.t =
-        match opcode with 0x6C -> step_indr_inst cpu Instruction.jmp_op | _ -> cpu
+        match opcode with
+        | 0x6C -> step_indr_inst cpu Instruction.jmp_op
+        | _ -> Instruction.nop_op cpu
 
     let step_xind (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -264,7 +266,7 @@ module Opcode = struct
         | 0xC3 -> step_xind_inst cpu Instruction.dcp_op
         | 0xE1 -> step_xind_inst cpu Instruction.sbc_op
         | 0xE3 -> step_xind_inst cpu Instruction.isc_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step_indy (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -284,7 +286,7 @@ module Opcode = struct
         | 0xD3 -> step_indy_inst cpu Instruction.dcp_op
         | 0xF1 -> step_indy_inst cpu Instruction.sbc_op
         | 0xF3 -> step_indy_inst cpu Instruction.isc_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step_relt (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -296,7 +298,7 @@ module Opcode = struct
         | 0xB0 -> step_relt_inst cpu Instruction.bcs_op
         | 0xD0 -> step_relt_inst cpu Instruction.bne_op
         | 0xF0 -> step_relt_inst cpu Instruction.beq_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step_zero (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -332,7 +334,7 @@ module Opcode = struct
         | 0xE5 -> step_zero_inst cpu Instruction.sbc_op
         | 0xE6 -> step_zero_inst cpu Instruction.inc_op
         | 0xE7 -> step_zero_inst cpu Instruction.isc_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step_zerx (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -364,7 +366,7 @@ module Opcode = struct
         | 0xF5 -> step_zerx_inst cpu Instruction.sbc_op
         | 0xF6 -> step_zerx_inst cpu Instruction.inc_op
         | 0xF7 -> step_zerx_inst cpu Instruction.isc_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step_zery (opcode : int) (cpu : CPU.t) : CPU.t =
         match opcode with
@@ -372,11 +374,11 @@ module Opcode = struct
         | 0x97 -> step_zery_inst cpu Instruction.sax_op
         | 0xB6 -> step_zery_inst cpu Instruction.ldx_op
         | 0xB7 -> step_zery_inst cpu Instruction.lax_op
-        | _ -> cpu
+        | _ -> Instruction.nop_op cpu
 
     let step (cpu : CPU.t) (opcode : uint8) : CPU.t =
         let opcode = UInt8.to_int opcode in
-        Decode.incr_cpu_pc cpu 1 |> step_none opcode |> step_accm opcode
+        Decode.increment_pc cpu 1 |> step_none opcode |> step_accm opcode
         |> step_abst opcode |> step_absx opcode |> step_absy opcode
         |> step_imed opcode |> step_indr opcode |> step_xind opcode
         |> step_indy opcode |> step_relt opcode |> step_zero opcode

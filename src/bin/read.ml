@@ -8,24 +8,23 @@ open Lib__UInt16
 let pp_cpu (cpu : CPU.t) : unit =
     let str8 = UInt8.to_string in
     let str16 = UInt16.to_string in
-    let ptr = ~^0x01 +++ !^(cpu.stack_pointer) in
+    let ptr = ~^0x01 +++ !^(cpu.stackPointer) in
     print_endline ("CPU " ^ "{");
     print_endline ("    Accumulator: " ^ str8 cpu.accumulator);
-    print_endline ("    Register X: " ^ str8 cpu.register_X);
-    print_endline ("    Register Y: " ^ str8 cpu.register_Y);
-    print_endline ("    Program Counter: " ^ str16 cpu.program_counter);
+    print_endline ("    Register X: " ^ str8 cpu.registerX);
+    print_endline ("    Register Y: " ^ str8 cpu.registerY);
+    print_endline ("    Program Counter: " ^ str16 cpu.progCounter);
     print_endline ("    Stack Pointer: " ^ str16 ptr);
     print_endline ("    RAM: " ^ "[ ... ... ... ]");
-    print_endline ("    Flags: " ^ str8 (CPU.flags_ui8 cpu.flags));
+    print_endline ("    Flags: " ^ str8 (CPU.flags_to_ui8 cpu.flags));
     print_endline ("}" ^ " ")
 
 (** [fetch_current_opcode cpu] is the opcode that was just run. *)
-let fetch_current_opcode (cpu : CPU.t) : uint8 =
-    CPU.fetch_current_instruction cpu
+let fetch_current_opcode (cpu : CPU.t) : uint8 = CPU.fetch_instruction cpu
 
 (** [step_cpu_pc cpu] is the CPU state after the program counter has been updated. *)
 let step_cpu_pc (cpu : CPU.t) : CPU.t =
-    { cpu with program_counter = cpu.program_counter +++ ~^1 }
+    { cpu with progCounter = cpu.progCounter +++ ~^1 }
 
 (** [step cpu] runs an opcode and prints the CPU state. *)
 let rec step (cpu : CPU.t) : unit =

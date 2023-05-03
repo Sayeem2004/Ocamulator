@@ -54,8 +54,8 @@ val ( >> ) : uint8 -> int -> uint8
 val ( ~. ) : int -> uint8
 (** Infix alias for UInt8.from_int. *)
 
-val ( ~--. ) : uint8 -> int
-(** Infix for signed integer of uint8 *)
+val ( ~* ) : uint8 -> int
+(** Infix alias for UInt8.to_int. *)
 
 val ( ?. ) : bool -> uint8
 (** Converts a bool to a uint8. [true] -> [1], [false] -> [0]. *)
@@ -71,3 +71,9 @@ val ( ?+ ) : uint8 -> bool
 
 val ( ?* ) : uint8 -> bool
 (** Returns true if the [uint8] is [0]. *)
+
+val ( ?@ ) : uint8 -> uint8
+(** Returns the two's complement of a uint8. *)
+
+val ( ~% ) : uint8 -> int
+(** Infix for signed integer of uint8 *)

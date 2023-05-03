@@ -7,7 +7,7 @@ module RAM = struct
         ram_memory : bytes;
     }
 
-    let nes_zero_ram () : t =
+    let zero_ram () : t =
         { max_mem = 0xFFFF + 1; ram_memory = Bytes.make (0xFFFF + 1) '\x00' }
 
     let nes_ram (rom_file : bytes) =

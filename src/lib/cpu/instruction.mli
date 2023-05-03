@@ -8,227 +8,227 @@ open Decode
 module Instruction : sig
     val adc_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [adc_op] implements the ADC instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#ADC *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#ADC *)
 
     val and_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [and_op] implements the AND instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#AND *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#AND *)
 
     val asl_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [asl_op] implements the ASL instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#ASL *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#ASL *)
 
     val bcc_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [bcc_op] implements the BCC instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#BCC *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#BCC *)
 
     val bcs_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [bcs_op] implements the BCS instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#BCS *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#BCS *)
 
     val beq_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [beq_op] implements the BEQ instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#BEQ *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#BEQ *)
 
     val bit_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [bit_op] implements the BIT instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#BIT *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#BIT *)
 
     val bmi_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [bmi_op] implements the BMI instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#BMI *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#BMI *)
 
     val bne_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [bne_op] implements the BNE instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#BNE *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#BNE *)
 
     val bpl_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [bpl_op] implements the BPL instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#BPL *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#BPL *)
 
     val brk_op : CPU.t -> CPU.t
     (** [brk_op] implements the BRK instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#BRK *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#BRK *)
 
     val bvc_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [bvc_op] implements the BVC instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#BVC *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#BVC *)
 
     val bvs_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [bvs_op] implements the BVS instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#BVS *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#BVS *)
 
     val clc_op : CPU.t -> CPU.t
     (** [clc_op] implements the CLC instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#CLC *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#CLC *)
 
     val cld_op : CPU.t -> CPU.t
     (** [cld_op] implements the CLD instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#CLD *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#CLD *)
 
     val cli_op : CPU.t -> CPU.t
     (** [cli_op] implements the CLI instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#CLI *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#CLI *)
 
     val clv_op : CPU.t -> CPU.t
     (** [clv_op] implements the CLV instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#CLV *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#CLV *)
 
     val cmp_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [cmp_op] implements the CMP instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#CMP *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#CMP *)
 
     val cpx_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [cpx_op] implements the CPX instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#CPX *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#CPX *)
 
     val cpy_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [cpy_op] implements the CPY instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#CPY *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#CPY *)
 
     val dec_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [dec_op] implements the DEC instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#DEC *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#DEC *)
 
     val dex_op : CPU.t -> CPU.t
     (** [dex_op] implements the DEX instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#DEX *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#DEX *)
 
     val dey_op : CPU.t -> CPU.t
     (** [dey_op] implements the DEY instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#DEY *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#DEY *)
 
     val eor_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [eor_op] implements the EOR instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#EOR *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#EOR *)
 
     val inc_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [inc_op] implements the INC instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#INC *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#INC *)
 
     val inx_op : CPU.t -> CPU.t
     (** [inx_op] implements the INX instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#INX *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#INX *)
 
     val iny_op : CPU.t -> CPU.t
     (** [iny_op] implements the INY instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#INY *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#INY *)
 
     val jmp_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [jmp_op] implements the JMP instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#JMP *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#JMP *)
 
     val jsr_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [jsr_op] implements the JSR instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#JSR *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#JSR *)
 
     val lda_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [lda_op] implements the LDA instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#LDA *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#LDA *)
 
     val ldx_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [ldx_op] implements the LDX instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#LDX *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#LDX *)
 
     val ldy_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [ldy_op] implements the LDY instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#LDY *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#LDY *)
 
     val lsr_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [lsr_op] implements the LSR instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#LSR *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#LSR *)
 
     val nop_op : CPU.t -> CPU.t
     (** [nop_op] implements the NOP instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#NOP *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#NOP *)
 
     val ora_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [ora_op] implements the ORA instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#ORA *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#ORA *)
 
     val pha_op : CPU.t -> CPU.t
     (** [pha_op] implements the PHA instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#PHA *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#PHA *)
 
     val php_op : CPU.t -> CPU.t
     (** [php_op] implements the PHP instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#PHP *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#PHP *)
 
     val pla_op : CPU.t -> CPU.t
     (** [pla_op] implements the PLA instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#PLA *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#PLA *)
 
     val plp_op : CPU.t -> CPU.t
     (** [plp_op] implements the PLP instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#PLP *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#PLP *)
 
     val rol_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [rol_op] implements the ROL instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#ROL *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#ROL *)
 
     val ror_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [ror_op] implements the ROR instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#ROR *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#ROR *)
 
     val rti_op : CPU.t -> CPU.t
     (** [rti_op] implements the RTI instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#RTI *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#RTI *)
 
     val rts_op : CPU.t -> CPU.t
     (** [rts_op] implements the RTS instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#RTS *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#RTS *)
 
     val sbc_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [sbc_op] implements the SBC instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#SBC *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#SBC *)
 
     val sec_op : CPU.t -> CPU.t
     (** [sec_op] implements the SEC instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#SEC *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#SEC *)
 
     val sed_op : CPU.t -> CPU.t
     (** [sed_op] implements the SED instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#SED *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#SED *)
 
     val sei_op : CPU.t -> CPU.t
     (** [sei_op] implements the SEI instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#SEI *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#SEI *)
 
     val sta_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [sta_op] implements the STA instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#STA *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#STA *)
 
     val stx_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [stx_op] implements the STX instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#STX *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#STX *)
 
     val sty_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [sty_op] implements the STY instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#STY *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#STY *)
 
     val tax_op : CPU.t -> CPU.t
     (** [tax_op] implements the TAX instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#TAX *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#TAX *)
 
     val tay_op : CPU.t -> CPU.t
     (** [tay_op] implements the TAY instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#TAY *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#TAY *)
 
     val tsx_op : CPU.t -> CPU.t
     (** [tsx_op] implements the TSX instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#TSX *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#TSX *)
 
     val txa_op : CPU.t -> CPU.t
     (** [txa_op] implements the TXA instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#TXA *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#TXA *)
 
     val txs_op : CPU.t -> CPU.t
     (** [txs_op] implements the TXS instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#TXS *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#TXS *)
 
     val tya_op : CPU.t -> CPU.t
     (** [tya_op] implements the TYA instruction found here:
-        https://www.nesdev.org/obelisk-6502-guide/reference.html#TYA *)
+        https://www.masswerk.at/6502/6502_instruction_set.html#TYA *)
 
     val dop_op : 'a Decode.memory_mode -> CPU.t -> CPU.t
     (** [dop_op] implements the DOP instruction found here:

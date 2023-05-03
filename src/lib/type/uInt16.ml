@@ -17,8 +17,7 @@ module UInt16 = struct
         |> add (ui16_from_ui8 least_sig_bit)
 
     let split_ui16 (ui16 : t) : uint8 * uint8 =
-        ( shift_right ui16 8 |> to_int |> UInt8.from_int,
-          ui16 |> to_int |> UInt8.from_int )
+        (shift_right ui16 8 |> to_int |> ( ~. ), ui16 |> to_int |> ( ~. ))
 end
 
 type uint16 = UInt16.t

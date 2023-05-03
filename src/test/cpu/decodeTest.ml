@@ -6,11 +6,11 @@ open Lib__Ram
 open Lib__Decode
 
 (** [cpu_zero] is a CPU with an empty RAM array. *)
-let cpu_zero : CPU.t = CPU.nes_cpu (UInt16.from_int 0) (RAM.nes_zero_ram ())
+let cpu_zero : CPU.t = CPU.nes_cpu (UInt16.from_int 0) (RAM.zero_ram ())
 
 (** [cpu_ui8] is a CPU with a RAM array with value 128 set at position 0. *)
 let cpu_ui8 : CPU.t =
-    let cpu = CPU.nes_cpu (UInt16.from_int 0) (RAM.nes_zero_ram ()) in
+    let cpu = CPU.nes_cpu (UInt16.from_int 0) (RAM.zero_ram ()) in
     CPU.write_ui8 cpu (UInt16.from_int 0) (UInt8.from_int 128);
     cpu
 
@@ -108,92 +108,49 @@ let address_tests : test list =
         address_test "address zero page y" cpu_zero
             (ZeropageY (UInt8.from_int 0))
             (UInt16.from_int 0);
-        address_raise_test "address accumulator" cpu_zero Accumulator;
-        address_raise_test "address immediate" cpu_zero
-            (Immediate (UInt8.from_int 0));
     ]
 
-(** [add_overflow_test name a b c exp] asserts the equivalence between
-    [add_overflow a b c] and [exp]. *)
-let add_overflow_test (name : string) (a : uint8) (b : uint8) (exp : bool) :
-    test =
-    name >:: fun _ ->
-        assert_equal exp (Decode.add_overflow a b) ~printer:string_of_bool
-
-(** Add_overflow tests to be run. *)
-let add_overflow_tests : test list =
-    [
-        add_overflow_test "add overflow 0 0 0" (UInt8.from_int 0) (UInt8.from_int 0)
-            false;
-        add_overflow_test "add overflow 0 1 1" (UInt8.from_int 0) (UInt8.from_int 1)
-            false;
-        add_overflow_test "add overflow 128 0 128" (UInt8.from_int 128)
-            (UInt8.from_int 0) false;
-        add_overflow_test "add overflow 128 128 0" (UInt8.from_int 128)
-            (UInt8.from_int 128) true;
-    ]
-
-(** [sub_overflow_test name a b c exp] asserts the equivalence between
-    [sub_overflow a b c] and [exp]. *)
-let sub_overflow_test (name : string) (a : uint8) (b : uint8) (exp : bool) :
-    test =
-    name >:: fun _ ->
-        assert_equal exp (Decode.sub_overflow a b) ~printer:string_of_bool
-
-(** Sub_overflow tests to be run. *)
-let sub_overflow_tests : test list =
-    [
-        sub_overflow_test "sub overflow 0 0 0" (UInt8.from_int 0) (UInt8.from_int 0)
-            false;
-        sub_overflow_test "sub overflow 1 0 1" (UInt8.from_int 1) (UInt8.from_int 0)
-            false;
-        sub_overflow_test "sub overflow 128 0 128" (UInt8.from_int 128)
-            (UInt8.from_int 0) false;
-        sub_overflow_test "sub overflow 0 128 128" (UInt8.from_int 0)
-            (UInt8.from_int 128) true;
-    ]
-
-(** [incr_cpu_pc_test name cpu size exp] asserts the equivalence between [incr_cpu_pc
+(** [increment_pc_test name cpu size exp] asserts the equivalence between [increment_pc
     cpu size] and [exp]. *)
-let incr_cpu_pc_test (name : string) (cpu : CPU.t) (size : int) (exp : uint16) :
-    test =
+let increment_pc_test (name : string) (cpu : CPU.t) (size : int) (exp : uint16)
+    : test =
     name >:: fun _ ->
-        assert_equal exp (Decode.incr_cpu_pc cpu size).program_counter
+        assert_equal exp (Decode.increment_pc cpu size).progCounter
             ~printer:UInt16.to_string
 
-(** Incr_cpu_pc tests to be run. *)
-let incr_cpu_pc_tests : test list =
+(** Increment_pc tests to be run. *)
+let increment_pc_tests : test list =
     [
-        incr_cpu_pc_test "incr cpu pc 0" cpu_zero 0 (UInt16.from_int 0);
-        incr_cpu_pc_test "incr cpu pc 1" cpu_zero 1 (UInt16.from_int 1);
-        incr_cpu_pc_test "incr cpu pc 2" cpu_zero 2 (UInt16.from_int 2);
-        incr_cpu_pc_test "incr cpu pc 3" cpu_zero 3 (UInt16.from_int 3);
+        increment_pc_test "incr cpu pc 0" cpu_zero 0 (UInt16.from_int 0);
+        increment_pc_test "incr cpu pc 1" cpu_zero 1 (UInt16.from_int 1);
+        increment_pc_test "incr cpu pc 2" cpu_zero 2 (UInt16.from_int 2);
+        increment_pc_test "incr cpu pc 3" cpu_zero 3 (UInt16.from_int 3);
     ]
 
-(** [fetch_uint8_op_test name cpu exp] asserts the equivalence between [fetch_uint8_op
+(** [fetch_ui8_op_test name cpu exp] asserts the equivalence between [fetch_ui8_op
     cpu] and [exp]. *)
-let fetch_uint8_op_test (name : string) (cpu : CPU.t) (exp : uint8) : test =
+let fetch_ui8_op_test (name : string) (cpu : CPU.t) (exp : uint8) : test =
     name >:: fun _ ->
-        assert_equal exp (Decode.fetch_uint8_op cpu) ~printer:UInt8.to_string
+        assert_equal exp (Decode.fetch_ui8_op cpu) ~printer:UInt8.to_string
 
-(** Fetch_uint8_op tests to be run. *)
-let fetch_uint8_op_tests : test list =
+(** Fetch_ui8_op tests to be run. *)
+let fetch_ui8_op_tests : test list =
     [
-        fetch_uint8_op_test "fetch uint8 op cpu_zero" cpu_zero (UInt8.from_int 0);
-        fetch_uint8_op_test "fetch uint8 op cpu_ui8" cpu_ui8 (UInt8.from_int 128);
+        fetch_ui8_op_test "fetch ui8 op cpu_zero" cpu_zero (UInt8.from_int 0);
+        fetch_ui8_op_test "fetch ui8 op cpu_ui8" cpu_ui8 (UInt8.from_int 128);
     ]
 
-(** [fetch_uint16_op_test name cpu exp] asserts the equivalence between
-    [fetch_uint16_op cpu] and [exp]. *)
-let fetch_uint16_op_test (name : string) (cpu : CPU.t) (exp : uint16) : test =
+(** [fetch_ui16_op_test name cpu exp] asserts the equivalence between
+    [fetch_ui16_op cpu] and [exp]. *)
+let fetch_ui16_op_test (name : string) (cpu : CPU.t) (exp : uint16) : test =
     name >:: fun _ ->
-        assert_equal exp (Decode.fetch_uint16_op cpu) ~printer:UInt16.to_string
+        assert_equal exp (Decode.fetch_ui16_op cpu) ~printer:UInt16.to_string
 
-(** Fetch_uint16_op tests to be run. *)
-let fetch_uint16_op_tests : test list =
+(** Fetch_ui16_op tests to be run. *)
+let fetch_ui16_op_tests : test list =
     [
-        fetch_uint16_op_test "fetch uint16 op cpu_zero" cpu_zero (UInt16.from_int 0);
-        fetch_uint16_op_test "fetch uint16 op cpu_ui8" cpu_ui8 (UInt16.from_int 128);
+        fetch_ui16_op_test "fetch ui16 op cpu_zero" cpu_zero (UInt16.from_int 0);
+        fetch_ui16_op_test "fetch ui16 op cpu_ui8" cpu_ui8 (UInt16.from_int 128);
     ]
 
 (** Decode tests to be run. *)
@@ -202,9 +159,7 @@ let tests : test list =
         [
             contents_tests;
             address_tests;
-            add_overflow_tests;
-            sub_overflow_tests;
-            incr_cpu_pc_tests;
-            fetch_uint8_op_tests;
-            fetch_uint16_op_tests;
+            increment_pc_tests;
+            fetch_ui8_op_tests;
+            fetch_ui16_op_tests;
         ]

@@ -33,7 +33,7 @@ let cpu_from_json (json : json) : CPU.t =
     let reg_x = json |> Util.member "x" |> Util.to_int |> UInt8.from_int in
     let reg_y = json |> Util.member "y" |> Util.to_int |> UInt8.from_int in
     let flags = json |> Util.member "p" |> Util.to_int |> UInt8.from_int in
-    CPU.spec_cpu prog_cnt stck_ptr acc reg_x reg_y flags
+    CPU.spec_cpu prog_cnt stck_ptr acc reg_x reg_y flags (RAM.zero_ram ())
 
 (** [cycles_from_json json] converts the given [json] into a list of cycles if
     possible. *)
@@ -106,11 +106,11 @@ let check_ram (ram1 : RAM.t) (ram2 : RAM.t) (info : rinfo) : bool =
     given [info]. *)
 let compare_cpu (info : rinfo) (cpu1 : CPU.t) (cpu2 : CPU.t) : bool =
     cpu1.accumulator <-> cpu2.accumulator
-    && cpu1.register_X <-> cpu2.register_X
-    && cpu1.register_Y <-> cpu2.register_Y
-    && cpu1.program_counter <--> cpu2.program_counter
-    && cpu1.stack_pointer <-> cpu2.stack_pointer
-    && CPU.flags_ui8 cpu1.flags <-> CPU.flags_ui8 cpu2.flags
+    && cpu1.registerX <-> cpu2.registerX
+    && cpu1.registerY <-> cpu2.registerY
+    && cpu1.progCounter <--> cpu2.progCounter
+    && cpu1.stackPointer <-> cpu2.stackPointer
+    && CPU.flags_to_ui8 cpu1.flags <-> CPU.flags_to_ui8 cpu2.flags
     && check_ram cpu1.ram cpu2.ram info
 
 (** [ram_to_string info cpu] converts the given [info] and [cpu] into a ram string. *)
@@ -127,12 +127,12 @@ let ram_to_string (info : rinfo) (cpu : CPU.t) : string =
 (** [cpu_to_string info cpu] converts the given [info] and [cpu] into a cpu string. *)
 let cpu_to_string (info : rinfo) (cpu : CPU.t) : string =
     Printf.sprintf "CPU: { PC: %s, SP: %s, A: %s, X: %s, Y: %s, F: %s }\n"
-        (UInt16.to_string cpu.program_counter)
-        (UInt8.to_string cpu.stack_pointer)
+        (UInt16.to_string cpu.progCounter)
+        (UInt8.to_string cpu.stackPointer)
         (UInt8.to_string cpu.accumulator)
-        (UInt8.to_string cpu.register_X)
-        (UInt8.to_string cpu.register_Y)
-        (UInt8.to_string (CPU.flags_ui8 cpu.flags))
+        (UInt8.to_string cpu.registerX)
+        (UInt8.to_string cpu.registerY)
+        (UInt8.to_string (CPU.flags_to_ui8 cpu.flags))
     ^ ram_to_string info cpu
 
 (** [make_opcode_test test opcode] confirms the given opcode steps properly. *)
@@ -155,14 +155,14 @@ let tests : test list =
     let tests : test list list = mapi opcode_tests in
     List.flatten tests
 
-let tests : test list =
-    let num : uint8 = UInt8.from_int 0xE1 in
+(* let tests : test list =
+    let num : uint8 = UInt8.from_int 0x10 in
     let json : json = parse_json num in
     let opcode_tests : opcode_test list = from_json json in
-    List.map (fun t -> make_opcode_test t num) opcode_tests
+    List.map (fun t -> make_opcode_test t num) opcode_tests *)
 
 (* let print_opcode_test (test : opcode_test) : unit = Printf.printf "Name:
-    %s\n" test.name; Printf.printf "Initial State:\n"; Printf.printf "%s\n"
-    (cpu_to_string test.initial_ram test.initial_state); Printf.printf "Final
-    State:\n"; Printf.printf "%s\n" (cpu_to_string test.final_ram
-    test.final_state) *)
+   %s\n" test.name; Printf.printf "Initial State:\n"; Printf.printf "%s\n"
+   (cpu_to_string test.initial_ram test.initial_state); Printf.printf "Final
+   State:\n"; Printf.printf "%s\n" (cpu_to_string test.final_ram
+   test.final_state) *)

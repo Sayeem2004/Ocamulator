@@ -31,31 +31,15 @@ module Decode : sig
     val address : CPU.t -> 'a memory_mode -> uint16
     (** [address cpu mode] is the address the memory mode represents. *)
 
-    val add_unsigned_overflow : uint8 -> uint8 -> bool
-    (** [add_unsigned_overflow a b] is true if adding [a] and [b] would cause an
-        unsigned overflow. *)
-
-    val add_signed_overflow : uint8 -> uint8 -> bool
-    (** [add_signed_overflow a b] is true if adding [a] and [b] would cause a
-        signed overflow. *)
-
-    val sub_unsigned_overflow : uint8 -> uint8 -> bool
-    (** [sub_unsigned_overflow a b] is true if subtracting [b] from [a] would
-        cause an unsigned overflow. *)
-
-    val sub_signed_overflow : uint8 -> uint8 -> bool
-    (** [sub_signed_overflow a b] is true if subtracting [b] from [a] would
-        cause a signed overflow. *)
-
-    val incr_cpu_pc : CPU.t -> int -> CPU.t
-    (** [incr_cpu_pc cpu n] is [cpu] with the program counter incremented by
+    val increment_pc : CPU.t -> int -> CPU.t
+    (** [increment_pc cpu n] is [cpu] with the program counter incremented by
         [n]. *)
 
-    val fetch_uint8_op : CPU.t -> uint8
-    (** [fetch_uint8_op cpu] is the next uint8 in RAM specified by the program
+    val fetch_ui8_op : CPU.t -> uint8
+    (** [fetch_ui8_op cpu] is the next uint8 in RAM specified by the program
         counter. *)
 
-    val fetch_uint16_op : CPU.t -> uint16
-    (** [fetch_uint16_op cpu] is the next uint16 in RAM specified by the program
+    val fetch_ui16_op : CPU.t -> uint16
+    (** [fetch_ui16_op cpu] is the next uint16 in RAM specified by the program
         counter. *)
 end
