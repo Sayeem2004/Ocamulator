@@ -1,77 +1,21 @@
-open UInt8
+(** [UInt16.ml] simulates an unsigned integer with a size of 2 bytes. *)
 
 module UInt16Set : UIntX.USet with type t := int
 (** [UInt16Set] describes an unsigned integer with 16 bits by specifying min and
     max values along with the number of bits. *)
 
+module UInt16 : UIntX.UInt
 (** [UInt16] represents an unsigned integer with 16 bits that has defined integer
     operations. *)
-module UInt16 : sig
-    include UIntX.UInt
 
-    val ui16_from_ui8 : uint8 -> t
-    (** Converts a uint8 to a uint16. *)
+include UIntX.UInt
+(** Including the signature of an arbitrary unsigned integer. *)
 
-    val combine_ui8 : uint8 -> uint8 -> t
-    (** Combines two uint8s into a uint16. *)
+val ui16_from_ui8 : UInt8.t -> t
+(** [ui16_from_ui8 ui8] is [ui8] stored as the representative type of [UInt16]. *)
 
-    val split_ui16 : t -> uint8 * uint8
-    (** Splits a uint16 into two uint8s. *)
-end
+val combine_ui8 : UInt8.t -> UInt8.t -> t
+(** [combine_ui8 hig low] is [hig << 8 + low]. *)
 
-type uint16 = UInt16.t
-(** Alias for UInt16.t. *)
-
-val ( <??> ) : uint16 -> uint16 -> int
-(** Alias for UInt16.compare. *)
-
-val ( <--> ) : uint16 -> uint16 -> bool
-(** Alias for UInt16.equal. *)
-
-val ( +++ ) : uint16 -> uint16 -> uint16
-(** Alias for UInt16.add. *)
-
-val ( !++ ) : uint16 -> uint16
-(** Alias for UInt16.succ. *)
-
-val ( --- ) : uint16 -> uint16 -> uint16
-(** Alias for UInt16.sub. *)
-
-val ( !-- ) : uint16 -> uint16
-(** Alias for UInt16.pred. *)
-
-val ( *** ) : uint16 -> uint16 -> uint16
-(** Alias for UInt16.mul. *)
-
-val ( /// ) : uint16 -> uint16 -> uint16
-(** Alias for UInt16.div. *)
-
-val ( %%% ) : uint16 -> uint16 -> uint16
-(** Alias for UInt16.rem. *)
-
-val ( &&& ) : uint16 -> uint16 -> uint16
-(** Alias for UInt16.logand. *)
-
-val ( |/| ) : uint16 -> uint16 -> uint16
-(** Alias for UInt16.logxor. *)
-
-val ( ||| ) : uint16 -> uint16 -> uint16
-(** Alias for UInt16.logor. *)
-
-val ( <<< ) : uint16 -> int -> uint16
-(** Alias for UInt16.shift_left. *)
-
-val ( >>> ) : uint16 -> int -> uint16
-(** Alias for UInt16.shift_right. *)
-
-val ( ~^ ) : int -> uint16
-(** Alias for UInt16.from_int. *)
-
-val ( ?^ ) : bool -> uint16
-(** Converts a bool to a uint8. [true] -> [1], [false] -> [0]. *)
-
-val ( !^ ) : uint8 -> uint16
-(** Alias for UInt16.ui16_from_ui8. *)
-
-val ( !. ) : uint16 -> uint8
-(** Converts the 8 least significant bits of a uint16 into a uint8. *)
+val split_ui16 : t -> UInt8.t * UInt8.t
+(** [split_ui16 ui16] is [hig * low] where [ui16 = hig << 8 + low]. *)

@@ -1,21 +1,19 @@
-open UInt8
-open UInt16
+open Alias
 
-module RAM = struct
-    type t = {
-        max_mem : int;
-        ram_memory : bytes;
-    }
+type t = {
+    size : int;
+    memory : bytes;
+}
 
-    let zero_ram () : t =
-        { max_mem = 0xFFFF + 1; ram_memory = Bytes.make (0xFFFF + 1) '\x00' }
+let zero_ram () : t =
+    { size = 0xFFFF + 1; memory = Bytes.make (0xFFFF + 1) '\x00' }
 
-    let nes_ram (rom_file : bytes) =
-        { max_mem = 0xFFFF + 1; ram_memory = rom_file }
+let nes_ram (rom : bytes) =
+    let index i = if i < Bytes.length rom then Bytes.get rom i else '\x00' in
+    { size = 0xFFFF + 1; memory = Bytes.init (0xFFFF + 1) index }
 
-    let read_ui8 (ram : t) (addr : uint16) : uint8 =
-        Bytes.get_uint8 ram.ram_memory (UInt16.to_int addr) |> ( ~. )
+let read_ui8 (ram : t) (addr : uint16) : uint8 =
+    Bytes.get_uint8 ram.memory ~**addr |> ( ~. )
 
-    let write_ui8 (ram : t) (addr : uint16) (value : uint8) : unit =
-        Bytes.set_uint8 ram.ram_memory (UInt16.to_int addr) (UInt8.to_int value)
-end
+let write_ui8 (ram : t) (addr : uint16) (value : uint8) : unit =
+    Bytes.set_uint8 ram.memory ~**addr ~*value

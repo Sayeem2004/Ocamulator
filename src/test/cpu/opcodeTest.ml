@@ -1,10 +1,9 @@
+open Lib
 open OUnit2
+open Lib.Alias
 open Yojson.Basic
-open Lib__UInt8
-open Lib__UInt16
-open Lib__Opcode
-open Lib__Cpu
-open Lib__Ram
+
+(** [OpcodeTest.ml] contains coverage and accuracy tests for [Opcode.ml]. *)
 
 type json = Yojson.Basic.t
 (** Alias for Yojson.Basic.t type. *)
@@ -17,23 +16,23 @@ type rinfo = (int * int) list
 
 type opcode_test = {
     name : string;
-    initial_state : CPU.t;
+    initial_state : Cpu.t;
     initial_ram : rinfo;
-    final_state : CPU.t;
+    final_state : Cpu.t;
     final_ram : rinfo;
     cycles : cycle list;
 }
 (** Type representing an opcode_test stored in data/opcode. *)
 
 (** [cpu_from_json json] converts the given [json] into a cpu if possible. *)
-let cpu_from_json (json : json) : CPU.t =
-    let prog_cnt = json |> Util.member "pc" |> Util.to_int |> UInt16.from_int in
-    let stck_ptr = json |> Util.member "s" |> Util.to_int |> UInt8.from_int in
-    let acc = json |> Util.member "a" |> Util.to_int |> UInt8.from_int in
-    let reg_x = json |> Util.member "x" |> Util.to_int |> UInt8.from_int in
-    let reg_y = json |> Util.member "y" |> Util.to_int |> UInt8.from_int in
-    let flags = json |> Util.member "p" |> Util.to_int |> UInt8.from_int in
-    CPU.spec_cpu prog_cnt stck_ptr acc reg_x reg_y flags (RAM.zero_ram ())
+let cpu_from_json (json : json) : Cpu.t =
+    let prog_cnt = json |> Util.member "pc" |> Util.to_int |> ( ~.. ) in
+    let stck_ptr = json |> Util.member "s" |> Util.to_int |> ( ~. ) in
+    let acc = json |> Util.member "a" |> Util.to_int |> ( ~. ) in
+    let reg_x = json |> Util.member "x" |> Util.to_int |> ( ~. ) in
+    let reg_y = json |> Util.member "y" |> Util.to_int |> ( ~. ) in
+    let flags = json |> Util.member "p" |> Util.to_int |> ( ~. ) in
+    Cpu.spec_cpu prog_cnt stck_ptr acc reg_x reg_y flags (Ram.zero_ram ())
 
 (** [cycles_from_json json] converts the given [json] into a list of cycles if
     possible. *)
@@ -60,9 +59,9 @@ let rinfo_from_json (json : json) : rinfo =
     in
     List.map parse json_list
 
-let apply_ram (ram : RAM.t) (info : rinfo) : unit =
-    let apply (ram : RAM.t) ((addr, value) : int * int) : unit =
-        RAM.write_ui8 ram (UInt16.from_int addr) (UInt8.from_int value)
+let apply_ram (ram : Ram.t) (info : rinfo) : unit =
+    let apply (ram : Ram.t) ((addr, value) : int * int) : unit =
+        Ram.write_ui8 ram ~..addr ~.value
     in
     List.iter (apply ram) info
 
@@ -70,10 +69,10 @@ let apply_ram (ram : RAM.t) (info : rinfo) : unit =
     if possible. *)
 let opcode_test_from_json (json : json) : opcode_test =
     let name : string = json |> Util.member "name" |> to_string in
-    let initial_state : CPU.t = json |> Util.member "initial" |> cpu_from_json in
+    let initial_state : Cpu.t = json |> Util.member "initial" |> cpu_from_json in
     let initial_ram : rinfo = json |> Util.member "initial" |> rinfo_from_json in
     let _ = apply_ram initial_state.ram initial_ram in
-    let final_state : CPU.t = json |> Util.member "final" |> cpu_from_json in
+    let final_state : Cpu.t = json |> Util.member "final" |> cpu_from_json in
     let final_ram : rinfo = json |> Util.member "final" |> rinfo_from_json in
     let _ = apply_ram final_state.ram final_ram in
     let cycles : cycle list = json |> Util.member "cycles" |> cycles_from_json in
@@ -96,43 +95,42 @@ let parse_json (opcode : uint8) : json =
 
 (** [check_ram ram1 ram2 info] checks to see if the address value pairs described
     in [info] exist in both [ram1] and [ram2]. *)
-let check_ram (ram1 : RAM.t) (ram2 : RAM.t) (info : rinfo) : bool =
-    let check (ram : RAM.t) ((addr, value) : int * int) =
-        RAM.read_ui8 ram (UInt16.from_int addr) <-> UInt8.from_int value
+let check_ram (ram1 : Ram.t) (ram2 : Ram.t) (info : rinfo) : bool =
+    let check (ram : Ram.t) ((addr, value) : int * int) =
+        Ram.read_ui8 ram ~..addr <-> ~.value
     in
     List.for_all (check ram1) info && List.for_all (check ram2) info
 
 (** [compare_cpu cpu1 cpu2 info] compares the given [cpu1] and [cpu2] with the
     given [info]. *)
-let compare_cpu (info : rinfo) (cpu1 : CPU.t) (cpu2 : CPU.t) : bool =
+let compare_cpu (info : rinfo) (cpu1 : Cpu.t) (cpu2 : Cpu.t) : bool =
     cpu1.accumulator <-> cpu2.accumulator
     && cpu1.registerX <-> cpu2.registerX
     && cpu1.registerY <-> cpu2.registerY
     && cpu1.progCounter <--> cpu2.progCounter
     && cpu1.stackPointer <-> cpu2.stackPointer
-    && CPU.flags_to_ui8 cpu1.flags <-> CPU.flags_to_ui8 cpu2.flags
+    && Cpu.flags_to_ui8 cpu1.flags <-> Cpu.flags_to_ui8 cpu2.flags
     && check_ram cpu1.ram cpu2.ram info
 
 (** [ram_to_string info cpu] converts the given [info] and [cpu] into a ram string. *)
-let ram_to_string (info : rinfo) (cpu : CPU.t) : string =
+let ram_to_string (info : rinfo) (cpu : Cpu.t) : string =
     Printf.sprintf "RAM: [ %s ]\n"
         (String.concat ", "
              (List.map
                   (fun (addr, value) ->
-                       Printf.sprintf "(%s, %s)"
-                           (UInt16.to_string (UInt16.from_int addr))
-                           (UInt8.to_string (RAM.read_ui8 cpu.ram (UInt16.from_int addr))))
+                       Printf.sprintf "(%s, %s)" (UInt16.to_string ~..addr)
+                           (UInt8.to_string (Ram.read_ui8 cpu.ram ~..addr)))
                   info))
 
 (** [cpu_to_string info cpu] converts the given [info] and [cpu] into a cpu string. *)
-let cpu_to_string (info : rinfo) (cpu : CPU.t) : string =
-    Printf.sprintf "CPU: { PC: %s, SP: %s, A: %s, X: %s, Y: %s, F: %s }\n"
+let cpu_to_string (info : rinfo) (cpu : Cpu.t) : string =
+    Printf.sprintf "Cpu: { PC: %s, SP: %s, A: %s, X: %s, Y: %s, F: %s }\n"
         (UInt16.to_string cpu.progCounter)
         (UInt8.to_string cpu.stackPointer)
         (UInt8.to_string cpu.accumulator)
         (UInt8.to_string cpu.registerX)
         (UInt8.to_string cpu.registerY)
-        (UInt8.to_string (CPU.flags_to_ui8 cpu.flags))
+        (UInt8.to_string (Cpu.flags_to_ui8 cpu.flags))
     ^ ram_to_string info cpu
 
 (** [make_opcode_test test opcode] confirms the given opcode steps properly. *)
@@ -145,24 +143,17 @@ let make_opcode_test (test : opcode_test) (opcode : uint8) : test =
 
 (** Opcode tests to be run. *)
 let tests : test list =
-    let parse (i : int) : json = parse_json (UInt8.from_int i) in
+    let parse (i : int) : json = parse_json ~.i in
     let json_list : json list = List.init 256 parse in
     let opcode_tests : opcode_test list list = List.map from_json json_list in
     let mapi =
-        List.mapi (fun i l ->
-            List.map (fun t -> make_opcode_test t (UInt8.from_int i)) l)
+        List.mapi (fun i l -> List.map (fun t -> make_opcode_test t ~.i) l)
     in
     let tests : test list list = mapi opcode_tests in
     List.flatten tests
 
 (* let tests : test list =
-    let num : uint8 = UInt8.from_int 0x10 in
+    let num : uint8 = ~.0x10 in
     let json : json = parse_json num in
     let opcode_tests : opcode_test list = from_json json in
     List.map (fun t -> make_opcode_test t num) opcode_tests *)
-
-(* let print_opcode_test (test : opcode_test) : unit = Printf.printf "Name:
-   %s\n" test.name; Printf.printf "Initial State:\n"; Printf.printf "%s\n"
-   (cpu_to_string test.initial_ram test.initial_state); Printf.printf "Final
-   State:\n"; Printf.printf "%s\n" (cpu_to_string test.final_ram
-   test.final_state) *)
