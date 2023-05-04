@@ -424,11 +424,12 @@ let tya_op (cpu : Cpu.t) : Cpu.t =
         flags = { cpu.flags with zero; negative = ngtv };
     }
 
-let dop_op (type a') (mode : a' Decode.memory_mode) (cpu : Cpu.t) : Cpu.t = cpu
 let top_op (type a') (mode : a' Decode.memory_mode) (cpu : Cpu.t) : Cpu.t = cpu
 
 let alr_op (type a') (mode : a' Decode.memory_mode) (cpu : Cpu.t) : Cpu.t =
     and_op mode cpu |> lsr_op Accumulator
+
+let dop_op (type a') (mode : a' Decode.memory_mode) (cpu : Cpu.t) : Cpu.t = cpu
 
 let anc_op (type a') (mode : a' Decode.memory_mode) (cpu : Cpu.t) : Cpu.t =
     let contents = Decode.contents cpu mode in
