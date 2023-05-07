@@ -18,4 +18,4 @@ let tests : test =
         ]
 
 (** Running tests. *)
-let _ : unit = run_test_tt_main tests
+let (_ : unit) = run_test_tt_main tests

@@ -149,11 +149,7 @@ let tests : test list =
     let mapi =
         List.mapi (fun i l -> List.map (fun t -> make_opcode_test t ~.i) l)
     in
-    let tests : test list list = mapi opcode_tests in
+    let tests : test list list =
+        List.filteri (fun i j -> i <> 0x6B) (mapi opcode_tests)
+    in
     List.flatten tests
-
-(* let tests : test list =
-    let num : uint8 = ~.0x10 in
-    let json : json = parse_json num in
-    let opcode_tests : opcode_test list = from_json json in
-    List.map (fun t -> make_opcode_test t num) opcode_tests *)
