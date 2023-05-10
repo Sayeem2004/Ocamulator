@@ -48,7 +48,7 @@ let main () : unit =
     | exception End_of_file -> ()
     | file_name ->
         let sep = Filename.dir_sep in
-        let file_dir = "data" ^ sep ^ "rom" ^ sep ^ file_name in
+        let file_dir = "../data" ^ sep ^ "rom" ^ sep ^ file_name in
         let _ = print_endline file_dir in
         let nes_channel_in = open_in file_dir in
         let nes_rom_buffer = Bytes.make (0xFFFF + 1) ' ' in
