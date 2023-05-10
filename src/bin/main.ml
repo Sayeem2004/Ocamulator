@@ -35,11 +35,35 @@ let color_from_u8 (c : uint8) : unit =
     | 0x00 -> Graphics.set_color Graphics.black
     | 0x01 -> Graphics.set_color Graphics.white
     | 0x02 | 0x03 -> Graphics.set_color Graphics.red
-    | 0x04 | 0x05 -> Graphics.set_color Graphics.green
-    | 0x06 | 0x07 -> Graphics.set_color Graphics.blue
-    | 0x08 | 0x09 -> Graphics.set_color Graphics.yellow
-    | 0x10 | 0x11 -> Graphics.set_color Graphics.cyan
+    | 0x04 | 0x05 | 0x06 -> Graphics.set_color Graphics.green
+    | 0x07 | 0x08 | 0x09 -> Graphics.set_color Graphics.blue
+    | 0x0A | 0x0B -> Graphics.set_color Graphics.yellow
+    | 0x0C | 0x0D -> Graphics.set_color Graphics.cyan
     | _ -> Graphics.set_color Graphics.magenta
+
+let color_from_u8 (c : uint8) : unit = 
+    match ~* c with
+    | 0x0 -> Graphics.set_color Graphics.black
+    | 0x1 -> Graphics.set_color Graphics.white
+    | 0x2 -> Graphics.set_color Graphics.red
+    | 0x3 -> Graphics.set_color Graphics.cyan
+    | 0x4 -> Graphics.set_color (Graphics.rgb 128 0 128)
+    | 0x5 -> Graphics.set_color Graphics.green
+    | 0x6 -> Graphics.set_color Graphics.blue
+    | 0x7 -> Graphics.set_color Graphics.yellow
+    | 0x8 -> Graphics.set_color (Graphics.rgb 255 165 0)
+    | 0x9 -> Graphics.set_color (Graphics.rgb 150 75 0)
+    | 0xa -> Graphics.set_color (Graphics.rgb 255 69 0)
+    | 0xb -> Graphics.set_color (Graphics.rgb 105 105 105)
+    | 0xc -> Graphics.set_color (Graphics.rgb 169 169 169)
+    | 0xd -> Graphics.set_color (Graphics.rgb 144 238 144)
+    | 0xe -> Graphics.set_color (Graphics.rgb 173 216 230)
+    | 0xf -> Graphics.set_color (Graphics.rgb 211 211 211)
+    | _ -> Graphics.set_color Graphics.magenta
+
+(* let color_from_u8 (c : uint8) : unit =
+    match ~*c with
+    | 0x00 *)
 
 let pix_size = 32
 
@@ -70,27 +94,30 @@ let rec step_snake (cpu : Cpu.t) (draw : int) : unit =
     else ();
     let opcode = fetch_current_opcode cpu in
     let stepped_cpu = Opcode.step cpu opcode in
-    let new_draw = if draw > 1100 then 0 else draw + 1 in
-    if draw > 1100 then draw_screen_graphics stepped_cpu 0 else ();
-    if draw > 1100 then Cpu.write_ui8 stepped_cpu (~.. 0xFE) (~. (Random.int 0xF) ++ UInt8.one) else ();
-    Unix.sleepf 0.00001;
+    let new_draw = if draw > 1200 then 0 else draw + 1 in
+    if draw > 1200 then draw_screen_graphics stepped_cpu 0 else ();
+    if draw > 1200 then Cpu.write_ui8 stepped_cpu (~.. 0xFE) (~. (Random.int 0xF) ++ UInt8.one) else ();
     step_snake stepped_cpu new_draw
 
 let snake_main () : unit =
-    let sep = Filename.dir_sep in
-    let snake_file_name = "snake.nes" in
-    let snake_file_dir = "../data" ^ sep ^ "rom" ^ sep ^ snake_file_name in
-    let snake_rom_channel = open_in snake_file_dir in
-    let nes_rom_buffer = Bytes.make (0xFFFF + 1) '\x00' in
-    let _ = In_channel.really_input_string snake_rom_channel 0x10 in
-    let _ = In_channel.input snake_rom_channel nes_rom_buffer 0 0xFFFF in
-    let nes_ram_rom = Ram.nes_ram nes_rom_buffer in
-    let init_pc = ~.. 0x0600 in
-    let new_nes_cpu = Cpu.nes_cpu init_pc nes_ram_rom in
-    Cpu.write_ui8 new_nes_cpu (~.. 0xFE) (~. 0x2);
-    Graphics.open_graph "";
-    Graphics.resize_window (32 * pix_size) (32 * pix_size);
-    step_snake new_nes_cpu 0
+    print_newline ();
+    print_endline "Please enter the ROM file in ./data/rom to run:";
+    match read_line () with
+    | exception End_of_file -> ()
+    | file_name ->
+        let sep = Filename.dir_sep in
+        let snake_file_dir = "../data" ^ sep ^ "rom" ^ sep ^ file_name in
+        let snake_rom_channel = open_in snake_file_dir in
+        let nes_rom_buffer = Bytes.make (0xFFFF + 1) '\x00' in
+        let _ = In_channel.really_input_string snake_rom_channel 0x10 in
+        let _ = In_channel.input snake_rom_channel nes_rom_buffer 0 0xFFFF in
+        let nes_ram_rom = Ram.nes_ram nes_rom_buffer in
+        let init_pc = ~.. 0x0600 in
+        let new_nes_cpu = Cpu.nes_cpu init_pc nes_ram_rom in
+        Cpu.write_ui8 new_nes_cpu (~.. 0xFE) (~. 0x2);
+        Graphics.open_graph "";
+        Graphics.resize_window (32 * pix_size) (32 * pix_size);
+        step_snake new_nes_cpu 0
 
 (** Running main. *)
 let _ = snake_main ()
