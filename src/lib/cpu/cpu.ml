@@ -55,11 +55,11 @@ let nes_cpu (pc : uint16) (ram : Ram.t) : t =
             {
                 carry = false;
                 zero = false;
-                interrupt = true;
+                interrupt = false;
                 decimal = false;
                 negative = false;
                 overflow = false;
-                break = false;
+                break = true;
                 reserved = true;
             };
     }

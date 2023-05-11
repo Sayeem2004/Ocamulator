@@ -3,6 +3,9 @@ open Lib.Alias
 
 (** [read.ml] contains code for parsing ROM files. *)
 
+(** [fetch_current_opcode cpu] is the opcode that was just run. *)
+let fetch_current_opcode (cpu : Cpu.t) : uint8 = Cpu.fetch_instruction cpu
+
 (** [pp_cpu cpu] is a pretty-printed string representing the Cpu state. *)
 let pp_cpu (cpu : Cpu.t) : unit =
     let str8 = UInt8.to_string in
@@ -16,10 +19,8 @@ let pp_cpu (cpu : Cpu.t) : unit =
     print_endline ("    Stack Pointer: " ^ str16 ptr);
     print_endline ("    RAM: " ^ "[ ... ... ... ]");
     print_endline ("    Flags: " ^ str8 (Cpu.flags_to_ui8 cpu.flags));
-    print_endline ("}" ^ " ")
-
-(** [fetch_current_opcode cpu] is the opcode that was just run. *)
-let fetch_current_opcode (cpu : Cpu.t) : uint8 = Cpu.fetch_instruction cpu
+    print_endline ("}" ^ " ");
+    print_endline("Current Instruction: " ^ str8 (fetch_current_opcode cpu))
 
 (** [step_cpu_pc cpu] is the Cpu state after the program counter has been updated. *)
 let step_cpu_pc (cpu : Cpu.t) : Cpu.t =
@@ -36,8 +37,7 @@ let rec step (cpu : Cpu.t) : unit =
             | "quit" | "exit" -> ()
             | _ ->
                 let opcode = fetch_current_opcode cpu in
-                let cpu_stepped_pc = step_cpu_pc cpu in
-                let stepped_cpu = Opcode.step cpu_stepped_pc opcode in
+                let stepped_cpu = Opcode.step cpu opcode in
                 step stepped_cpu)
 
 (** [main ()] enters the ROM parsing pipeline for this project. *)
@@ -51,7 +51,7 @@ let main () : unit =
         let file_dir = "../data" ^ sep ^ "rom" ^ sep ^ file_name in
         let _ = print_endline file_dir in
         let nes_channel_in = open_in file_dir in
-        let nes_rom_buffer = Bytes.make (0xFFFF + 1) ' ' in
+        let nes_rom_buffer = Bytes.make (0xFFFF + 1) '\x00' in
         let _ = In_channel.input nes_channel_in nes_rom_buffer 0 0xFFFF in
         let nes_ram_rom = Ram.nes_ram nes_rom_buffer in
         let init_pc = ~..0x10 in
