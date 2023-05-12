@@ -53,10 +53,7 @@ let main () : unit =
                 step cpu 0
             with
             | Graphic_failure "fatal I/O error" -> print_endline "Thanks for playing!"
-            | Sys_error n ->
-                print_endline
-                    "Please enter a valid ROM file to play (don't forget the .nes \
-                     extension).")
+            | Sys_error n -> print_endline "Please enter a valid \".nes\" file.")
 
 (** Running main. *)
 let _ = main ()

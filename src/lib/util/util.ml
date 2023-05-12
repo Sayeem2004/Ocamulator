@@ -22,7 +22,7 @@ let set_color (u : uint8) : unit =
     | 0xD -> Graphics.set_color (Graphics.rgb 144 238 144)
     | 0xE -> Graphics.set_color (Graphics.rgb 173 216 230)
     | 0xF -> Graphics.set_color (Graphics.rgb 211 211 211)
-    | _ -> Graphics.set_color (Graphics.rgb 255 000 255)
+    | _ -> Graphics.set_color (Graphics.rgb 255 000 255) [@coverage off]
 
 let psize : int = 24
 let ssize : int = 32
