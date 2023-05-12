@@ -22,8 +22,8 @@ let flags_to_ui8_test (name : string) (cpu : Cpu.t) (exp : uint8) : test =
 (** Flags_ui8 tests to be run. *)
 let flags_to_ui8_tests : test list =
     [
-        flags_to_ui8_test "flags_to_ui8_test_zero" cpu_zero ~.0x24;
-        flags_to_ui8_test "flags_to_ui8_test_ui8" cpu_ui8 ~.0x24;
+        flags_to_ui8_test "flags_to_ui8_test_zero" cpu_zero ~.0x30;
+        flags_to_ui8_test "flags_to_ui8_test_ui8" cpu_ui8 ~.0x30;
     ]
 
 (** [fetch_ui8_test name cpu addr exp] tests equivalence between [fetch_ui8 cpu
@@ -127,6 +127,35 @@ let pop_stack_tests : test list =
         pop_stack_test "pop_stack_test_ui8" cpu_ui8 ~.0x01 ~.0x01;
     ]
 
+(** [to_string_test cpu exp] tests equivalence between [to_string cpu] and [exp]. *)
+let to_string_test (name : string) (cpu : Cpu.t) (exp : string) : test =
+    name >:: fun _ -> assert_equal exp (Cpu.to_string cpu) ~printer:(fun x -> x)
+
+(** To_string tests to be run. *)
+let to_string_tests : test list =
+    [
+        to_string_test "to_string_test_zero" cpu_zero
+            "Cpu {\n\
+             \tAccumulator: $0000\n\
+             \tRegister X: $0000\n\
+             \tRegister Y: $0000\n\
+             \tProgram Counter: $0000\n\
+             \tStack Pointer: $00FF\n\
+             \tRAM: [ ... ... ... ]\n\
+             \tFlags: $0030\n\
+             }";
+        to_string_test "to_string_test_ui8" cpu_ui8
+            "Cpu {\n\
+             \tAccumulator: $0000\n\
+             \tRegister X: $0000\n\
+             \tRegister Y: $0000\n\
+             \tProgram Counter: $0000\n\
+             \tStack Pointer: $00FF\n\
+             \tRAM: [ ... ... ... ]\n\
+             \tFlags: $0030\n\
+             }";
+    ]
+
 (** Cpu tests to be run. *)
 let tests : test list =
     List.flatten
@@ -139,4 +168,5 @@ let tests : test list =
             push_stack_ui8_tests;
             push_stack_ui16_tests;
             pop_stack_tests;
+            to_string_tests;
         ]

@@ -1,6 +1,6 @@
 (library
  (name "lib")
- (instrumentation
-  (backend bisect_ppx)))
+ (libraries "graphics")
+ (instrumentation (backend bisect_ppx)))
 
 (include_subdirs unqualified)

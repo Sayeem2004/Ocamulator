@@ -116,3 +116,18 @@ let peek_stack_ui16 (cpu : t) : uint16 =
     let pop_cpu = pop_stack_ui8 cpu in
     let hi = peek_stack_ui8 pop_cpu in
     !..hi lo
+
+let to_string (cpu : t) : string =
+    "Cpu {\n" ^ "\tAccumulator: "
+    ^ UInt8.to_string cpu.accumulator
+    ^ "\n" ^ "\tRegister X: "
+    ^ UInt8.to_string cpu.registerX
+    ^ "\n" ^ "\tRegister Y: "
+    ^ UInt8.to_string cpu.registerY
+    ^ "\n" ^ "\tProgram Counter: "
+    ^ UInt16.to_string cpu.progCounter
+    ^ "\n" ^ "\tStack Pointer: "
+    ^ UInt8.to_string cpu.stackPointer
+    ^ "\n" ^ "\tRAM: [ ... ... ... ]\n" ^ "\tFlags: "
+    ^ UInt8.to_string (flags_to_ui8 cpu.flags)
+    ^ "\n" ^ "}"

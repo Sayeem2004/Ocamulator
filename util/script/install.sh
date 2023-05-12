@@ -14,3 +14,4 @@ opam install -y menhir
 opam install -y ocaml-lsp-server
 opam install -y ocamlformat
 opam install -y ocamlformat-rpc
+opam install -y graphics

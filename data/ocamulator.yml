@@ -19,9 +19,10 @@ demo-video-url: ""
 desc: >
     Ocamulator is a NES emulator written in OCaml. A NES emulator is an engine
     that simulates the hardware of the Nintendo Entertainment System, allowing
-    older games like Super Mario Bros. to be played on modern computers.
-    Ocamulator supports a command line interface that allows users to enter the
-    path to a ROM file. After the ROM file is parsed a GUI is displayed that is
-    connected to the keyboard. All visual and audio effects from the original
-    game should be present, and there should be bonus emulator features such as
-    speeding up the game or creating new keybindings.
+    older games like Super Mario Bros. built specifically for the NES console to
+    be played on modern computers. Ocamulator simulates the CPU and RAM of the
+    NES, so it can parse and simulate the execution of NES game ROMs. Ocamulator
+    also features a simple GUI that allows users to play certain NES games like
+    Snake, Skier, and Maze, along with a whole variety of simple animations.
+    Currently, scrolling games like Super Mario Bros. are not supported, but we
+    hope to add support for them in the future.

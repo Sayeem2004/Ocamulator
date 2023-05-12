@@ -25,13 +25,13 @@ val contents : Cpu.t -> 'a memory_mode -> uint8
 val address : Cpu.t -> 'a memory_mode -> uint16
 (** [address cpu mode] is the address the memory mode represents. *)
 
-val increment_pc : Cpu.t -> int -> Cpu.t
-(** [increment_pc cpu n] is [cpu] with the program counter incremented by
-    [n]. *)
-
 val fetch_ui8_op : Cpu.t -> uint8
 (** [fetch_ui8_op cpu] is the next uint8 in RAM specified by the program
     counter. *)
+
+val increment_pc : Cpu.t -> int -> Cpu.t
+(** [increment_pc cpu n] is [cpu] with the program counter incremented by
+    [n]. *)
 
 val fetch_ui16_op : Cpu.t -> uint16
 (** [fetch_ui16_op cpu] is the next uint16 in RAM specified by the program

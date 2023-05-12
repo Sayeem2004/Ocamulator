@@ -1,25 +1,6 @@
 # General Stuff
 .DS_Store
-*.swp
-*~
-\#*\#
-
-# Project Specific
-assignment/
-*.nes
-!alive.nes
-!breakout.nes
-!congoline.nes
-!demo.nes
-!gameoflife.nes
-!loading.nes
-!maze.nes
-!sarptriangle.nes
-!skier.nes
-!snake.nes
-!spacer.nes
-!triangles.nes
-!visuals.nes
+data/rom/hidden/*.nes
 *.zip
 
 # Ocaml

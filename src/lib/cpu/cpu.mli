@@ -68,12 +68,6 @@ val push_stack_ui16 : t -> uint16 -> t
 (** [push_stack_u16 cpu value] pushes [value] to the stack and updates the
     position of the stack_pointer. *)
 
-val peek_stack_ui8 : t -> uint8
-(** [peek_stack cpu] is the [uint8] value at the top of the stack. *)
-
-val peek_stack_ui16 : t -> uint16
-(** [peek_stack cpu] is the [uint8] value at the top of the stack. *)
-
 val pop_stack_ui8 : t -> t
 (** [pop_stack cpu] pops the top [uint8]
     value of the stack and updates the position of the stack_pointer. *)
@@ -81,3 +75,12 @@ val pop_stack_ui8 : t -> t
 val pop_stack_ui16 : t -> t
 (** [pop_stack cpu] pops the top [uint16]
     value of the stack and updates the position of the stack_pointer. *)
+
+val peek_stack_ui8 : t -> uint8
+(** [peek_stack cpu] is the [uint8] value at the top of the stack. *)
+
+val peek_stack_ui16 : t -> uint16
+(** [peek_stack cpu] is the [uint8] value at the top of the stack. *)
+
+val to_string : t -> string
+(** [to_string cpu] is a string representation of the cpu. *)
