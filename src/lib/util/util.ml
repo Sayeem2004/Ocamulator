@@ -5,7 +5,7 @@ let open_rom (name : string) : in_channel =
     In_channel.open_bin ("../data/rom/" ^ name)
 
 let set_color (u : uint8) : unit =
-    match ~*u with
+    match ~*u mod 0x10 with
     | 0x0 -> Graphics.set_color (Graphics.rgb 000 000 000)
     | 0x1 -> Graphics.set_color (Graphics.rgb 255 255 255)
     | 0x2 -> Graphics.set_color (Graphics.rgb 255 000 000)
