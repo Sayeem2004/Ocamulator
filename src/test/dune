@@ -1,5 +1,6 @@
 (test
- (name "main")
- (libraries "ounit2" "lib" "yojson"))
+ (name main)
+ (modules CpuTest RamTest DecodeTest InstructionTest OpcodeTest UInt8Test UInt16Test UIntXTest AliasTest UtilTest Main)
+ (libraries ounit2 lib yojson))
 
 (include_subdirs unqualified)

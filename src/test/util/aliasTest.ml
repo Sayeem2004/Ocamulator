@@ -2,6 +2,8 @@ open Lib
 open OUnit2
 open Lib.Alias
 
+(** [AliasTest.ml] contains coverage and accuracy tests for [Alias.ml]. *)
+
 (** [bool_to_ui8_test name b exp] tests equivalence between [?. b] and [exp]. *)
 let bool_to_ui8_test (name : string) (b : bool) (exp : uint8) : test =
     name >:: fun _ -> assert_equal exp ?.b ~printer:UInt8.to_string

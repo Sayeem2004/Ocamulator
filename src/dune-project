@@ -1,12 +1,15 @@
-(lang dune 3.6)
+(lang dune 3.4)
+
 (name "Ocamulator")
-(source (github "Sayeem2004/3110Project"))
+
+(source (github "Sayeem2004/Ocamulator"))
+
 (authors "Mohammad Khan" "Pablo Raigoza" "Evan Vera")
-(maintainers "Mohammad Khan" "Pablo Raigoza" "Evan Vera")
+
 (license MIT)
+
 (package
  (name "Ocamulator")
- (synopsis "This package parses NES ROMs and runs them.")
- (description "This package parses NES ROMs and runs them.")
+ (synopsis "This package simulates and executes NES ROMs")
  (depends ocaml dune)
  (allow_empty))

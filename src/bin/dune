@@ -1,3 +1,9 @@
-(executables
- (names "execute" "simulate")
- (libraries "lib" "graphics"))
+(executable
+ (name execute)
+ (modules Execute)
+ (libraries lib graphics))
+
+(executable
+ (name simulate)
+ (modules Simulate)
+ (libraries lib))

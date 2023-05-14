@@ -1,6 +1,7 @@
 (library
- (name "lib")
- (libraries "graphics")
+ (name lib)
+ (modules Cpu Ram Decode Instruction Opcode UInt8 UInt16 UIntX Alias Util)
+ (libraries graphics)
  (instrumentation (backend bisect_ppx)))
 
 (include_subdirs unqualified)

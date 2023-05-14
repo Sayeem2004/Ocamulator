@@ -4,7 +4,7 @@ ML_FILES = $(wildcard src/*/*.ml) $(wildcard src/*/*/*.ml)
 MLI_FILES = $(wildcard src/*/*.mli) $(wildcard src/*/*/*.mli)
 
 build:
-	@cd src && dune build --no-print-directory
+	@cd src && OCAMLRUNPARAM=b dune build --no-print-directory
 
 clean:
 	@rm -rf src/_coverage *.zip
@@ -43,7 +43,7 @@ bisect:
 	@./util/script/opencov.sh
 
 doc:
-	cd src && dune build @doc --no-print-directory
+	@cd src && dune build @doc --no-print-directory
 	@./util/script/opendoc.sh
 
 zip:
