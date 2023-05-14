@@ -1,6 +1,6 @@
-open Lib
+open Ocamulator
 open OUnit2
-open Lib.Alias
+open Ocamulator.Alias
 open Yojson.Basic
 
 (** [OpcodeTest.ml] contains coverage and accuracy tests for [Opcode.ml]. *)

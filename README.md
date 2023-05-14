@@ -130,6 +130,7 @@ src:                             Contains project source code.
 |-- .ocp-indent:                 OcpIndent configuration.
 |-- dune:                        Dune configuration.
 |-- dune-project:                Dune project configuration.
+|-- Ocamulator.opam:             Opam package description.
 
 util:                            Contains project utilities
 |-- gen:                         Contains project generation utilities.

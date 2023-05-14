@@ -1,6 +1,6 @@
 (library
- (name lib)
- (modules Cpu Ram Decode Instruction Opcode UInt8 UInt16 UIntX Alias Util)
+ (name ocamulator)
+ (public_name Ocamulator)
  (libraries graphics)
  (instrumentation (backend bisect_ppx)))
 

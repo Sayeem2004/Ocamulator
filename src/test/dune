@@ -1,6 +1,5 @@
 (test
  (name main)
- (modules CpuTest RamTest DecodeTest InstructionTest OpcodeTest UInt8Test UInt16Test UIntXTest AliasTest UtilTest Main)
- (libraries ounit2 lib yojson))
+ (libraries ounit2 ocamulator yojson))
 
 (include_subdirs unqualified)

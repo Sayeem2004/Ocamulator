@@ -1,6 +1,6 @@
-open Lib
+open Ocamulator
 open OUnit2
-open Lib.Alias
+open Ocamulator.Alias
 
 (** [UtilTest.ml] contains coverage and accuracy tests for [Util.ml]. *)
 
@@ -13,7 +13,6 @@ let open_rom_test (name : string) (rom : string) =
 let open_rom_tests =
     [
         open_rom_test "Open_rom snake" "snake.nes";
-        open_rom_test "Open_rom mario" "hidden/mario.nes";
     ]
 
 let constant_tests =

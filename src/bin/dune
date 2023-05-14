@@ -1,9 +1,9 @@
 (executable
  (name execute)
  (modules Execute)
- (libraries lib graphics))
+ (libraries ocamulator graphics))
 
 (executable
  (name simulate)
  (modules Simulate)
- (libraries lib))
+ (libraries ocamulator))

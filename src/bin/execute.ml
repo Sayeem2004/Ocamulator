@@ -1,8 +1,8 @@
-open Lib
-open Lib.Alias
+open Ocamulator
+open Ocamulator.Alias
 open Graphics
 
-(** [Execute.ml] contains code for executinng ROM files. *)
+(** [Execute.ml] contains code for executing ROM files. *)
 
 (** [draw_screen cpu index] draws the current pixel at [index]  *)
 let rec draw_screen (cpu : Cpu.t) (index : int) : unit =

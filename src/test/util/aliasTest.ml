@@ -1,6 +1,6 @@
-open Lib
+open Ocamulator
 open OUnit2
-open Lib.Alias
+open Ocamulator.Alias
 
 (** [AliasTest.ml] contains coverage and accuracy tests for [Alias.ml]. *)
 

@@ -1,5 +1,5 @@
-open Lib
-open Lib.Alias
+open Ocamulator
+open Ocamulator.Alias
 
 (** [Simulate.ml] contains code for simulating ROM files. *)
 
