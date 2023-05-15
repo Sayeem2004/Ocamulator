@@ -10,10 +10,7 @@ let open_rom_test (name : string) (rom : string) =
     name >:: fun _ -> assert_bool "" true
 
 (** Open_rom tests to run. *)
-let open_rom_tests =
-    [
-        open_rom_test "Open_rom snake" "snake.nes";
-    ]
+let open_rom_tests = [ open_rom_test "Open_rom snake" "snake.nes" ]
 
 let constant_tests =
     [
