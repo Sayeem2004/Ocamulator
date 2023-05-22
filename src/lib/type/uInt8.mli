@@ -11,9 +11,6 @@ module UInt8 : UIntX.UInt
 include UIntX.UInt
 (** Including the signature of an arbitrary unsigned integer. *)
 
-val ui4_from_ui8 : t -> UInt4.t
-(** [ui4_from_ui8 ui8] is [ui8] >> 4 as a [UInt4] *)
-
 val ui8_from_ui4 : UInt4.t -> t
 (** [ui8_from_ui4 ui4] is [ui4] converted to a [UInt8] *)
 
