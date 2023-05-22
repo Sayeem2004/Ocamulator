@@ -5,6 +5,14 @@ type t = {
     memory : bytes;
 }
 
+let zero_ram_size (size : int) : t =
+    { size; memory = Bytes.make size '\x00' }
+
+let ram_size (pos : int) (size : int) (data : bytes) : t =
+    let memory = Bytes.make size '\x00' in
+    Bytes.blit data pos memory 0 size;
+    {size; memory}
+
 let zero_ram () : t =
     { size = 0xFFFF + 1; memory = Bytes.make (0xFFFF + 1) '\x00' }
 
