@@ -1,5 +1,8 @@
 (** [Alias.ml] contains helpful infix operators to reduce code repetition. *)
 
+type uint4 = UInt4.t
+(** Alias for UInt4.t. *)
+
 type uint8 = UInt8.t
 (** Alias for UInt8.t. *)
 
@@ -98,3 +101,6 @@ val ( !++ ) : bool -> uint16
 
 val ( !@@ ) : uint16 -> uint8 * uint8
 (** Converts a uint16 into two uint8s. *)
+
+val nth_bit_ui8 : uint8 -> int -> bool
+(** [nth_bit_ui8 ui8 n] is true if the [n]-th bit of [ui8] is 1, false otherwise *)

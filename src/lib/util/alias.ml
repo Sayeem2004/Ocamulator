@@ -1,3 +1,4 @@
+type uint4 = UInt4.t
 type uint8 = UInt8.t
 type uint16 = UInt16.t
 
@@ -32,3 +33,5 @@ let ( !** ) = UInt16.ui16_from_ui8
 let ( !-- ) u = UInt16.to_int u |> UInt8.from_int
 let ( !++ ) b = Bool.to_int b |> UInt16.from_int
 let ( !@@ ) = UInt16.split_ui16
+
+let nth_bit_ui8 (ui8 : uint8) (n : int) = not (ui8 &&. ~.(0b00000001 lsl n) <-> ~.0x00)
