@@ -1,14 +1,11 @@
 ---
 group:
-    -
-        name: Mohammad Khan
-        netid: msk295
-    -
-        name: Pablo Raigoza
-        netid: pr428
-    -
-        name: Evan Vera
-        netid: erv29
+    - name: Mohammad Khan
+      netid: msk295
+    - name: Pablo Raigoza
+      netid: pr428
+    - name: Evan Vera
+      netid: erv29
 pm:
     name: Leo Zhao
     netid: lz527

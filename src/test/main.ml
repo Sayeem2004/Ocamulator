@@ -12,7 +12,7 @@ open OUnit2
     executables and graphical functions were automatically tested by OUnit,
     while the exceptions were tested manually.
 
-    Our initial tests for each module were purely black box tested because we
+    Our initial tests for each module were heavily black box tested because we
     wanted to be assured that the functionality resembled the actual NES
     hardware. After this initial phase of testing, we implemented the strategy
     of glass box testing to achieve 100% coverage in all files (again
