@@ -9,6 +9,9 @@ type uint8 = UInt8.t
 type uint16 = UInt16.t
 (** Alias for UInt16.t. *)
 
+val ( ~... ) : int -> uint4
+(** Infix alias for UInt4.from_int. *)
+
 val ( <?> ) : uint8 -> uint8 -> int
 (** Infix alias for UInt8.compare. *)
 
@@ -60,6 +63,9 @@ val ( ?@ ) : uint8 -> uint8
 val ( ?% ) : uint8 -> int
 (** Returns the signed integer of a uint8. *)
 
+val ( ?& ) : uint8 -> int -> bool
+(** Returns true if the nth bit of [ui8] is 1, false otherwise *)
+
 val ( <??> ) : uint16 -> uint16 -> int
 (** Alias for UInt16.compare. *)
 
@@ -101,6 +107,3 @@ val ( !++ ) : bool -> uint16
 
 val ( !@@ ) : uint16 -> uint8 * uint8
 (** Converts a uint16 into two uint8s. *)
-
-val nth_bit_ui8 : uint8 -> int -> bool
-(** [nth_bit_ui8 ui8 n] is true if the [n]-th bit of [ui8] is 1, false otherwise *)

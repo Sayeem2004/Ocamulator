@@ -55,28 +55,5 @@ let main () : unit =
             | Graphic_failure "fatal I/O error" -> print_endline "Thanks for playing!"
             | Sys_error n -> print_endline "Please enter a valid \".nes\" file.")
 
-let test_main () : unit =
-    print_endline "\nThe available ROM files are:";
-    let rom_files = Sys.readdir "../data/rom" in
-    Array.iter (fun name -> print_endline name) rom_files;
-    print_string "\nPlease enter the ROM file in ./data/rom to run: ";
-    match read_line () with
-    | exception End_of_file -> ()
-    | file_name -> (
-            try
-                let channel = Util.open_rom file_name in
-                let buffer = Bytes.make (0xFFFF + 1) '\x00' in
-                let _ = In_channel.really_input_string channel 0x10 in
-                let _ = In_channel.input channel buffer 0 0xFFFF in
-                let cpu = Cpu.nes_cpu ~..0x0600 (Ram.nes_ram buffer) in
-                let _ = Cpu.write_ui8 cpu ~..0xFE ~.0x2 in
-                let _ = Graphics.open_graph "" in
-                let size = Util.ssize * Util.psize in
-                let _ = Graphics.resize_window size size in
-                step cpu 0
-            with
-            | Graphic_failure "fatal I/O error" -> print_endline "Thanks for playing!"
-            | Sys_error n -> print_endline "Please enter a valid \".nes\" file.")
-
 (** Running main. *)
 let _ = main ()
