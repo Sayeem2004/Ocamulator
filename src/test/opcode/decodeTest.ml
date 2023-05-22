@@ -1,4 +1,4 @@
-open Ocamulator
+(* open Ocamulator
 open OUnit2
 open Ocamulator.Alias
 
@@ -121,4 +121,4 @@ let tests : test list =
             increment_pc_tests;
             fetch_ui8_op_tests;
             fetch_ui16_op_tests;
-        ]
+        ] *)

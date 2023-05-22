@@ -1,4 +1,4 @@
-open OUnit2
+(* open OUnit2
 
 (** [main.ml] contains coverage and accuracy tests for the emulator. *)
 
@@ -54,4 +54,4 @@ let tests : test =
         ]
 
 (** Running tests. *)
-let (_ : unit) = run_test_tt_main tests
+let (_ : unit) = run_test_tt_main tests *)

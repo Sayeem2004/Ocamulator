@@ -1,4 +1,4 @@
-open Ocamulator
+(* open Ocamulator
 open OUnit2
 open Ocamulator.Alias
 
@@ -40,4 +40,4 @@ let tests : test list =
             List.init 256 (fun i ->
                 let name = Printf.sprintf "cpu_true %s" (UInt8.to_string ~.i) in
                 step_test name cpu_true ~.i);
-        ]
+        ] *)

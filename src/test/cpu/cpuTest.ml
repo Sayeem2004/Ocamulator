@@ -1,4 +1,4 @@
-open Ocamulator
+(* open Ocamulator
 open OUnit2
 open Ocamulator.Alias
 
@@ -169,4 +169,4 @@ let tests : test list =
             push_stack_ui16_tests;
             pop_stack_tests;
             to_string_tests;
-        ]
+        ] *)

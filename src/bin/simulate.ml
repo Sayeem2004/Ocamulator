@@ -1,4 +1,4 @@
-open Ocamulator
+(* open Ocamulator
 open Ocamulator.Alias
 
 (** [Simulate.ml] contains code for simulating ROM files. *)
@@ -40,4 +40,4 @@ let main () : unit =
             with Sys_error n -> print_endline "Please enter a valid \".nes\" file.")
 
 (** Running main. *)
-let _ = main ()
+let _ = main () *)

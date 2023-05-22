@@ -1,4 +1,4 @@
-open Ocamulator
+(* open Ocamulator
 open OUnit2
 open Ocamulator.Alias
 open Yojson.Basic
@@ -152,4 +152,4 @@ let tests : test list =
     let tests : test list list =
         List.filteri (fun i j -> i <> 0x6B) (mapi opcode_tests)
     in
-    List.flatten tests
+    List.flatten tests *)

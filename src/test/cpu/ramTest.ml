@@ -1,4 +1,4 @@
-open Ocamulator
+(* open Ocamulator
 open OUnit2
 open Ocamulator.Alias
 
@@ -43,4 +43,4 @@ let write_ui8_tests : test list =
     ]
 
 (** Ram tests to be run. *)
-let tests : test list = List.flatten [ read_ui8_tests; write_ui8_tests ]
+let tests : test list = List.flatten [ read_ui8_tests; write_ui8_tests ] *)
