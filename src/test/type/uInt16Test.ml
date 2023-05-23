@@ -17,11 +17,11 @@ let to_string_tests : test list =
             "$0000";
     ]
 
-(** [ui16_from_ui8_test name a expected] tests equivalence between
-    [ui16_from_ui8 a] and [expected]. *)
-let ui16_from_ui8_test (name : string) (a : uint8) (expected : uint16) =
+(** [ui16_from_ui8_test name a exp] tests equivalence between
+    [ui16_from_ui8 a] and [exp]. *)
+let ui16_from_ui8_test (name : string) (a : uint8) (exp : uint16) =
     name >:: fun _ ->
-        assert_equal expected (UInt16.ui16_from_ui8 a) ~printer:UInt16.to_string
+        assert_equal exp (UInt16.ui16_from_ui8 a) ~printer:UInt16.to_string
 
 (** Ui16_from_ui8 tests to be run. *)
 let ui16_from_ui8_tests : test list =
@@ -31,12 +31,11 @@ let ui16_from_ui8_tests : test list =
         ui16_from_ui8_test "UI16_From_UI8 Maxx -> $00FF" UInt8.max ~..0xFF;
     ]
 
-(** [combine_ui8_test name a b expected] tests equivalence between
-    [combine_ui8 a b] and [expected]. *)
-let combine_ui8_test (name : string) (a : uint8) (b : uint8) (expected : uint16)
-    =
+(** [combine_ui8_test name a b exp] tests equivalence between
+    [combine_ui8 a b] and [exp]. *)
+let combine_ui8_test (name : string) (a : uint8) (b : uint8) (exp : uint16) =
     name >:: fun _ ->
-        assert_equal expected (UInt16.combine_ui8 a b) ~printer:UInt16.to_string
+        assert_equal exp (UInt16.combine_ui8 a b) ~printer:UInt16.to_string
 
 (** Combine_ui8 tests to be run. *)
 let combine_ui8_tests : test list =
@@ -53,11 +52,11 @@ let combine_ui8_tests : test list =
             UInt16.max;
     ]
 
-(** [split_ui16_test name n expected] tests equivalence between
-    [split_ui16 n] and [expected]. *)
-let split_ui16_test (name : string) (n : uint16) (expected : uint8 * uint8) =
+(** [split_ui16_test name n exp] tests equivalence between
+    [split_ui16 n] and [exp]. *)
+let split_ui16_test (name : string) (n : uint16) (exp : uint8 * uint8) =
     name >:: fun _ ->
-        assert_equal expected (UInt16.split_ui16 n) ~printer:(fun (a, b) ->
+        assert_equal exp (UInt16.split_ui16 n) ~printer:(fun (a, b) ->
             "(" ^ UInt8.to_string a ^ ", " ^ UInt8.to_string b ^ ")")
 
 (** Split_ui16 tests to be run. *)

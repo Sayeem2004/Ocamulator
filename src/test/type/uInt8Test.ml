@@ -17,5 +17,58 @@ let to_string_tests : test list =
             "$0000";
     ]
 
+(** [ui4_from_ui8_test name a exp] tests equivalence between [ui4_from_ui8 a]
+    and [exp]. *)
+let ui4_from_ui8_test (name : string) (a : uint8) (exp : uint4) : test =
+    name >:: fun _ ->
+        assert_equal exp (UInt8.ui4_from_ui8 a) ~printer:UInt4.to_string
+
+(** Ui4_from_ui8 tests to be run. *)
+let ui4_from_ui8_tests : test list =
+    [
+        ui4_from_ui8_test "Ui4_From_Ui8 Zero" ~.0x00 ~...0x00;
+        ui4_from_ui8_test "Ui4_From_Ui8 Ones" ~.0x01 ~...0x00;
+        ui4_from_ui8_test "Ui4_From_Ui8 Half" ~.0x0F ~...0x00;
+        ui4_from_ui8_test "Ui4_From_Ui8 Maxx" ~.0xFF ~...0x0F;
+    ]
+
+(** [ui8_from_ui4_test name a exp] tests equivalence between [ui8_from_ui4 a]
+    and [exp]. *)
+let ui8_from_ui4_test (name : string) (a : uint4) (exp : uint8) : test =
+    name >:: fun _ ->
+        assert_equal exp (UInt8.ui8_from_ui4 a) ~printer:UInt8.to_string
+
+(** Ui8_from_ui4 tests to be run. *)
+let ui8_from_ui4_tests : test list =
+    [
+        ui8_from_ui4_test "Ui8_From_Ui4 Zero" ~...0x00 ~.0x00;
+        ui8_from_ui4_test "Ui8_From_Ui4 Ones" ~...0x01 ~.0x01;
+        ui8_from_ui4_test "Ui8_From_Ui4 Maxx" ~...0x0F ~.0x0F;
+    ]
+
+(** [combine_ui4_test name a b exp] tests equivalence between [combine_ui4 a b]
+    and [exp]. *)
+let combine_ui4_test (name : string) (a : uint4) (b : uint4) (exp : uint8) =
+    name >:: fun _ ->
+        assert_equal exp (UInt8.combine_ui4 a b) ~printer:UInt8.to_string
+
+(** Combine_ui4 tests to be run. *)
+let combine_ui4_tests : test list =
+    [
+        combine_ui4_test "Combine_Ui4 Zero Zero -> $0000" ~...0x00 ~...0x00 ~.0x00;
+        combine_ui4_test "Combine_Ui4 Zero Ones -> $0001" ~...0x00 ~...0x01 ~.0x01;
+        combine_ui4_test "Combine_Ui4 Ones Zero -> $0010" ~...0x01 ~...0x00 ~.0x10;
+        combine_ui4_test "Combine_Ui4 Ones Ones -> $0011" ~...0x01 ~...0x01 ~.0x11;
+        combine_ui4_test "Combine_Ui4 Maxx Maxx -> $00FF" ~...0x0F ~...0x0F ~.0xFF;
+    ]
+
 (** UInt8 tests to be run. *)
-let tests : test list = List.flatten [ UInt8Tester.tests; to_string_tests ]
+let tests : test list =
+    List.flatten
+        [
+            UInt8Tester.tests;
+            to_string_tests;
+            ui4_from_ui8_tests;
+            ui8_from_ui4_tests;
+            combine_ui4_tests;
+        ]

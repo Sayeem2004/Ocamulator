@@ -75,6 +75,24 @@ let to_signed_tests : test list =
         to_signed_test "to_signed non-zero 2" ~.0x80 (-128);
     ]
 
+(** [nth_bit_ui8_test name a n exp] test equivalence between [?& a n] and [exp]. *)
+let nth_bit_ui8_test (name : string) (a : uint8) (n : int) (exp : bool) : test =
+    name >:: fun _ -> assert_equal exp (?&a n) ~printer:string_of_bool
+
+(** Nth_bit_ui8 tests to run. *)
+let nth_bit_ui8_tests : test list =
+    [
+        nth_bit_ui8_test "nth_bit_ui8 zero zero" ~.0x00 0 false;
+        nth_bit_ui8_test "nth_bit_ui8 zero ones" ~.0x00 1 false;
+        nth_bit_ui8_test "nth_bit_ui8 zero maxx" ~.0x00 7 false;
+        nth_bit_ui8_test "nth_bit_ui8 ones zero" ~.0x01 0 true;
+        nth_bit_ui8_test "nth_bit_ui8 ones ones" ~.0x01 1 false;
+        nth_bit_ui8_test "nth_bit_ui8 ones maxx" ~.0x01 7 false;
+        nth_bit_ui8_test "nth_bit_ui8 maxx zero" ~.0xFF 0 true;
+        nth_bit_ui8_test "nth_bit_ui8 maxx ones" ~.0xFF 1 true;
+        nth_bit_ui8_test "nth_bit_ui8 maxx maxx" ~.0xFF 7 true;
+    ]
+
 (** [ui16_to_ui8_test name a exp] tests equivalence between [!-- a] and [exp]. *)
 let ui16_to_ui8_test (name : string) (a : uint16) (exp : uint8) : test =
     name >:: fun _ -> assert_equal exp !--a ~printer:UInt8.to_string
@@ -108,6 +126,7 @@ let tests : test list =
             check_low_bit_tests;
             twos_complement_tests;
             to_signed_tests;
+            nth_bit_ui8_tests;
             ui16_to_ui8_tests;
             bool_to_ui16_tests;
         ]
