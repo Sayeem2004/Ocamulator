@@ -23,7 +23,7 @@ module Cpu (Bus : Bus.CpuBus) = struct
             progCounter = pc;
             stackPointer = sp;
             bus;
-            flags = Flags.fresh flags;
+            flags = Flags.from_ui8 flags;
             data_ui8 = ~.0;
             data_ui16 = ~..0;
         }
@@ -73,7 +73,7 @@ module Cpu (Bus : Bus.CpuBus) = struct
         let low_cpu = peek_stack_ui8 cpu in
         let pop_cpu = pop_stack_ui8 low_cpu in
         let hi_cpu = peek_stack_ui8 pop_cpu in
-        { hi_cpu with data_ui16 = !.. (low_cpu.data_ui8) (hi_cpu.data_ui8) }
+        { hi_cpu with data_ui16 = !.. (hi_cpu.data_ui8) (low_cpu.data_ui8) }
 
     let nmi_vector_addr = ~..0xFFFA
     let reset_vector_addr = ~..0xFFFC
@@ -83,13 +83,12 @@ module Cpu (Bus : Bus.CpuBus) = struct
         but online it said not to do that or change flags. *)
 
     let reset (cpu : t) : t =
-        let low_cpu = fetch_ui8 cpu reset_vector_addr in
-        let hi_cpu = fetch_ui8 low_cpu (reset_vector_addr +++ ~..1) in
+        let vector_cpu = fetch_ui16 cpu reset_vector_addr in
         {
-            hi_cpu with
-            progCounter = !..(hi_cpu.data) low_cpu.data;
+            vector_cpu with
+            progCounter = vector_cpu.data_ui16;
             stackPointer = cpu.stackPointer -- ~.0x03;
-            flags = Flags.set_interrupt_disable true hi_cpu.flags;
+            flags = Flags.set_interrupt_disable true vector_cpu.flags;
             bus = Bus.reset_interrupt cpu.bus;
         }
 
@@ -102,12 +101,11 @@ module Cpu (Bus : Bus.CpuBus) = struct
                     flags = Flags.set_break false cpu_pc.flags |> Flags.set_reserved true |> Flags.set_interrupt_disable true
                 }
             in
-            let pushed_flags_cpu = push_stack_ui8 cpu_pc (Flags.status cpu_flags.flags) in
-            let low_vector_cpu = fetch_ui8 pushed_flags_cpu irq_vector_addr in
-            let hi_vector_cpu = fetch_ui8 low_vector_cpu (irq_vector_addr +++ ~..1) in
+            let pushed_flags_cpu = push_stack_ui8 cpu_pc (Flags.to_ui8 cpu_flags.flags) in
+            let vector_cpu = fetch_ui16 pushed_flags_cpu irq_vector_addr in
             {
-                hi_vector_cpu with
-                progCounter = !..(hi_vector_cpu.data) low_vector_cpu.data;
+                vector_cpu with
+                progCounter = vector_cpu.data_ui16;
                 bus = Bus.reset_interrupt pushed_flags_cpu.bus;
             }
         else cpu
@@ -120,12 +118,11 @@ module Cpu (Bus : Bus.CpuBus) = struct
                 flags = Flags.set_break false pushed_pc_cpu.flags |> Flags.set_reserved true |> Flags.set_interrupt_disable true
             }
         in
-        let pushed_flags_cpu = push_stack_ui8 cpu_with_correct_flags (Flags.status cpu_with_correct_flags.flags) in
-        let low_vector_cpu = fetch_ui8 pushed_flags_cpu irq_vector_addr in
-        let hi_vector_cpu = fetch_ui8 low_vector_cpu (irq_vector_addr +++ ~..1) in
+        let pushed_flags_cpu = push_stack_ui8 cpu_with_correct_flags (Flags.to_ui8 cpu_with_correct_flags.flags) in
+        let vector_cpu = fetch_ui16 pushed_flags_cpu nmi_vector_addr in
         {
-            hi_vector_cpu with
-            progCounter = !..(hi_vector_cpu.data) low_vector_cpu.data;
+            vector_cpu with
+            progCounter = vector_cpu.data_ui16;
             bus = Bus.reset_interrupt pushed_flags_cpu.bus;
         }
 
@@ -141,9 +138,11 @@ module Cpu (Bus : Bus.CpuBus) = struct
         ^ "\n" ^ "\tStack Pointer: "
         ^ UInt8.to_string cpu.stackPointer
         ^ "\n" ^ "\tFlags: "
-        ^ UInt8.to_string (Flags.status cpu.flags)
-        ^ "\n" ^ "\tData: "
-        ^ UInt8.to_string cpu.data
+        ^ UInt8.to_string (Flags.to_ui8 cpu.flags)
+        ^ "\n" ^ "\tData UI8: "
+        ^ UInt8.to_string cpu.data_ui8
+        ^ "\tData UI16: "
+        ^ UInt16.to_string cpu.data_ui16 
         ^ "\n" ^ "}"
 
     (** TODO: Clean this shithole mess up *)
@@ -163,9 +162,9 @@ module Cpu (Bus : Bus.CpuBus) = struct
             | ZeropageX : uint8 -> uint16 memory_mode
             | ZeropageY : uint8 -> uint16 memory_mode
 
-        let contents (cpu : t) (type a) (mode : a memory_mode) : uint8 =
+        let contents (cpu : t) (type a) (mode : a memory_mode) : t =
             match mode with
-            | Accumulator -> cpu.accumulator
+            | Accumulator -> { cpu with data_ui8 = cpu.accumulator }
             | Absolute addr -> fetch_ui8 cpu addr
             | AbsoluteX addr ->
                 let addr = addr +++ !**(cpu.registerX) in
@@ -173,20 +172,20 @@ module Cpu (Bus : Bus.CpuBus) = struct
             | AbsoluteY addr ->
                 let addr = addr +++ !**(cpu.registerY) in
                 fetch_ui8 cpu addr
-            | Immediate addr -> addr
+            | Immediate addr -> { cpu with data_ui8 = addr }
             | Indirect addr ->
                 let addr = fetch_ui16 cpu addr in
-                fetch_ui8 cpu addr
+                fetch_ui8 addr addr.data_ui16
             | XIndirect addr ->
                 let low = fetch_ui8 cpu !**(addr ++ cpu.registerX) in
                 let hig = fetch_ui8 cpu !**(addr ++ cpu.registerX ++ ~.0x01) in
-                let addr = !..hig low in
-                fetch_ui8 cpu addr
+                let addr = !..(hig.data_ui8) (low.data_ui8) in
+                fetch_ui8 hig addr
             | IndirectY addr ->
                 let low = fetch_ui8 cpu !**addr in
                 let hig = fetch_ui8 cpu !**(addr ++ ~.0x01) in
-                let addr = !..hig low +++ !**(cpu.registerY) in
-                fetch_ui8 cpu addr
+                let addr = !..(hig.data_ui8) (low.data_ui8) +++ !**(cpu.registerY) in
+                fetch_ui8 hig addr
             | Relative addr ->
                 let addr = !**addr +++ cpu.progCounter in
                 fetch_ui8 cpu addr
@@ -200,24 +199,24 @@ module Cpu (Bus : Bus.CpuBus) = struct
                 let addr = !**(addr ++ cpu.registerY) in
                 fetch_ui8 cpu addr
 
-        let address (cpu : t) (type a) (mode : a memory_mode) : uint16 =
+        let address (cpu : t) (type a) (mode : a memory_mode) : t =
             match mode with
-            | Absolute addr -> addr
-            | AbsoluteX addr -> addr +++ !**(cpu.registerX)
-            | AbsoluteY addr -> addr +++ !**(cpu.registerY)
+            | Absolute addr -> { cpu with data_ui16 = addr }
+            | AbsoluteX addr -> { cpu with data_ui16 = addr +++ !**(cpu.registerX) }
+            | AbsoluteY addr -> { cpu with data_ui16 = addr +++ !**(cpu.registerY) }
             | Indirect addr -> fetch_ui16 cpu addr
             | XIndirect addr ->
                 let low = fetch_ui8 cpu !**(addr ++ cpu.registerX) in
                 let hig = fetch_ui8 cpu !**(addr ++ cpu.registerX ++ ~.0x01) in
-                !..hig low
+                { hig with data_ui16 = !..(hig.data_ui8) (low.data_ui8)}
             | IndirectY addr ->
                 let low = fetch_ui8 cpu !**addr in
                 let hig = fetch_ui8 cpu !**(addr ++ ~.0x01) in
-                !..hig low +++ !**(cpu.registerY)
-            | Relative addr -> ~..(?%addr + ~**(cpu.progCounter))
-            | Zeropage addr -> !**addr
-            | ZeropageX addr -> !**(addr ++ cpu.registerX)
-            | ZeropageY addr -> !**(addr ++ cpu.registerY)
+                { hig with data_ui16 = !..(hig.data_ui8) (low.data_ui8) +++ !**(cpu.registerY) }
+            | Relative addr -> {cpu with data_ui16 = ~..(?%addr + ~**(cpu.progCounter)) }
+            | Zeropage addr -> {cpu with data_ui16 = !**addr }
+            | ZeropageX addr -> {cpu with data_ui16 = !**(addr ++ cpu.registerX) }
+            | ZeropageY addr -> {cpu with data_ui16 = !**(addr ++ cpu.registerY) }
             | _ -> raise InvalidValue
     end
 
@@ -225,32 +224,25 @@ module Cpu (Bus : Bus.CpuBus) = struct
 
     module Instruction = struct
         let adc_op (type a') (mode : a' memory_mode) (cpu : t) : t =
-            let contents = contents cpu mode in
-            let sum = ~*(cpu.accumulator) + ~*contents + ~*(?.(cpu.flags.carry)) in
+            let contents_cpu = contents cpu mode in
+            let sum = ~*(cpu.accumulator) + ~*(contents_cpu.data_ui8) + ~*(?.(Flags.carry cpu.flags)) in
             let res, acc = (~.sum, cpu.accumulator) in
             let carr, zero, ngtv = (sum > 0xFF, ?*res, ?-res) in
-            let over = ?@(acc |&. contents) &&. (acc |&. res) &&. ~.0x80 > ~.0x00 in
+            let over = ?@(acc |&. contents_cpu.data_ui8) &&. (acc |&. res) &&. ~.0x80 > ~.0x00 in
             {
-                cpu with
+                contents_cpu with
                 accumulator = res;
-                flags =
-                    {
-                        cpu.flags with
-                        carry = carr;
-                        zero;
-                        overflow = over;
-                        negative = ngtv;
-                    };
+                flags = Flags.set_carry true contents_cpu.flags |> Flags.set_zero zero |> Flags.set_overflow over |> Flags.set_negative ngtv
             }
 
         let and_op (type a') (mode : a' memory_mode) (cpu : t) : t =
-            let operand = contents cpu mode in
-            let modif_acc = cpu.accumulator &&. operand in
+            let operand_cpu = contents cpu mode in
+            let modif_acc = cpu.accumulator &&. operand_cpu.data_ui8 in
             let zero, ngtv = (?*modif_acc, ?-modif_acc) in
             {
-                cpu with
+                operand_cpu with
                 accumulator = modif_acc;
-                flags = { cpu.flags with zero; negative = ngtv };
+                flags = Flags.set_zero zero operand_cpu.flags |> Flags.set_negative ngtv;
             }
 
         let asl_op (type a') (mode : a' memory_mode) (cpu : t) : t =
@@ -261,17 +253,18 @@ module Cpu (Bus : Bus.CpuBus) = struct
                 {
                     cpu with
                     accumulator = acc;
-                    flags = { cpu.flags with carry = carr; zero; negative = ngtv };
+                    flags = Flags.set_carry carr cpu.flags |> Flags.set_zero zero |> Flags.set_negative ngtv
                 }
             | addr_mode ->
-                let address = address cpu addr_mode in
-                let contents = contents cpu addr_mode in
+                let contents_cpu = contents cpu addr_mode in
+                let contents = contents_cpu.data_ui8 in
+                let address_cpu = address contents_cpu addr_mode in
                 let shifted = contents << 1 in
                 let carr, zero, ngtv = (?-contents, ?*shifted, ?-shifted) in
-                write_ui8 cpu address shifted;
+                let write_cpu = write_ui8 cpu address_cpu.data_ui16 shifted in
                 {
-                    cpu with
-                    flags = { cpu.flags with carry = carr; zero; negative = ngtv };
+                    write_cpu with
+                    flags = Flags.set_carry carr write_cpu.flags |> Flags.set_zero zero |> Flags.set_negative ngtv
                 }
 
         let bcc_op (type a') (mode : a' memory_mode) (cpu : t) : t =
