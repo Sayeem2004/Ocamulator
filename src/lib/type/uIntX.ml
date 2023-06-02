@@ -23,6 +23,7 @@ module type UInt = sig
     val rem : t -> t -> t
     val succ : t -> t
     val pred : t -> t
+    val lognot : t -> t
     val logand : t -> t -> t
     val logor : t -> t -> t
     val logxor : t -> t -> t
@@ -49,6 +50,7 @@ module SetToInt (M : USet with type t := int) : UInt = struct
     let rem (ui1 : t) (ui2 : t) : t = ui1 mod ui2 land max
     let succ (ui : t) : t = add ui one
     let pred (ui : t) : t = sub ui one
+    let lognot (ui : t) = lnot ui land max
     let logand (ui1 : t) (ui2 : t) : t = ui1 land ui2
     let logor (ui1 : t) (ui2 : t) : t = ui1 lor ui2
     let logxor (ui1 : t) (ui2 : t) = ui1 lxor ui2

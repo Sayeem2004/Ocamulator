@@ -51,8 +51,5 @@ let combine_ui4_tests : test list =
 let tests : test list =
     List.flatten
         [
-            UInt8Tester.tests;
-            to_string_tests;
-            ui8_from_ui4_tests;
-            combine_ui4_tests;
+            UInt8Tester.tests; to_string_tests; ui8_from_ui4_tests; combine_ui4_tests;
         ]

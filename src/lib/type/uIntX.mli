@@ -79,6 +79,9 @@ module type UInt = sig
     val pred : t -> t
     (** [pred a] is [a - 1 mod 2^size]. *)
 
+    val lognot : t -> t
+    (** [lognot a] is the bitwise complement of a [mod 2^size] *)
+
     val logand : t -> t -> t
     (** [logand a b] is [a & b mod 2^size]. *)
 

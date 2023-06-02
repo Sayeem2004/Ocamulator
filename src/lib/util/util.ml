@@ -25,6 +25,9 @@ let set_color (u : uint8) : unit =
     | _ -> Graphics.set_color (Graphics.rgb 255 000 255)
 [@@coverage off]
 
+let addr_interval (low : uint16) (hi : uint16) (addr : uint16) =
+    (addr //>= low) && (addr //<= hi)
+
 let psize : int = 24
 let ssize : int = 32
 let stall : int = 1200

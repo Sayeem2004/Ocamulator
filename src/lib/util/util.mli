@@ -9,6 +9,8 @@ val open_rom : string -> in_channel
 val set_color : uint8 -> unit
 (** [set_color color] sets the color of the pixel to [color]. *)
 
+val addr_interval : uint16 -> uint16 -> uint16 -> bool
+
 val psize : int
 (** [psize] is the size of a pixel. *)
 
